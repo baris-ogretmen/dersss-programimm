@@ -339,6 +339,12 @@ input,textarea,select{-webkit-user-select:text;user-select:text}
 .egAlt{display:flex;gap:.6rem;justify-content:center;padding:.8rem 1rem calc(.8rem + env(safe-area-inset-bottom))}.egAlt .dpB{font-size:1.2rem;min-height:3.2rem;padding:.6rem 1.3rem}
 @media print{body{overflow:visible!important;height:auto!important;background:#fff!important}#merkez,#app,#etkOrtu,#dpEkran,.dpUst .dpUstBtn,.dpSinif,.dpUyg,.dpBtn,#toast{display:none!important}
   #dpOrtu{position:static!important;display:block!important;background:#fff!important;color:#111!important}.dpGovde{overflow:visible!important}.dpOzet,.dpHafta.bu{background:#fff!important;border:1px solid #ccc!important;outline:0!important}.dpHBas,.dpLogo small{color:#111!important;opacity:1!important}.dpKart{box-shadow:none!important;border:1px solid #ddd;break-inside:avoid}html,body{height:auto!important}}
+.dpSira{display:inline-block;font-size:.8rem;background:#f1f5f9;color:#475569;border-radius:99px;padding:.05rem .5rem;vertical-align:middle;font-weight:800}
+.dpParca.ok .dpKonu{color:#047857}.dpBtn .dpB.dpIsle{background:#dcfce7;color:#166534}
+.dpTrk{margin:.35rem 0}.dpTrk .dpIlerBar{height:.45rem;margin-top:.2rem}.dpYuvalar{margin-top:.5rem;padding-top:.4rem;border-top:1px dashed rgba(255,255,255,.18)}
+.dpIslenen{background:rgba(52,211,153,.08);border-radius:1rem;padding:.5rem .8rem}.dpIslenen summary{cursor:pointer}.dpIslList{display:flex;flex-direction:column;gap:.3rem;margin-top:.4rem}
+.dpIsl{display:flex;justify-content:space-between;gap:.6rem;background:rgba(255,255,255,.06);border-radius:.6rem;padding:.35rem .6rem;font-weight:700;flex-wrap:wrap}.dpIsl em{font-style:normal;opacity:.75;white-space:nowrap}
+.dpUyari{border:1px solid rgba(250,204,21,.5)!important;background:rgba(250,204,21,.08)!important}
 /* ---- 🎮 Ders Oyunu ---- */
 #doOrtu{position:fixed;inset:0;z-index:62;display:none;flex-direction:column;background:linear-gradient(160deg,#eef2ff,#f5f3ff 40%,#ecfeff);color:#1e1b4b;font-weight:600}
 #doOrtu.acik{display:flex}
@@ -865,7 +871,7 @@ function boyutla(){
   yanKontrol();
 }
 let yanGec=false;
-function yanKontrol(){const dik=innerHeight>innerWidth&&innerWidth<700;$('yanCevir').classList.toggle('acik',dik&&!yanGec);}
+function yanKontrol(){const ap=$('app'),gor=ap&&getComputedStyle(ap).display!=='none'&&!(document.getElementById('dpOrtu')||{classList:{contains:()=>false}}).classList.contains('acik');const dik=innerHeight>innerWidth&&innerWidth<700;$('yanCevir').classList.toggle('acik',dik&&gor&&!yanGec);}
 addEventListener('resize',()=>{uiOlcek();boyutla();});
 function noktaAl(e){const r=cv.getBoundingClientRect();return {x:(e.clientX-r.left)/r.width*W,y:(e.clientY-r.top)/r.height*H};}
 
@@ -4227,6 +4233,286 @@ const ACILIS=[["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", ["e2e
     const S_=sec([['Uçmuyor, suda yaşıyor, bacakları var.','🐸 Kurbağa',['🐟 Balık','🐍 Yılan']],['Uçmuyor, suda yaşamıyor, süt vermiyor.','🐍 Yılan',['🐱 Kedi','🐦 Kuş']],['Uçmuyor, suda yaşıyor, bacaksız.','🐟 Balık',['🐸 Kurbağa','🐄 İnek']]]);
     return secTur({baslik:'🌳 Ağacı izle',yon:'Makine bu karar ağacını kullanıyor. İpuçlarını takip ederek dala in: hangi hayvan?',soru:agac+'<p class="doDurum">'+S_[0]+'</p>',secenek:[S_[1],...S_[2]],dogru:S_[1],neden:'Karar ağacı her soruda grubu ikiye böler. Yaprağa ulaşınca cevap bulunur. Son yaprakta birden fazla hayvan varsa ağaca yeni bir soru eklemek gerekir!'});};}
 
+
+  /* =================== ➕ EK MOTORLAR (Maarif konularına göre) =================== */
+  /* ---- 🗼 Hanoi kulesi ---- */
+  function hanoiTur(n){return ()=>{let K=[[...Array(n).keys()].map(i=>n-i),[],[]],sec_=-1,say=0;const en=2**n-1;
+    return {baslik:'🗼 Hanoi kulesi ('+n+' disk)',yon:'Bütün diskleri <b>en sağdaki</b> çubuğa taşı. Bir seferde tek disk; büyük disk küçüğün üstüne konamaz. En az: <b>'+en+'</b> hamle.',ipucu:'Özyineleme: n diski taşımak için önce üstteki n−1 diski ortaya, en büyüğü sağa, sonra n−1 diski sağa taşı.',
+      ciz(k,bit){const kk=E('div','doHanoi');k.appendChild(kk);const ciz_=()=>{kk.innerHTML='<div class="doSayac">Hamle: <b>'+say+'</b> · en az '+en+'</div>';const r=E('div','doHC3');
+          K.forEach((c,i)=>{const d=E('div','doCubukH'+(sec_===i?' sec':''));d.innerHTML='<i class="dir"></i>'+c.map(x=>'<b style="width:'+(28+x*18)+'%;background:hsl('+(x*55)+',75%,55%)">'+x+'</b>').reverse().join('');d.onclick=()=>tik(i);r.appendChild(d);});kk.appendChild(r);};
+        const tik=i=>{if(sec_<0){if(!K[i].length)return;sec_=i;ciz_();return;}if(i===sec_){sec_=-1;ciz_();return;}const a=K[sec_],b_=K[i];if(b_.length&&b_[b_.length-1]<a[a.length-1]){sesY();toast('Büyük disk küçüğün üstüne konamaz!',1800);sec_=-1;ciz_();return;}
+          b_.push(a.pop());say++;sec_=-1;sesT(1500);ciz_();if(K[2].length===n)bit({ok:true,yildiz:say<=en?3:say<=en+4?2:1,neden:say+' hamlede bitirdin (en az '+en+' = 2<sup>'+n+'</sup> − 1). Bu bulmaca <b>özyineleme</b> (recursion) ile çözülür: büyük problemi aynı türden küçük problemlere bölmek.'});};
+        this._t=tik;this._c=ciz_;ciz_();},
+      tekrar(){K=[[...Array(n).keys()].map(i=>n-i),[],[]];sec_=-1;say=0;this._c();},
+      coz(){const hm=[];const h=(m,a,b_,c)=>{if(!m)return;h(m-1,a,c,b_);hm.push([a,c]);h(m-1,b_,a,c);};h(n,0,1,2);hm.forEach(([a,c])=>{this._t(a);this._t(c);});}};};}
+  /* ---- 🎲 Olasılık: tahmin et, sonra 200 kez dene ---- */
+  const OLAS=[{s:'İki zar atınca toplam hangisi daha sık gelir?',a:'7',b:'2',f:()=>ri(1,6)+ri(1,6),k:v=>v===7?'7':v===2?'2':null,n:'7 toplamı 6 farklı yolla (1+6, 2+5…) gelir, 2 ise tek yolla (1+1). Olasılık: 6/36 ile 1/36.'},
+    {s:'Bir zar atınca hangisi daha olası?',a:'Çift sayı',b:'6 gelmesi',f:()=>ri(1,6),k:v=>v%2===0?'Çift sayı':null,k2:v=>v===6?'6 gelmesi':null,n:'Çift sayı 3 yüzde (2,4,6) var: 3/6. 6 gelmesi 1/6. (6 ikisine de sayılır.)'},
+    {s:'Üç para atınca hangisi daha olası?',a:'2 yazı 1 tura',b:'3 yazı',f:()=>[0,1,2].map(()=>ri(0,1)).reduce((x,y)=>x+y,0),k:v=>v===2?'2 yazı 1 tura':v===3?'3 yazı':null,n:'2 yazı 1 tura 3 farklı sırayla gelir (YYT, YTY, TYY): 3/8. 3 yazı tek yolla: 1/8.'},
+    {s:'Torbada 3 kırmızı, 1 mavi top var. Gözü kapalı çekince?',a:'Kırmızı',b:'Mavi',f:()=>ri(1,4),k:v=>v<=3?'Kırmızı':'Mavi',n:'Kırmızı olasılığı 3/4, mavi 1/4. Ne kadar çok deneme, sonuç o kadar olasılığa yaklaşır (büyük sayılar yasası).'}];
+  function olasilikTur(){return ()=>{const o=sec(OLAS);let tah=null;
+    return {baslik:'🎲 Tahmin et, sonra dene!',yon:o.s+' Önce tahmin et, sonra bilgisayar <b>200 kez</b> denesin.',
+      ciz(k,bit){const kk=E('div','doOlas');k.appendChild(kk);kk.innerHTML='<div class="doSecG"></div><div class="doGraf"></div>';const g=kk.querySelector('.doSecG');
+        [o.a,o.b].forEach(s=>g.appendChild(B(s,'doSec',async()=>{if(tah)return;tah=s;[...g.children].forEach(x=>x.classList.toggle('sec',x.textContent===s));const say={};say[o.a]=0;say[o.b]=0;const gr=kk.querySelector('.doGraf');
+          for(let i=0;i<200;i++){const v=o.f();const a=o.k(v),b_=o.k2?o.k2(v):null;if(a)say[a]++;if(b_)say[b_]++;if(!DO._hizli&&i%10===0){gr.innerHTML=[o.a,o.b].map(x=>'<div><i style="height:'+say[x]*1.3+'px"></i><b>'+say[x]+'</b><span>'+x+'</span></div>').join('');await bekle(40);}}
+          gr.innerHTML=[o.a,o.b].map(x=>'<div><i style="height:'+say[x]*1.3+'px"></i><b>'+say[x]+'</b><span>'+x+'</span></div>').join('');const ok=s===o.a;bit({ok,yildiz:3,tekrar:false,neden:(ok?'Doğru tahmin! ':'Deney farklı söylüyor. ')+o.n});}))); },
+      coz(){[...document.querySelectorAll('#doSahne .doSec')].find(b=>b.textContent===o.a).click();}};};}
+  /* ---- 🧠 N-geri hafıza ---- */
+  function nBackTur(N){return ()=>{const H='ABKMRST',L=[];for(let i=0;i<14;i++){L.push(i>=N&&R()<.35?L[i-N]:sec([...H]));}const hedef=new Set(L.map((x,i)=>i>=N&&x===L[i-N]?i:-1).filter(i=>i>=0));let i=-1,bas=new Set(),zam=null;
+    return {baslik:'🧠 '+N+'-geri hafıza oyunu',yon:'Harfler tek tek gelecek. Gelen harf <b>'+N+' önceki</b> harfle aynıysa <b>“Aynı!”</b> düğmesine bas.',ipucu:'Son '+N+' harfi aklında tut ve her yeni harfte güncelle.',
+      ciz(k,bit){const kk=E('div','doNB');kk.innerHTML='<div class="doNBH">?</div><div class="doNBS"></div>';k.appendChild(kk);const btn=B('✋ Aynı!','doA buyuk',()=>{if(i>=0){bas.add(i);btn.classList.add('akt');setTimeout(()=>btn.classList.remove('akt'),200);}});kk.appendChild(btn);
+        const adim=()=>{i++;if(i>=L.length){clearInterval(zam);let d=0,y=0;hedef.forEach(j=>{if(bas.has(j))d++;});bas.forEach(j=>{if(!hedef.has(j))y++;});const ok=d>=hedef.size-1&&y<=1;bit({ok,yildiz:d===hedef.size&&!y?3:2,neden:d+'/'+hedef.size+' eşleşmeyi yakaladın, '+y+' yanlış alarm. N-geri, çalışan belleği güçlendiren bilimsel bir egzersizdir.'});return;}
+          kk.querySelector('.doNBH').textContent=L[i];kk.querySelector('.doNBS').textContent=(i+1)+' / '+L.length;};
+        this._bas=()=>{i=-1;bas=new Set();clearInterval(zam);zam=setInterval(adim,DO._hizli?60:1700);};this._bas();this._bul=()=>{bas=new Set(hedef);};},
+      tekrar(){this._bas();},coz(){this._bul();const s=this;const t=setInterval(()=>{s._bul();if(i>=L.length)clearInterval(t);},2);},temizle(){clearInterval(zam);}};};}
+  /* ---- 🪞 Simetri: aynadaki yarıyı boya ---- */
+  function simetriTur(){return ()=>{const w=4,h=6;const sol=[];for(let y=0;y<h;y++){const r=[];for(let x=0;x<w;x++)r.push(R()<.45?1:0);sol.push(r);}if(sol.flat().every(v=>!v))sol[2][3]=1;let boya=new Set();
+    return {baslik:'🪞 Simetriyi tamamla',yon:'Kırmızı çizgi bir ayna. Sağ tarafı, soldakinin <b>ayna görüntüsü</b> olacak şekilde boya.',ipucu:'Çizgiye en yakın kare, aynada da çizgiye en yakın olur.',
+      ciz(k,bit){const kk=E('div','doSim2');k.appendChild(kk);const ciz_=()=>{kk.innerHTML='';const g=E('div','doSimG');for(let y=0;y<h;y++){for(let x=0;x<w*2;x++){const sag=x>=w,z=(x-w)+','+y,c=E('div','doPx'+(sag?(boya.has(z)?' on':''):(sol[y][x]?' on sol':' sol'))+(x===w?' ayna':''));if(sag)c.onclick=()=>{boya.has(z)?boya.delete(z):boya.add(z);ciz_();};g.appendChild(c);}}kk.appendChild(g);
+          kk.appendChild(B('✔ Kontrol','doA',()=>{let h_=0;for(let y=0;y<h;y++)for(let x=0;x<w;x++){if((sol[y][w-1-x]===1)!==boya.has(x+','+y))h_++;}bit({ok:!h_,yildiz:3,neden:h_?h_+' kare hatalı. Aynada sol–sağ yer değiştirir.':'Simetri doğada (kelebek), sanatta (ebru) ve tasarımda her yerde. Robotlar da bir hareketi aynalayarak iki kolunu aynı anda kullanır.'});}));};this._c=ciz_;ciz_();this._s=()=>{boya=new Set();for(let y=0;y<h;y++)for(let x=0;x<w;x++)if(sol[y][w-1-x])boya.add(x+','+y);ciz_();};},
+      tekrar(){},coz(){this._s();[...document.querySelectorAll('#doSahne .doB')].find(b=>b.textContent.includes('Kontrol')).click();}};};}
+  /* ---- ➗ İşlem bulmacası (KenKen ısınması) ---- */
+  function islemTur(gl){return ()=>{const T=sec(gl<=1?['eksik','op']:['eksik','op','iki']);let s,c,y;
+    if(T==='eksik'){const a=ri(2,gl<=1?9:15),b_=ri(2,9),op=sec(gl<=1?['+','−']:['+','−','×']);const r=op==='+'?a+b_:op==='−'?a-b_:a*b_;s=a+' '+op+' □ = '+r;c=String(b_);y=[b_+1,b_-1,r-a,a].filter(v=>v!==b_&&v>=0).map(String);}
+    else if(T==='op'){const a=ri(2,9),b_=ri(2,9),op=sec(['+','−','×',...(gl>=2?['÷']:[])]);const A=op==='÷'?a*b_:a;const r=op==='+'?A+b_:op==='−'?A-b_:op==='×'?A*b_:A/b_;s=A+' □ '+b_+' = '+r;c=op;y=['+','−','×','÷'].filter(x=>x!==op);}
+    else{const a=ri(2,6),b_=ri(2,6),d=ri(1,9);s='□ × '+b_+' + '+d+' = '+(a*b_+d);c=String(a);y=[a+1,a-1,a*2].map(String);}
+    return secTur({baslik:'➗ İşlem bulmacası',yon:'Kutuya ne gelmeli? KenKen ve Kakuro’da da hep böyle düşünürüz: sonuçtan geriye.',soru:'<div class="doDizi"><span>'+s+'</span></div>',secenek:[c,...[...new Set(y)].slice(0,3)],dogru:c,neden:'Ters işlem: toplama ↔ çıkarma, çarpma ↔ bölme. Bulmacayı sondan başa çözmek güçlü bir stratejidir.'});};}
+  /* ---- 🔢 Kaç tane? (ana) ---- */
+  function sayiTur(){return ()=>{const e=sec(['🍎','⭐','🐟','🎈','🚗','🌸']),n=ri(3,9);return secTur({baslik:'🔢 Kaç tane?',yon:'Say ve doğru sayıyı seç. Parmağınla tek tek dokunarak sayabilirsin.',soru:'<div class="doSayDiz">'+e.repeat(n)+'</div>',secenek:[String(n),String(n+1),String(n-1)],dogru:String(n),neden:'Saymak, matematiğin ilk adımı! Bilgisayarlar da her şeyi sayarak yapar.'});};}
+  /* ---- 🧬 Yapay nöron: ağırlık ve eşik ---- */
+  const NORON=[{ad:'🍦 Dondurma yer misin?',f:['☀️ Sıcaklık (0–10)','💰 Harçlık (0–10)'],v:[[9,8,1],[8,2,1],[3,9,0],[2,3,0],[7,6,1],[4,4,0],[9,3,1],[1,8,0]],n:'Sıcaklık daha önemli, o yüzden ağırlığı büyük.'},
+    {ad:'⚽ Maça gidelim mi?',f:['🌧️ Yağmur (0–10)','👫 Gelen arkadaş (0–10)'],v:[[1,8,1],[2,6,1],[8,9,0],[9,3,0],[3,7,1],[7,7,0],[0,5,1],[6,2,0]],n:'Yağmur kararı olumsuz etkiliyor: ağırlığı eksi olmalı.'}];
+  function noronTur(){return ()=>{const D=sec(NORON);let w1=0,w2=0,e=5;
+    return {baslik:'🧬 Bir nöron eğit: '+D.ad,yon:'Nöron her özelliği bir <b>ağırlıkla</b> çarpar ve toplar. Toplam <b>eşikten büyükse “EVET”</b> der. Ağırlıkları ve eşiği ayarla; bütün örnekler doğru olsun.',ipucu:D.n+' Önemli özelliğin ağırlığını artır, ters etkileyenin ağırlığını eksi yap.',
+      ciz(k,bit){const kk=E('div','doNoron');k.appendChild(kk);const ciz_=()=>{const sat=D.v.map(([a,b_,y])=>{const t=a*w1+b_*w2,c=t>e?1:0;return {a,b_,y,t,c};});
+          kk.innerHTML='<div class="doNF"><b>'+D.f[0]+' × <span class="doDeger">'+w1+'</span> + '+D.f[1]+' × <span class="doDeger">'+w2+'</span> &gt; <span class="doDeger">'+e+'</span> ?</b></div><div class="doVeri">'+sat.map(x=>'<div class="'+(x.c===x.y?'iyi':'kotu')+'"><b>'+x.a+' · '+x.b_+'</b><span>toplam '+x.t+' → '+(x.c?'EVET':'HAYIR')+' (doğrusu: '+(x.y?'EVET':'HAYIR')+')</span></div>').join('')+'</div>';
+          const ay=E('div','doKalemKod');[['Ağırlık 1',()=>w1,v=>w1=v],['Ağırlık 2',()=>w2,v=>w2=v],['Eşik',()=>e,v=>e=v]].forEach(([l,g,s])=>{const r=E('div','doAyar','<span>'+l+'</span>');[-5,-1,1,5].forEach(d=>r.appendChild(B((d>0?'+':'')+d,'kucuk',()=>{s(Math.max(-20,Math.min(100,g()+d)));ciz_();})));ay.appendChild(r);});kk.appendChild(ay);
+          kk.appendChild(B('✔ Test et','doA',()=>{const h=sat.filter(x=>x.c!==x.y).length;bit({ok:!h,yildiz:3,neden:h?h+' örnek yanlış (kırmızı). Ağırlıkları değiştir.':'Tebrikler! Yapay sinir ağları binlerce böyle nöronun ağırlıklarını otomatik ayarlayarak öğrenir. Buna <b>eğitim</b> denir.'});}));};this._c=ciz_;ciz_();},
+      tekrar(){},coz(){for(let a=-10;a<=10;a++)for(let b_=-10;b_<=10;b_++)for(let t=0;t<=60;t++){if(D.v.every(([x,y,z])=>((x*a+y*b_>t)?1:0)===z)){w1=a;w2=b_;e=t;this._c();[...document.querySelectorAll('#doSahne .doB')].find(b=>b.textContent.includes('Test')).click();return;}}}};};}
+  /* ---- ♟️ Açık / koyu kareler (ana) ---- */
+  function sRenkTur(){return ()=>{const r=ri(0,7),koyu=sec([true,false]);const dogru=new Set();for(let c=0;c<8;c++)if(((r+c)%2===1)===koyu)dogru.add(r*8+c);
+    return isaretTur({baslik:'⬛⬜ Açık ve koyu kareler',yon:'Tahtanın <b>'+(8-r)+'. sırasındaki</b> (soldaki numara) <b>'+(koyu?'koyu':'açık')+'</b> karelerin hepsine dokun, sonra ✔ Kontrol.',st:{b:Array(64).fill(''),w:true},dogru,neden:'Satranç tahtasında açık ve koyu kareler sırayla dizilir: 32 açık, 32 koyu. Sağ alt köşe hep açık karedir!'})();};}
+  /* ---- 🙂 Duygu kartları (ana YZ) ---- */
+  function duyguTur(){return ()=>{const D=[['😀','Mutlu'],['😢','Üzgün'],['😠','Kızgın'],['😨','Korkmuş'],['😲','Şaşkın'],['😴','Uykulu']];const x=sec(D);
+    return secTur({baslik:'🙂 Makine yüzden duyguyu tahmin ediyor',yon:'Makine yüzdeki ağza, gözlere ve kaşlara bakarak duyguyu tahmin eder. Sen de bak: bu yüz ne hissediyor?',soru:'<div style="font-size:5rem">'+x[0]+'</div>',secenek:kac(D.filter(d=>d!==x),2).map(d=>d[1]).concat([x[1]]),dogru:x[1],neden:'Yüz tanıyan YZ’ler binlerce yüz örneğinden ağız, göz ve kaş şekillerini öğrenir. Ama duyguları en iyi yine insanlar anlar 💛'});};}
+  /* ---- ⚡ Bulmaca yarışı: karışık turlar ---- */
+  function karisik(L){return L;}
+  /* ---- ek içerik ---- */
+  Object.assign(SEC,{
+    sportmen:[['Oyunu kaybettin. Ne yaparsın?','Rakibimi tebrik eder, elini sıkarım',['Taşları devirip kızarım','Bir daha oynamam derim']],['Rakibin hamle yaparken ne yaparsın?','Sessizce bekler, tahtaya bakarım',['Sürekli konuşurum','Acele et derim']],['Kazandın! Ne yaparsın?','Rakibime “iyi oyundu” derim',['Herkese bağırarak söylerim','Rakibimle alay ederim']]],
+    tarih:[['Satrancın atası sayılan oyun hangi ülkede doğdu?','Hindistan (Çaturanga)',['Japonya','Brezilya']],['Satrançta “Şah mat” sözü hangi dilden gelir?','Farsça “şah öldü / çaresiz” anlamından',['İngilizceden','Latinceden']],['Osmanlı’da satranç ustalarının oynadığı yerlerden biri?','Kahvehaneler',['Stadyumlar','Uzay üsleri']],['Bilgisayar ilk kez dünya şampiyonunu hangi yıl yendi?','1997 (Deep Blue – Kasparov)',['1950','2020']]],
+    notasyon:[['“Af3” ne demek?','At f3 karesine gitti',['Fil f3 karesine gitti','Vezir 3. sıraya gitti']],['“exd5” ne demek?','e piyonu d5’teki taşı aldı',['e5’ten d5’e kale gitti','Şah d5’e kaçtı']],['“O-O” ne demek?','Kısa rok',['Uzun rok','Berabere']],['“Vh5+” sonundaki “+” ne demek?','Şah çekildi',['Taş alındı','Mat oldu']],['“Kxe8#” sonundaki “#” ne demek?','Mat!',['Pat','Terfi']]],
+    pozisyon:[['Kaleler hangi hatlarda en güçlüdür?','Açık hatlarda (piyonsuz sütun)',['Köşede beklerken','Piyonların arkasında kapalıyken']],['Zayıf kare nedir?','Piyonla korunamayan ve rakibin yerleşebileceği kare',['Hiç taş olmayan kare','Tahtanın kenarındaki kare']],['Atlar nerede daha güçlüdür?','Merkezde (kenarda at = zayıf at)',['Köşede','İlk sırada']],['Geçer piyon nedir?','Önünde ve yan sütunlarda rakip piyon olmayan piyon',['Geri giden piyon','İki kez oynanan piyon']]],
+    unlu:[['“Ölümsüz Oyun” (1851) kimin oyunudur?','Adolf Anderssen',['Magnus Carlsen','Garri Kasparov']],['Opera oyunu (1858) ile ünlü usta?','Paul Morphy',['Bobby Fischer','Judit Polgar']],['Kadınlar arasında tüm zamanların en güçlü oyuncularından biri?','Judit Polgar',['Kraliçe Elizabeth','Ada Lovelace']],['Türkiye’nin ilk büyükustası?','Suat Atalık',['Mustafa Kemal','Cahit Arf']]],
+    satDusunme:[['Satranç hangi beceriyi en çok geliştirir?','İleriyi düşünüp plan yapmayı',['Hızlı koşmayı','Yüksek sesle şarkı söylemeyi']],['Hamle yapmadan önce sorulacak en önemli soru?','Rakibim ne tehdit ediyor?',['Hangi taş daha güzel?','Ne zaman bitecek?']],['Aday hamle nedir?','Düşünmeye değer, olası iyi hamleler listesi',['Rakibin en kötü hamlesi','İlk akla gelen tek hamle']]],
+    dusunme:[['“Her sabah okul var, bugün sabah → okul var” hangi düşünme türü?','Tümdengelim (genelden özele)',['Tümevarım','Tahmin']],['Problemi küçük parçalara bölmek?','Ayrıştırma',['Ezberleme','Kopyalama']],['Kendi düşünme sürecini fark etmek?','Üst biliş',['Unutkanlık','Şans']]],
+    tumevarim:[['1, 3, 5, 7 gördüm → “hepsi tek sayı” dedim. Bu?','Tümevarım (örneklerden genellemeye)',['Tümdengelim','Kanıt']],['Bütün kuşların kanadı var; serçe kuş → serçenin kanadı var. Bu?','Tümdengelim',['Tümevarım','Rastlantı']],['Tümevarımın riski nedir?','Yeni bir örnek genellemeyi çürütebilir',['Hiç riski yok','Hep yanlıştır']]],
+    oyunTeorisi:[['Mahkûm ikileminde iki taraf da işbirliği yaparsa?','İkisi için de iyi sonuç',['İkisi de en kötü sonucu alır','Biri hep kazanır']],['Nim’de 4’ün katı bırakmak neden kazandırır?','Rakip ne alırsa alsın tekrar 4’ün katına tamamlarsın',['Şans eseri','Kural öyle der']],['Sıfır toplamlı oyun nedir?','Birinin kazancı diğerinin kaybıdır',['Herkes kazanır','Kimse puan alamaz']]],
+    yaratici:[['Bir ataşı kaç farklı işte kullanabilirsin? En yaratıcı fikir?','Kablo düzenleyici, mini kanca, SIM iğnesi…',['Yalnızca kâğıt tutturmak','Hiçbir işe yaramaz']],['Beyin fırtınasının ilk kuralı?','Her fikir değerlidir, eleştiri sonra',['Yalnızca en iyi fikri söyle','Sessiz kal']],['Bir sorunu tersinden düşünmek ne işe yarar?','Gözden kaçan çözümleri gösterir',['Zaman kaybıdır','Sorunu büyütür']]],
+    elestirel:[['“Herkes bu oyunu oynuyor, o zaman en iyisi” sözü?','Popülerlik iyi olduğunu kanıtlamaz',['Kesin doğru','Bilimsel kanıt']],['Bir haberi doğrulamanın ilk adımı?','Kaynağını ve tarihini kontrol etmek',['Başlığına inanmak','Hemen paylaşmak']],['Korelasyon (birlikte görülme) ne demektir?','İki şey birlikte değişir ama biri diğerinin nedeni olmayabilir',['Biri diğerine kesin neden olur','Hiçbir ilişki yok']]],
+    yanilgi:[['“Sen de geç kalıyorsun, beni eleştiremezsin.”','Sen de (tu quoque) yanılgısı',['Geçerli argüman','Kanıt']],['“Ya benimle olursun ya da düşmanım.”','Yanlış ikilem',['Mantıklı seçim','Tümdengelim']],['“Ünlü biri söyledi, demek doğru.”','Otoriteye başvurma yanılgısı',['Bilimsel kanıt','Tümevarım']],['“Bir kere kola içersen her gün içersin, sonra hasta olursun.”','Kaygan zemin yanılgısı',['Kesin sonuç','İstatistik']]],
+    poz:[['Poz modeli neyi tanır?','Vücudun eklem noktalarını (el, dirsek, diz…)',['Sesin tonunu','Yazının rengini']],['Poz modeliyle hangi uygulama yapılır?','Hareketle oynanan oyun ya da doğru egzersiz kontrolü',['Şarkı sözü yazma','Hesap makinesi']],['Ses modeli eğitirken arka plan gürültüsü neden ayrı sınıf olmalı?','Model sessizliği/gürültüyü komut sanmasın diye',['Gerek yok','Daha renkli olsun diye']]],
+    mlTur:[['Etiketli verilerle (kedi/köpek resimleri) öğrenme?','Denetimli öğrenme',['Denetimsiz öğrenme','Pekiştirmeli öğrenme']],['Etiket olmadan benzer müşterileri gruplama?','Denetimsiz öğrenme',['Denetimli öğrenme','Ezber']],['Oyun oynayıp ödül/ceza ile öğrenen robot?','Pekiştirmeli öğrenme',['Denetimsiz öğrenme','Sözlük']]]});
+  Object.assign(KUTU,{
+    duygu:{baslik:'💬 Duygu analizi: olumlu mu, olumsuz mu?',kutular:['😊 Olumlu','😞 Olumsuz'],o:[['“Bu oyun harika, çok eğlendim!”',0],['“Kargo yine gecikti, çok kötü.”',1],['“Öğretmenimiz süper anlattı.”',0],['“Hiç beğenmedim, sıkıcıydı.”',1],['“Yemek nefisti, teşekkürler!”',0],['“Uygulama sürekli donuyor.”',1],['“En güzel gün buydu!”',0],['“Berbat bir hava.”',1]],neden:'Doğal dil işleme modelleri “harika, süper, nefis” ya da “kötü, berbat, sıkıcı” gibi kelimeleri sayarak ve bağlamı öğrenerek duyguyu tahmin eder.'},
+    mlTurK:{baslik:'🤖 Hangi öğrenme türü?',kutular:['🏷️ Denetimli','🧺 Denetimsiz','🏆 Pekiştirmeli'],o:[['Etiketli kedi–köpek resimleri',0],['Spam / güvenli işaretli e-postalar',0],['Müşterileri benzerliğe göre gruplamak',1],['Şarkıları türüne göre kendiliğinden kümelemek',1],['Satranç oynayıp kazanınca ödül alan YZ',2],['Düşmeden yürümeyi deneme-yanılmayla öğrenen robot',2]],neden:'Denetimli: etiketli örnek · Denetimsiz: etiketsiz gruplama · Pekiştirmeli: ödül-ceza ile deneme.'}});
+  Object.assign(SIRA,{
+    mlSurec:{baslik:'🔁 Makine öğrenmesi süreci',s:['❓ Problemi tanımla','📥 Veri topla','🏷️ Veriyi etiketle','✂️ Eğitim ve test verisine ayır','🧠 Modeli eğit','🧪 Test et, doğruluğu ölç','🔧 Hataları incele, veriyi iyileştir']},
+    boyut1:{baslik:'🐘 Büyükten küçüğe sırala',s:['🐘 Fil','🐄 İnek','🐕 Köpek','🐈 Kedi','🐭 Fare']},
+    boyut2:{baslik:'🌍 Büyükten küçüğe sırala',s:['☀️ Güneş','🌍 Dünya','🏔️ Dağ','🏠 Ev','🍎 Elma']},
+    boyut3:{baslik:'🔢 Büyükten küçüğe sırala',s:['9','7','5','3','1']}});
+  SISTEM.push({ad:'💬 Kural tabanlı sohbet botu',algi:[['“Merhaba” yazılırsa','👋 “Merhaba! Nasıl yardım edebilirim?”'],['“saat” kelimesi geçerse','⏰ Saati söyle'],['“hava” kelimesi geçerse','☁️ Hava durumunu göster'],['Hiçbir kural uymazsa','🤔 “Anlayamadım, tekrar yazar mısın?”']]});
+
+  /* =================== 🗺️ MAARIF KONULARI → OYUN (Satranç · YZ · Akıl-Zekâ) =================== */
+  /* her satır: [nasıl oynanır, ()=>turlar, akılda kalsın cümlesi] — sıra, Yıllık Plan’daki 12 ünitenin sırasıdır */
+  function MPLAN(T,b,st){const gl=b==='ana'?0:b==='12'?1:b==='34'?2:b==='56'?3:4,genc=gl<=1;
+    const rush=()=>[sMat1Tur(Math.min(st,2)),sAlTur(1),sCatalTur(1),sAcmazTur(),sSahVerTur(),sMatPatTur()];
+    const S={
+      ana:[['Satranç ailesinin taşlarını bul!',()=>[sTasBul(),sTasBul(),sTasBul(),sYolTur('k',1)],'Satranç tahtasında iki ordu var: beyazlar ve siyahlar.'],
+        ['Kareleri tanı, fil ile hep aynı renkte kal.',()=>[sRenkTur(),sRenkTur(),sYolTur('b',1),sRenkTur()],'Kareler açık–koyu sırayla dizilir; fil hep kendi renginde gezer.'],
+        ['Piyon askerleri ilerlet!',()=>[sHareketTur('p',0),sHareketTur('p',0),sHareketTur('p',1),sTerfiTur(false)],'Piyon ileri gider, çapraz yer, sona varınca büyür.'],
+        ['Kale kule dümdüz gider.',()=>[sHareketTur('r',0),sYolTur('r',1),sHareketTur('r',0),sYolTur('r',1)],'Kale düz çizgide gider.'],
+        ['Fil çapraz yollarda!',()=>[sHareketTur('b',0),sYolTur('b',1),sHareketTur('b',0),sYolTur('b',1)],'Fil çapraz gider.'],
+        ['At zıp zıp: L çiz!',()=>[sHareketTur('n',0),sYolTur('n',1),sYolTur('n',1),sYolTur('n',1)],'At “L” çizer ve atlar.'],
+        ['Vezir ve Şah’ı tanı.',()=>[sHareketTur('q',0),sHareketTur('k',0),sYolTur('q',1),sTasBul()],'Vezir en güçlü, şah en değerli taş.'],
+        ['Taş yeme oyunu!',()=>[sAlTur(0),sAlTur(0),sAlTur(0)],'Rakibin taşını alabilirsin; en değerlisini seç.'],
+        ['Şahını tehlikeden kaçır!',()=>[sKurtarTur('kac'),sKurtarTur('kac'),sKurtarTur('kac')],'Şah tehdit altındaysa hemen kurtarılır.'],
+        ['Mini satranç görevleri.',()=>[sYolTur('r',1),sYolTur('n',1),sAlTur(0),sYolTur('q',1)],'Her taşın kendine özgü bir yolu var.'],
+        ['Kazanmak da kaybetmek de oyunun parçası.',()=>[secSetTur('sportmen',{baslik:'🤝 Satranç ahlakı'}),sAlTur(0),secSetTur('sportmen',{baslik:'🤝 Satranç ahlakı'}),sYolTur('n',1)],'Oyundan sonra tokalaşırız.'],
+        ['Satranç şenliği: her şeyden biraz!',()=>[sTasBul(),sYolTur('n',1),sAlTur(0),sKurtarTur('kac')],'Satranç sabır ve dikkat oyunudur.']],
+      '12':[['Tahtayı, kareleri ve taşları tanı.',()=>[sTasBul(),sKareTur(),sKareTur(),sTasBul(),sRenkTur()],'Her karenin bir adı var: harf + sayı (e4).'],
+        ['Piyonun hareketlerini uygula.',()=>[sHareketTur('p',0),sHareketTur('p',1),sHareketTur('p',2),sTerfiTur(false)],'Piyon ileri gider, çapraz alır, geri dönmez.'],
+        ['Kale ve fil ile görevler.',()=>[sHareketTur('r',st),sHareketTur('b',st),sYolTur('r',2),sYolTur('b',1)],'Kale düz, fil çapraz gider.'],
+        ['Atın L hareketiyle yıldız topla.',()=>[sHareketTur('n',st),sYolTur('n',1),sYolTur('n',2),sHareketTur('n',2)],'At taşların üstünden atlayabilir.'],
+        ['Vezir ve şahın kuralları.',()=>[sHareketTur('q',st),sHareketTur('k',1),sYolTur('q',2),sHareketTur('k',2)],'Şah tehdit altındaki kareye gidemez.'],
+        ['Taşların değerini öğren.',()=>[sAlTur(0),secSetTur('deger',{baslik:'⚖️ Değiş tokuş'}),sAlTur(0),secSetTur('deger',{baslik:'⚖️ Değiş tokuş'})],'Piyon 1 · At 3 · Fil 3 · Kale 5 · Vezir 9'],
+        ['Şah çek, şahını kurtar.',()=>[sSahVerTur(),sKurtarTur('kac'),sKurtarTur('al'),sKurtarTur('kapat'),sSahVerTur()],'Kurtulmanın 3 yolu: kaç, araya gir, al.'],
+        ['Mat nedir? Bul ve yap!',()=>[sMatPatTur(),sMat1Tur(0),sMatPatTur(),sMat1Tur(0)],'Mat: şah tehditte ve kaçış yok.'],
+        ['Rok ve terfi kuralları.',()=>[sRokTur(),sTerfiTur(false),sRokTur(),sTerfiTur(false)],'Rok şahı korur; piyon sona varınca terfi eder.'],
+        ['Pat mı, mat mı?',()=>[sMatPatTur(),sMatPatTur(),sMatPatTur(),sMatPatTur()],'Pat: tehdit yok ama hamle de yok → berabere.'],
+        ['Tam oyun becerileri.',()=>[sAcilisTur(),sAlTur(0),sMat1Tur(0),sMatPatTur()],'Açılış → oyun ortası → oyun sonu.'],
+        ['Sınıf turnuvası bulmacaları.',()=>[sMat1Tur(0),sAlTur(0),sSahVerTur(),sMatPatTur()],'Sporcu ahlakı her oyunun kuralıdır.']],
+      '34':[['Satrancın hikâyesi ve tahta.',()=>[secSetTur('tarih',{baslik:'📜 Satrancın tarihi'}),secSetTur('tarih',{baslik:'📜 Satrancın tarihi'}),sTasBul(),sKareTur()],'Satranç 1500 yıllık bir düşünme oyunudur.'],
+        ['Notasyonu oku ve yaz.',()=>[sKareTur(),secSetTur('notasyon',{baslik:'✍️ Notasyon'}),sKareTur(),secSetTur('notasyon',{baslik:'✍️ Notasyon'}),secSetTur('notasyon',{baslik:'✍️ Notasyon'})],'Notasyon: Ş, V, K, F, A + kare; x = alış, + = şah, # = mat.'],
+        ['Taş değerleri ve takas.',()=>[sAlTur(1),secSetTur('deger',{baslik:'⚖️ Takas'}),sAlTur(1),sAlTur(st>=1?2:1)],'Almadan önce: “bu kare korunuyor mu?”'],
+        ['Vezir ve kale ile mat kalıpları.',()=>[sMat1Tur(0),sMat1Tur(0),sMat1Tur(1),sMatPatTur()],'Koridor ve merdiven matı temel kalıplardır.'],
+        ['Şah + vezir ile mat.',()=>[sMat1Tur(1),sOyunSonuTur('q'),sOyunSonuTur('q'),sMatPatTur()],'Şahı kenara it, kendi şahını yardıma getir.'],
+        ['Açılış ilkeleri.',()=>[sAcilisTur(),sAcilisTur(),sAcilisTur(),sAcilisTur(),sAcilisTur()],'Merkez · gelişim · rok.'],
+        ['Çatal taktiği.',()=>[sCatalTur(0),sCatalTur(1),sCatalTur(1),sCatalTur(2)],'Çatal: bir taşla iki taşa saldırı.'],
+        ['Şiş ve bağlama (açmaz).',()=>[sAcmazTur(),sAcmazTur(),sAcmazTur(),sAcmazTur()],'Açmazdaki taş hareket edemez.'],
+        ['Savunma: tehdidi gör, kurtul.',()=>[sKurtarTur('hepsi'),sKurtarTur('kapat'),sKurtarTur('al'),sKurtarTur('kac')],'Her hamleden önce rakibin tehdidine bak.'],
+        ['Oyun sonu temelleri.',()=>[sTerfiTur(false),sMat1Tur(0),sOyunSonuTur('q'),sTerfiTur(true)],'Geçer piyon oyun sonunda kraliçe olur.'],
+        ['Kendi oyununu analiz et: hatayı bul.',()=>[sMatPatTur(),sAlTur(2),sCatalTur(1),sAcmazTur()],'Hatalarından öğrenmek ustalığın yoludur.'],
+        ['Lig finali: bulmaca turnuvası.',()=>rush().slice(0,5),'Hızlı ama dikkatli!']],
+      '56':[['Satranç ve düşünme.',()=>[secSetTur('satDusunme',{baslik:'🧠 Satranç ve düşünme'}),sAlTur(1),sSahVerTur(),sMat1Tur(1)],'Aday hamle → hesap → karar.'],
+        ['Açılış planları.',()=>[sAcilisTur(),sAcilisTur(),sAcilisTur(),sAcilisTur(),sAcilisTur()],'Açılışta her hamlenin bir amacı olmalı.'],
+        ['Taktik motifler: çatal, şiş, bağlama.',()=>[sCatalTur(1),sAcmazTur(),sCatalTur(2),sAcmazTur()],'Motifleri tanımak hesabı hızlandırır.'],
+        ['Taktik motifler II: kombinasyon.',()=>[sCatalTur(2),sMat1Tur(2),sAcmazTur(),sOyunSonuTur('q')],'Kombinasyon: zorlayıcı hamleler zinciri.'],
+        ['2–3 hamlelik hesap.',()=>[sOyunSonuTur('q'),sOyunSonuTur('r'),sMat1Tur(2),sCatalTur(2)],'Önce zorlayıcı hamleler: şah, alış, tehdit.'],
+        ['Oyun ortası planı.',()=>[secSetTur('pozisyon',{baslik:'🗺️ Pozisyon'}),sAlTur(2),secSetTur('pozisyon',{baslik:'🗺️ Pozisyon'}),sCatalTur(1)],'Plan: zayıf kareleri ve açık hatları kullan.'],
+        ['Taş aktivitesi: her taş görevde!',()=>[sHareketTur('q',2),sHareketTur('n',2),sHareketTur('r',2),sYolTur('n',2)],'Aktif taş = çok kare kontrol eden taş.'],
+        ['Oyun sonu teknikleri.',()=>[sOyunSonuTur('r'),sOyunSonuTur('q'),sTerfiTur(true),sMatPatTur()],'Kale oyun sonlarında şah aktif olmalı.'],
+        ['Hızlı satranç: süreye karşı bulmaca!',()=>rush(),'Hız + doğruluk; panik yok.'],
+        ['Ünlü oyunlar ve ustalar.',()=>[secSetTur('unlu',{baslik:'🏛️ Ünlü oyunlar'}),secSetTur('unlu',{baslik:'🏛️ Ünlü oyunlar'}),sMat1Tur(2),secSetTur('unlu',{baslik:'🏛️ Ünlü oyunlar'})],'Ustaların oyunları en iyi öğretmendir.'],
+        ['Kendi oyun analizim.',()=>[sMatPatTur(),sAlTur(2),sAcmazTur(),sCatalTur(1)],'Hata defteri tut, aynı hatayı tekrarlama.'],
+        ['Okul turnuvası bulmacaları.',()=>rush(),'Centilmenlik her zaman önce gelir.']],
+      '78':[['Stratejik düşünme.',()=>[secSetTur('satDusunme',{baslik:'🧠 Stratejik düşünme'}),sAlTur(2),sCatalTur(1),sMat1Tur(2)],'Strateji: uzun vadeli plan; taktik: kısa vadeli hamle.'],
+        ['Açılış repertuvarı.',()=>[sAcilisTur(),sAcilisTur(),sAcilisTur(),sAcilisTur(),sAcilisTur()],'Kendi tarzına uygun açılışları seç ve derinleştir.'],
+        ['İleri taktik.',()=>[sCatalTur(2),sAcmazTur(),sMat1Tur(2),sOyunSonuTur('r')],'Zorlayıcı hamleleri sırayla hesapla.'],
+        ['Pozisyonel oyun.',()=>[secSetTur('pozisyon',{baslik:'🗺️ Pozisyonel oyun'}),secSetTur('pozisyon',{baslik:'🗺️ Pozisyonel oyun'}),sAcilisTur(),sAlTur(2)],'Açık hat, zayıf kare, iyi–kötü fil.'],
+        ['Hesaplama ve aday hamle.',()=>[sOyunSonuTur('q'),sOyunSonuTur('r'),sMat1Tur(2),sCatalTur(2)],'Aday hamleleri listele, her birini sonuna kadar hesapla.'],
+        ['Saldırı ve savunma.',()=>[sSahVerTur(),sKurtarTur('hepsi'),sMat1Tur(2),sKurtarTur('kapat')],'Saldırıda zorlayıcı ol, savunmada tehdidi önce gör.'],
+        ['Oyun sonu ustalığı.',()=>[sOyunSonuTur('r'),sOyunSonuTur('r'),sTerfiTur(true),sMatPatTur()],'Pat tuzağına düşme!'],
+        ['Baskı altında karar: süreye karşı.',()=>rush(),'Sakin kal, önce tehdidi kontrol et.'],
+        ['Tarihte strateji.',()=>[secSetTur('tarih',{baslik:'📜 Tarih ve strateji'}),secSetTur('oyunTeorisi',{baslik:'🎯 Strateji'}),sAcilisTur(),secSetTur('tarih',{baslik:'📜 Tarih ve strateji'})],'Stratejinin ilkeleri satrançta da savaş tarihinde de aynıdır.'],
+        ['Usta oyunu analizi.',()=>[secSetTur('unlu',{baslik:'🏛️ Usta oyunları'}),sMat1Tur(2),secSetTur('unlu',{baslik:'🏛️ Usta oyunları'}),sCatalTur(2)],'Ustaları izle, nedenini sor.'],
+        ['Gelişim planım: zayıf yönünü bul.',()=>[sMatPatTur(),sCatalTur(1),sAcmazTur(),sAlTur(2),sMat1Tur(1)],'Ölç, analiz et, hedef koy.'],
+        ['Okul şampiyonası bulmacaları.',()=>rush(),'Kazanmak kadar oyunu onurla oynamak da önemli.']]};
+    const V=gl>=3?'spam':'ucar';
+    const Y={
+      ana:[['Akıllı makineleri tanı.',()=>[kutuSet('makine'),secSetTur('yzMi',{baslik:'🔍 Akıllı mı?'}),pikselTur(st)],'Akıllı makineler görür, duyar ve öğrenir.'],
+        ['Makine gözüyle gör.',()=>[pikselTur(st),pikselTur(st),cizimTur(['artı','kare'])],'Makine resmi küçük kareler (piksel) olarak görür.'],
+        ['Sesleri tanıyan makine.',()=>[sesTur(),sesTur(),sesTur()],'Makineler sesi ince–kalın diye ayırabilir.'],
+        ['Makineye örnek göster.',()=>[egitTur('ucar','etiket'),egitTur('ucar','test'),egitTur('ucar','duzelt')],'Makine örneklerle öğrenir.'],
+        ['Canlı mı, makine mi?',()=>[kutuSet('makine'),kutuSet('robotYapar'),kutuSet('makine',4)],'Canlılar büyür ve hisseder; makineler enerjiyle çalışır.'],
+        ['Duygu kartları.',()=>[duyguTur(),duyguTur(),duyguTur(),duyguTur()],'Makine yüzden duygu tahmin eder; ama duyguyu en iyi insan anlar.'],
+        ['Çizimi tahmin et.',()=>[cizimTur(['artı','kare']),cizimTur(['çarpı','dikey çizgi']),cizimTur(['L harfi','kare'])],'Makine çizgilere bakarak tahmin eder.'],
+        ['Konuşan asistanlar.',()=>[secSetTur('yzMi',{baslik:'🗣️ Asistan'}),sesTur(),kutuSet('akilli',4)],'Asistanlar sesimizi anlayıp cevap verir.'],
+        ['Makine de yanılır.',()=>[egitTur('ucar','test'),egitTur('ucar','duzelt'),cizimTur(['üçgen','kare'])],'Makineye yeni örnekler gösterirsek daha az yanılır.'],
+        ['Yardımcı robotumu tasarla.',()=>[secSetTur('parca',{baslik:'🔧 Robot parçası'}),secSetTur('parca',{baslik:'🔧 Robot parçası'}),sistemTur()],'Robot = algıla → düşün → yap.'],
+        ['Güvenli teknoloji.',()=>[kutuSet('guvenli',4),secSetTur('guvenliSen',{baslik:'🛡️ Ne yapmalı?'}),secSetTur('guvenliSen',{baslik:'🛡️ Ne yapmalı?'})],'Emin olmadığında büyüğüne sor.'],
+        ['Minik keşifçiler sergisi.',()=>[pikselTur(st),cizimTur(['artı','kare']),duyguTur(),egitTur('ucar','test')],'Öğrendiklerimizi paylaşıyoruz!']],
+      '12':[['Yapay zekâ nedir?',()=>[kutuSet('akilli'),secSetTur('yzMi',{baslik:'🔍 YZ mi?'}),secSetTur('yzMi',{baslik:'🔍 YZ mi?'}),pikselTur(st)],'YZ öğrenebilen bilgisayar programıdır.'],
+        ['Günlük hayatta YZ.',()=>[kutuSet('yzVar',8),secSetTur('yzMi',{baslik:'🔍 YZ mi?'}),sistemTur()],'Telefon, harita, çeviri: YZ her yerde.'],
+        ['Veri nedir?',()=>[veriTur('giris'),veriTur('oku'),veriTur('oku')],'Veri = topladığımız bilgiler.'],
+        ['Örüntü bulma.',()=>[oruntuTur('12',st),cizimTur(['artı','kare']),oruntuTur('12',st),cizimTur(['çarpı','T harfi'])],'Makine örüntüleri bularak tanır.'],
+        ['Sınıflama.',()=>[kutuSet('grupla'),setTur(2),egitTur('ucar','etiket')],'Özelliklere bakarak gruplarız.'],
+        ['Makine nasıl öğrenir?',()=>[egitTur('ucar','etiket'),egitTur('ucar','test'),egitTur('ucar','duzelt')],'Etiketli örnek → model → tahmin.'],
+        ['Teachable Machine ile tanışma.',()=>[egitTur('ucar','etiket'),egitTur('ucar','test'),cizimTur(Object.keys(SABLON))],'Örnek topla, eğit, test et.'],
+        ['Çizimi tanıyan makine.',()=>[cizimTur(['artı','kare']),cizimTur(['çarpı','L harfi']),cizimTur(['T harfi','üçgen']),cizimTur(Object.keys(SABLON))],'Çizimdeki çizgiler bir örüntüdür.'],
+        ['YZ yanılabilir.',()=>[egitTur('ucar','test'),egitTur('ucar','duzelt'),cizimTur(['üçgen','kare'])],'Eksik veri = yanlış tahmin.'],
+        ['Güvenli ve nazik kullanım.',()=>[kutuSet('guvenli'),secSetTur('guvenliSen',{baslik:'🛡️ Ne yapmalı?'}),secSetTur('guvenliSen',{baslik:'🛡️ Ne yapmalı?'})],'İnternette de nazik ve dikkatli ol.'],
+        ['YZ ile yaratıcılık.',()=>[cizimTur(Object.keys(SABLON)),pikselTur(st),promptTur()],'YZ fikir verir, yaratıcı olan sensin.'],
+        ['Proje ve sergi.',()=>[pikselTur(st),egitTur('ucar','test'),cizimTur(['artı','kare']),kutuSet('guvenli',4)],'Öğrendiklerini göster!']],
+      '34':[['Yapay zekâ nedir?',()=>[kutuSet('yzVar',8),secSetTur('yzMi',{baslik:'🔍 YZ mi?'}),secSetTur('yzMi',{baslik:'🔍 YZ mi?'}),egitTur('ucar','etiket')],'YZ veriden öğrenir; insan zekâsı ise anlar ve hisseder.'],
+        ['Veri toplama ve grafik.',()=>[veriTur('giris'),veriTur('oku'),veriTur('giris'),veriTur('oku')],'Veriyi tabloya ve grafiğe dök, örüntüyü gör.'],
+        ['Örüntü ve tahmin.',()=>[oruntuTur('34',st),cizimTur(['artı','çarpı','kare']),veriTur('oku'),oruntuTur('34',st)],'Örüntüyü bulan geleceği tahmin eder.'],
+        ['Sınıflandırma ve etiket.',()=>[egitTur('ucar','etiket'),kutuSet('grupla'),egitTur('ucar','test')],'Doğru etiket = doğru öğrenme.'],
+        ['Görüntü tanıma modeli.',()=>[pikselTur(st),cizimTur(['L harfi','T harfi','üçgen']),cizimTur(Object.keys(SABLON)),egitTur('ucar','test')],'Model, piksellerdeki örüntüleri öğrenir.'],
+        ['Ses tanıma modeli.',()=>[sesTur(),sesTur(),kutuSet('niyet',6)],'Ses modeli frekansları ve kelimeleri öğrenir.'],
+        ['Modeli iyileştirme.',()=>[egitTur('ucar','test'),egitTur('ucar','duzelt'),egitTur('spam','test'),egitTur('spam','duzelt')],'Daha çeşitli veri = daha iyi model.'],
+        ['Makine öğrenmesi ve Scratch.',()=>[sistemTur(),egitTur('ucar','test'),olayTur(3),sistemTur()],'Model kararını bir oyuna bağlayabiliriz.'],
+        ['Üretici YZ ile tanışma.',()=>[promptTur(),haluTur(),haluTur()],'Üretici YZ yeni içerik üretir ama uydurabilir.'],
+        ['YZ ve etik.',()=>[kutuSet('sorumlu',6),secSetTur('etik',{baslik:'⚖️ Etik'}),secSetTur('etik',{baslik:'⚖️ Etik'}),haluTur()],'Adalet, gizlilik ve telif.'],
+        ['YZ projesi.',()=>[siraSet('mlSurec'),agacTur('hayvan',6),egitTur('ucar','duzelt'),sistemTur()],'Problem → veri → model → test.'],
+        ['Proje sunumu.',()=>[egitTur('ucar','test'),agacTur('meyve',6),veriTur('oku'),haluTur()],'Projeni anlatırken nasıl çalıştığını da göster.']],
+      '56':[['YZ ve toplum.',()=>[kutuSet('yzVar',8),secSetTur('etik',{baslik:'⚖️ YZ ve toplum'}),kutuSet('meslek',6)],'YZ toplumu değiştiriyor; yönünü insanlar belirler.'],
+        ['Veri okuryazarlığı.',()=>[veriTur('giris'),veriTur('oku'),veriTur('oku'),pyTur(['ortalama'])],'Veriyi okumak, sorgulamak ve görselleştirmek.'],
+        ['Makine öğrenmesi türleri.',()=>[kutuSet('mlTurK'),secSetTur('mlTur',{baslik:'🤖 Öğrenme türü'}),egitTur('spam','etiket')],'Denetimli · denetimsiz · pekiştirmeli.'],
+        ['Görüntü modeli projesi.',()=>[pikselTur(st),cizimTur(Object.keys(SABLON)),egitTur('ucar','test'),egitTur('ucar','duzelt')],'Görüntü modeli piksellerden öğrenir.'],
+        ['Ses ve poz modelleri.',()=>[sesTur(),secSetTur('poz',{baslik:'🕺 Poz ve ses modelleri'}),secSetTur('poz',{baslik:'🕺 Poz ve ses modelleri'}),sistemTur()],'Poz modeli eklem noktalarını takip eder.'],
+        ['Sohbet botları.',()=>[kutuSet('niyet',7),secSetTur('yakin',{baslik:'🔤 Kelime yakınlığı'}),sistemTur()],'Kural tabanlı bot kurallara, YZ bot ise öğrendiği örüntülere göre cevap verir.'],
+        ['Üretici YZ ve prompt.',()=>[promptTur(),haluTur(),promptTur(),haluTur()],'Rol + kitle + biçim + ayrıntı = iyi prompt.'],
+        ['YZ ile oyun (ML4Kids).',()=>[sistemTur(),egitTur('spam','test'),olayTur(3)],'Modelin kararı oyundaki olayı tetikler.'],
+        ['Önyargı ve adalet.',()=>[egitTur('spam','test'),egitTur('spam','duzelt'),secSetTur('etik',{baslik:'⚖️ Önyargı'})],'Dengesiz veri, adaletsiz model.'],
+        ['Gizlilik ve güvenlik.',()=>[kutuSet('guvenli'),kutuSet('sorumlu',6),secSetTur('etik',{baslik:'🔒 Gizlilik'})],'Kişisel veri senin; korumak senin hakkın.'],
+        ['YZ projesi: tasarım döngüsü.',()=>[siraSet('tasarim'),siraSet('mlSurec'),agacTur('meslek',8),egitTur('spam','duzelt')],'Tasarla → yap → test et → iyileştir.'],
+        ['Proje sergisi.',()=>[egitTur('spam','test'),agacTur('hayvan',8),promptTur(),haluTur()],'Ürününü ve nasıl çalıştığını anlat.']],
+      '78':[['YZ okuryazarlığı.',()=>[kutuSet('yzVar',8),secSetTur('yzMi',{baslik:'🔍 YZ mi?'}),haluTur(),secSetTur('etik',{baslik:'⚖️ YZ ve biz'})],'YZ okuryazarı: ne yaptığını bilir, sınırlarını sorgular, sorumlu kullanır.'],
+        ['Veri bilimi temelleri.',()=>[veriTur('giris'),veriTur('oku'),pyTur(['ortalama']),pyTur(['filtre'])],'Veri → özet (ortalama, dağılım) → grafik → yorum.'],
+        ['Makine öğrenmesi süreci.',()=>[siraSet('mlSurec'),egitTur('spam','etiket'),egitTur('spam','test'),egitTur('spam','duzelt')],'Veri – eğitim – test – değerlendirme.'],
+        ['Sinir ağlarının mantığı.',()=>[noronTur(),noronTur(),agacTur('hayvan',8)],'Nöron: girdi × ağırlık → toplam → eşik → karar.'],
+        ['Görüntü ve ses modelleri.',()=>[pikselTur(st),cizimTur(Object.keys(SABLON)),sesTur(),egitTur('ucar','duzelt')],'Çok sınıflı modellerde hata tablosuna bak.'],
+        ['Python ile veri.',()=>[pyTur(['liste']),pyTur(['filtre']),pyTur(['ortalama']),siraSet('py4')],'Liste + döngü + koşul = veri işleme.'],
+        ['Doğal dil işleme.',()=>[kutuSet('duygu'),kutuSet('niyet',7),secSetTur('yakin',{baslik:'🔤 Kelime yakınlığı',neden:'Dil modelleri kelimeleri sayılara çevirir; yakın anlamlı kelimeler yakın durur.'})],'Metin → kelimeler → sayılar → anlam.'],
+        ['Prompt mühendisliği.',()=>[promptTur(),promptTur(),haluTur(),haluTur()],'Rol, bağlam, biçim, ayrıntı; ve her zaman doğrula.'],
+        ['Etik, önyargı ve telif.',()=>[kutuSet('sorumlu',8),secSetTur('etik',{baslik:'⚖️ Etik'}),secSetTur('etik',{baslik:'⚖️ Etik'}),egitTur('spam','test')],'YZ kararlarında sorumluluk insandadır.'],
+        ['YZ ve meslekler.',()=>[kutuSet('meslek',8),secSetTur('etik',{baslik:'🔮 Gelecek'}),secSetTur('yaratici',{baslik:'💡 İnsan becerisi'})],'Tekrarlayan işi makine, yaratıcılığı insan yapar.'],
+        ['Uçtan uca YZ projesi.',()=>[siraSet('mlSurec'),egitTur('spam','duzelt'),agacTur('meslek',8),sistemTur()],'Problem → veri → model → uygulama → değerlendirme.'],
+        ['Proje sunumu ve portfolyo.',()=>[egitTur('spam','test'),noronTur(),promptTur(),haluTur()],'Ne yaptın, nasıl çalışıyor, neyi geliştirirsin?']]};
+    const A={
+      ana:[['Oyunla düşünelim!',()=>[oruntuTur('ana',st),farkTur('ana'),hafizaTur(3,3)],'Oyun oynarken beynimiz çalışır.'],
+        ['Eşleştir ve grupla.',()=>[kutuSet('grupla'),setTur(2),hafizaTur(3,3)],'Aynı olanları bul, grupla.'],
+        ['Farkı bul.',()=>[farkTur('ana'),farkTur('ana'),farkTur('ana'),farkTur('ana')],'Dikkatli bakan farkı görür.'],
+        ['Renk ve şekil örüntüleri.',()=>[oruntuTur('ana',st),oruntuTur('ana',st),oruntuTur('ana',1),oruntuTur('ana',2)],'Örüntü tekrar eden düzendir.'],
+        ['Hafıza oyunları.',()=>[hafizaTur(3,3),simonTur(3),hafizaTur(3,4),simonTur(4)],'Hafıza oyunla güçlenir.'],
+        ['Yapboz: parça ve bütün.',()=>[dondurTur(),dondurTur(),simetriTur(),dondurTur()],'Parçaları döndürerek bütünü kurarız.'],
+        ['Labirent.',()=>[kodTur(()=>lvSira('ana',st,false)),kodTur(()=>lvSira('ana',st,false)),kodTur(()=>lvSira('ana',Math.min(2,st+1),false))],'Önce yolu düşün, sonra yürü.'],
+        ['Sayı ve miktar.',()=>[sayiTur(),sayiTur(),sayiTur(),sayiTur()],'Tek tek dokunarak say.'],
+        ['Büyükten küçüğe sırala.',()=>[siraSet('boyut1'),siraSet('boyut2'),siraSet('boyut3'),sayiTur()],'Sıralamak karşılaştırmaktır.'],
+        ['Mini strateji oyunları.',()=>[nimTur(0),ucTasTur(0),nimTur(0)],'Hamle yapmadan önce düşün.'],
+        ['Takım bulmacaları.',()=>[oruntuTur('ana',st),farkTur('ana'),hafizaTur(3,3),sayiTur()],'Birlikte düşünmek daha güçlü.'],
+        ['Minik dahiler şenliği.',()=>[oruntuTur('ana',st),simonTur(3),farkTur('ana'),ucTasTur(0)],'Her oyunda yeni bir şey öğrendik!']],
+      '12':[['Akıl oyunlarına giriş.',()=>[oruntuTur('12',st),farkTur('12'),hafizaTur(3,4),nimTur(0)],'Akıl oyunlarının kuralları vardır.'],
+        ['Görsel dikkat.',()=>[farkTur('12'),schulteTur(3),farkTur('12'),schulteTur(3)],'Gözünü sistemli gezdir.'],
+        ['Hafıza oyunları.',()=>[hafizaTur(3,4),simonTur(4),hafizaTur(4,5),simonTur(5)],'Şekil kurarak hatırla.'],
+        ['Örüntü ve sıralama.',()=>[oruntuTur('12',st),oruntuTur('12',st),siralaTur(5,false),oruntuTur('12',Math.min(2,st+1))],'Kuralı bul, sıradakini tahmin et.'],
+        ['Tangram ve şekiller.',()=>[dondurTur(),dondurTur(),dondurTur(),simetriTur()],'Şekli zihninde döndür.'],
+        ['Labirent ve yol.',()=>[kodTur(()=>lvSira('12',st,false)),kodTur(()=>lvSira('12',st,false)),sYolTur('n',1)],'En kısa yolu planla.'],
+        ['Sayı bulmacaları.',()=>[sudokuTur(4),islemTur(1),sihirliTur(3),islemTur(1)],'Sayılarla mantık kur.'],
+        ['Mantık soruları.',()=>[mantikIzTur(3,false),mantikIzTur(3,false),mantikIzTur(3,false)],'İpuçlarıyla seçenekleri ele.'],
+        ['Üç taş ve Nim.',()=>[ucTasTur(st),nimTur(st),ucTasTur(Math.min(2,st+1)),nimTur(Math.min(2,st+1))],'Kazanma stratejisini keşfet.'],
+        ['Simetri ve ayna.',()=>[simetriTur(),simetriTur(),simetriTur(),dondurTur()],'Aynada sağ ve sol yer değiştirir.'],
+        ['Takım bulmaca yarışı.',()=>[oruntuTur('12',st),sudokuTur(4),hafizaTur(4,5),schulteTur(3)],'Her takım üyesinin bir gücü var.'],
+        ['Akıl oyunları turnuvası.',()=>[nimTur(2),ucTasTur(1),dortTasTur(0)],'Kurallara uy, rakibine saygı göster.']],
+      '34':[['Zekâ oyunlarına giriş.',()=>[oruntuTur('34',st),setTur(2),hafizaTur(4,4),sudokuTur(4)],'Her oyun farklı bir zekâ becerisi çalıştırır.'],
+        ['Dikkat ve hız.',()=>[setTur(3),schulteTur(4),farkTur('34'),stroopTur(10)],'Hız ve doğruluk birlikte.'],
+        ['Hafıza teknikleri.',()=>[hafizaTur(4,5),hafizaTur(4,6),nBackTur(1),hafizaTur(5,6)],'Gruplamak ve şekil kurmak hafızayı güçlendirir.'],
+        ['Sayısal örüntüler.',()=>[oruntuTur('34',st),oruntuTur('34',st),oruntuTur('34',1),oruntuTur('56',0)],'Farkları incele: +, ×, kareler.'],
+        ['Sudoku.',()=>[sudokuTur(4),sudokuTur(st===2?6:4),sudokuTur(6)],'Satır, sütun, bölge: üç kural aynı anda.'],
+        ['KenKen ve işlem bulmacaları.',()=>[islemTur(2),islemTur(2),sudokuTur(4),islemTur(2)],'Sonuçtan geriye düşün.'],
+        ['Tangram ve pentomino.',()=>[dondurTur(),dondurTur(),dondurTur(),simetriTur()],'Parçaları döndür ve yerleştir.'],
+        ['Mantık ızgaraları.',()=>[mantikIzTur(3,true),mantikIzTur(3,true),mantikIzTur(3,true)],'Tablo kur, ele, yerleştir.'],
+        ['Strateji oyunları: Mangala.',()=>[mangalaTur(st),dortTasTur(st)],'Hesaplayarak oynamak kazandırır.'],
+        ['Uzamsal zekâ.',()=>[dondurTur(),dondurTur(),kalemTur('altigen'),simetriTur()],'Şekilleri zihninde döndür.'],
+        ['Bulmaca maratonu.',()=>[oruntuTur('34',st),sudokuTur(4),mantikIzTur(3,true),schulteTur(4),sifreTur('34',st)],'Farklı bulmaca, farklı beceri.'],
+        ['Zekâ oyunları turnuvası.',()=>[nimTur(2),ucTasTur(2),dortTasTur(1),mangalaTur(1)],'Saygı ve centilmenlik.']],
+      '56':[['Düşünme becerileri.',()=>[secSetTur('dusunme',{baslik:'🧠 Düşünme türleri'}),oruntuTur('56',st),mantikIzTur(4,true)],'Kendi düşünmeni fark et: üst biliş.'],
+        ['Akıl yürütme.',()=>[mantikIzTur(4,true),secSetTur('tumevarim',{baslik:'🔎 Tümevarım / tümdengelim'}),oruntuTur('56',st),secSetTur('tumevarim',{baslik:'🔎 Tümevarım / tümdengelim'})],'Tümevarım: örnekten kurala · tümdengelim: kuraldan örneğe.'],
+        ['Sudoku (orta–zor).',()=>[sudokuTur(6),sudokuTur(st===2?9:6),sudokuTur(9)],'Aday sayıları ele.'],
+        ['Mantık ızgaraları.',()=>[mantikIzTur(4,true),mantikIzTur(4,true),mantikIzTur(4,true)],'Çok değişkenli tablo, sabırlı eleme.'],
+        ['Uzamsal problemler.',()=>[dondurTur(),dondurTur(),kalemTur('yildiz'),dondurTur()],'Döndürme ve açınım.'],
+        ['Sayı bulmacaları.',()=>[islemTur(3),sihirliTur(5),islemTur(3),sudokuTur(6)],'KenKen ve Kakuro: işlem + mantık.'],
+        ['Strateji ve oyun teorisi.',()=>[nimTur(2),secSetTur('oyunTeorisi',{baslik:'🎯 Oyun teorisi'}),ucTasTur(2),secSetTur('oyunTeorisi',{baslik:'🎯 Oyun teorisi'})],'Kazanma stratejisi hesaplanabilir.'],
+        ['Hafıza ve dikkat.',()=>[nBackTur(2),hafizaTur(5,7),stroopTur(12),nBackTur(2)],'Çalışan bellek egzersizle güçlenir.'],
+        ['Yaratıcı düşünme.',()=>[secSetTur('yaratici',{baslik:'💡 Yaratıcı düşünme'}),secSetTur('yaratici',{baslik:'💡 Yaratıcı düşünme'}),dondurTur(),secSetTur('yaratici',{baslik:'💡 Yaratıcı düşünme'})],'Farklı çözümler üret, sonra değerlendir.'],
+        ['Eleştirel düşünme.',()=>[secSetTur('elestirel',{baslik:'🔍 Eleştirel düşünme'}),secSetTur('elestirel',{baslik:'🔍 Eleştirel düşünme'}),secSetTur('yanilgi',{baslik:'⚠️ Mantık yanılgısı'}),secSetTur('elestirel',{baslik:'🔍 Eleştirel düşünme'})],'Kanıt iste, kaynağı sorgula.'],
+        ['Bulmaca tasarımı.',()=>[sudokuTur(6),sihirliTur(5),mantikIzTur(4,true)],'İyi bulmacanın tek çözümü olur.'],
+        ['Zekâ oyunları şampiyonası.',()=>[nimTur(2),ucTasTur(2),dortTasTur(2),mangalaTur(2)],'Strateji + sabır + saygı.']],
+      '78':[['Üst düzey düşünme.',()=>[secSetTur('dusunme',{baslik:'🧠 Üst biliş'}),mantikIzTur(4,true),oruntuTur('78',st),hanoiTur(3)],'Nasıl düşündüğünü bilmek, daha iyi düşünmeni sağlar.'],
+        ['Mantıksal akıl yürütme.',()=>[mantikIzTur(4,true),secSetTur('tumevarim',{baslik:'🔎 Akıl yürütme'}),mantikTur(2),mantikIzTur(4,true)],'Öncüller doğruysa ve akıl yürütme geçerliyse sonuç kesindir.'],
+        ['İleri sudoku ve kakuro.',()=>[sudokuTur(9),islemTur(4),sudokuTur(9)],'Tek aday ve gizli tekil teknikleri.'],
+        ['Uzamsal zekâ.',()=>[dondurTur(),dondurTur(),kalemTur('cicek'),dondurTur()],'3B düşünme: döndür, aç, katla.'],
+        ['Oyun teorisi ve strateji.',()=>[secSetTur('oyunTeorisi',{baslik:'🎯 Oyun teorisi'}),nimTur(2),secSetTur('oyunTeorisi',{baslik:'🎯 Oyun teorisi'}),ucTasTur(2)],'Rasyonel karar: rakibin de en iyisini yapacağını varsay.'],
+        ['Algoritmik bulmacalar.',()=>[hanoiTur(3),hanoiTur(4),siralaTur(6,false),aramaTur(100)],'Özyineleme ve verimlilik.'],
+        ['Olasılık ve tahmin.',()=>[olasilikTur(),olasilikTur(),olasilikTur(),olasilikTur()],'Çok deneme yapınca sonuç olasılığa yaklaşır.'],
+        ['İleri hafıza teknikleri.',()=>[nBackTur(2),hafizaTur(5,8),nBackTur(3),hafizaTur(5,9)],'Hafıza sarayı ve gruplama.'],
+        ['Mantık yanılgıları.',()=>[secSetTur('yanilgi',{baslik:'⚠️ Mantık yanılgısı'}),secSetTur('yanilgi',{baslik:'⚠️ Mantık yanılgısı'}),secSetTur('yanilgi',{baslik:'⚠️ Mantık yanılgısı'}),secSetTur('elestirel',{baslik:'🔍 Eleştirel düşünme'})],'Sağlam argüman: kanıt + geçerli mantık.'],
+        ['Yaratıcı problem çözme.',()=>[secSetTur('yaratici',{baslik:'💡 Yaratıcı çözüm'}),hanoiTur(4),secSetTur('yaratici',{baslik:'💡 Yaratıcı çözüm'}),mantikIzTur(4,true)],'Problemi farklı açılardan gör.'],
+        ['Zekâ oyunu tasarımı.',()=>[sudokuTur(9),sihirliTur(6),mantikIzTur(4,true),sifreTur('78',2)],'İyi oyun: net kural, adil başlangıç, tek çözüm.'],
+        ['Şampiyona ve değerlendirme.',()=>[nimTur(2),ucTasTur(2),dortTasTur(2),mangalaTur(2)],'Gelişimini ölç, yeni hedef koy.']]};
+    return ({S,Y,A})[T][b];}
+
   /* =================== 🗺️ PLAN: ünite → oyun =================== */
   const tk=(n,f)=>Array.from({length:n},()=>f);
   const OZET={
@@ -4279,6 +4565,8 @@ const ACILIS=[["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", ["e2e
       ['Farklı bulmaca türleri farklı beceriler çalıştırır.','Zor olanı sabırla, adım adım çöz.','Takım hâlinde düşünmek güçlendirir.'],
       ['Kurallara uymak ve saygı turnuvanın temeli.','Kazanmayı ve kaybetmeyi yönetmek.','Her oyunda bir şey öğrenirsin.']]};
   function PLAN(sp){const {T,b,u,st}=sp,genc=b==='ana'||b==='12',gl=b==='ana'?0:b==='12'?1:b==='34'?2:b==='56'?3:4;let ik='🎮',ad='',nasil='',tr=[];
+    if(T!=='R'){const row=MPLAN(T,b,st)[u];const ad2=String(sp.unite||sp.konu||'').replace(/^Tanışalım:\s*/,'').replace(/\s·\s.*$/,'');const z0=sp.z||'';
+      return {ik:{S:'♟️',Y:'🧠',A:'🧩'}[T],ad:ad2,gorev:esc(z0)+(z0?'<br>':'')+'<small>'+esc(sp.konu)+'</small>',nasil:row[0]+' Her turda bir görev var; cevaptan sonra kısa açıklamayı oku. Az hatayla bitirirsen ⭐⭐⭐!',turlar:row[1](),ozet:[z0?'🎯 '+esc(z0):'','💡 '+row[2],sp.bec?'🧩 Beceri: '+esc(sp.bec):''].filter(Boolean)};}
     const sira_=n=>tk(n,kodTur(()=>lvSira(b,st,!genc))),dongu_=n=>tk(n,kodTur(()=>lvDongu(b,st))),kosul_=n=>tk(n,kodTur(()=>lvKosul(b,st))),kural_=n=>tk(n,kodTur(()=>lvKural(b,st))),hata_=n=>tk(n,kodTur(()=>lvHata(b,st))),tah_=n=>tk(n,tahminTur(b,st)),fonk_=n=>tk(n,kodTur(()=>lvFonk(b,st)));
     const KOD='Blokları sırayla ekle, ▶ Çalıştır’a bas, robotu izle. Hata yaparsan düzeltip tekrar dene; az blokla bitirirsen 3 yıldız!';
     if(T==='R'){ik='🤖';
@@ -4421,16 +4709,255 @@ const DP=(function(){
   const SINIFLAR=['Ana Sınıfı','1A','2A','3A','4A','5A','6A','7A','8A'];
   const RENK={'1A':'#ffef1a','2A':'#f7981d','3A':'#f24a3f','4A':'#5b0f63','5A':'#19e6f0','6A':'#9be33c','7A':'#ff1ee8','8A':'#1e8ef5','Ana Sınıfı':'#f59ac7'};
   const TR={R:{ad:'Robotik-Kodlama',ik:'🤖',r:['#7c3aed','#22d3ee'],v:'robokod'},Y:{ad:'Yapay Zekâ',ik:'🧠',r:['#0891b2','#22d3ee'],v:'yz'},S:{ad:'Satranç',ik:'♟️',r:['#059669','#34d399'],v:'satranc'},A:{ad:'Akıl-Zekâ Oyunları',ik:'🧩',r:['#db2777','#f472b6'],v:'akil'}};
-  /* ---- Yıllık üniteler: [konu, kazanım, "etkinlik1;etkinlik2;etkinlik3"] — her ünite 3 hafta ---- */
-  const ROBO={"ana":[["Tanışalım: Robotlar Nerede?","Çevresindeki makineleri ve robotları fark eder.","Robot resmi avı;\"Robot ol\" dans oyunu;Kutudan robot boyama"],["Önce–Sonra Sıralama","Günlük olayları doğru sıraya koyar.","Diş fırçalama kartları;Sandviç sıralama oyunu;Kendi sıra şeridini yap"],["Yönler: İleri–Geri–Sağ–Sol","Temel yön kavramlarını kullanır.","Yön şarkısı;Yere çizili yolda yürüme;Arkadaşını yönlendir"],["Oklarla Komut Verelim","Ok kartlarıyla basit bir yolu tarif eder.","Ok kartı oyunu;Halı labirenti;Hazine avı yolu"],["Renk ve Şekil Örüntüleri","Basit örüntüyü sürdürür ve oluşturur.","Boncuk dizme;Renk treni oyunu;Kendi örüntünü yap"],["Tekrar Eden Hareketler","Tekrar eden hareketleri fark eder.","Alkış–zıpla dansı;Şarkıdaki tekrarlar;Tekrar kolyesi"],["Eğer… O Zaman","Basit neden-sonuç kurallarını uygular.","Kırmızı ışıkta dur oyunu;Havaya göre kıyafet;Kural kartları"],["Hata Bul, Düzelt!","Yanlış adımı bulup düzeltir.","Karışık yol kartları;Robot şaşırdı oyunu;Düzelt ve dene"],["Sanal Robotla Tanışma","Tahtadaki sanal robota yön komutu verir.","Robot Lab: Hedefe Git;Sırayla komut ver;Takım görevi"],["Robotumu Tasarlıyorum","Hayalindeki robotu tasarlayıp anlatır.","Atık malzemeden robot;Robotuna isim ver;Robotunu tanıt"],["Birlikte Kodlayalım","Arkadaşlarıyla bir görevi birlikte tamamlar.","Takım labirenti;Sırayla kodlama;Grup yolu çizimi"],["Küçük Mucitler Sergisi","Yaptıklarını paylaşır, arkadaşını dinler.","Sergi hazırlığı;Robot geçidi;Aile ile paylaşım"]],
-    "12":[["Tanışalım: Kodlama Nedir?","Kodlamanın günlük hayattaki yerini fark eder.","Evdeki makineler sohbeti;Robot öğretmen oyunu;Atölye kural panosu"],["Algoritma: Adım Adım","Bir işi adımlara böler.","Sandviç algoritması;Adım kartları;Kendi algoritmanı çiz"],["Yön ve Konum","Izgarada yön ve konum belirtir.","Kareli kâğıt yolları;Satır–sütun oyunu;Hazine haritası"],["Ekransız Kodlama Kartları","Ok komutlarıyla bir yolu programlar.","Kart dizisi;Arkadaşını kodla;Labirent görevleri"],["Örüntü ve Tekrar","Tekrarı fark edip kısaltır.","Desen boyama;Tekrarı say;x3 gösterimi"],["Döngülerle Kısaltma","Tekrar eden komutları döngüyle yazar.","Dans döngüsü;Kare çizme;Robot Lab: Kare Çiz"],["Hata Ayıklama","Programdaki hatayı bulup düzeltir.","Bozuk yol kartları;Böcek avı;Düzelt–dene"],["ScratchJr ile Tanışma","Bloklarla karakteri hareket ettirir.","ScratchJr turu;Karakteri yürüt;Ses ekle"],["Olaylar: Dokun ve Başla","Bir olayla komut başlatır.","Dokununca konuşan karakter;Başla bayrağı;Mini sahne"],["Hikâye Kodlayalım","Kısa bir hikâyeyi bloklarla canlandırır.","Hikâye kurgula;Sahne ve karakter;Canlandır"],["Sanal Robot Görevleri","Hedefe ulaşan komut dizisi kurar.","Robot Lab görevleri;Engel aş;Takım yarışı"],["Mini Proje ve Sergi","Ürününü tanıtır, arkadaşına geri bildirim verir.","Proje seçimi;Yapım;Sergi"]],
-    "34":[["Tanışalım: Bilgisayarla Düşünme","Problem çözme adımlarını açıklar.","Günlük problemi parçala;Algoritma kartları;Atölye kuralları"],["Algoritma ve Akış Şeması","Basit akış şeması çizer.","Sabah rutini şeması;Başla–Bitir sembolleri;Eşli şema"],["Scratch'e Giriş","Scratch arayüzünü tanır, kukla hareket ettirir.","Arayüz turu;Kuklayı yürüt;Dekor değiştir"],["Olaylar ve Sıralı Komutlar","Olay bloklarıyla sahne kurar.","Tıkla–konuş;Tuşla hareket;Diyalog sahnesi"],["Döngüler","Tekrarı döngü bloklarıyla kurar.","Çokgen çizimi;Sürekli hareket;Animasyon"],["Koşullar: Eğer–İse","Koşula göre karar veren program yazar.","Kenara değince dön;Renge dokununca;Mini labirent"],["Değişkenler ve Puan","Değişkenle skor tutar.","Skor değişkeni;Toplama oyunu;Süre sayacı"],["Oyun Tasarımı","Basit bir oyunu planlayıp kodlar.","Oyun fikri;Kodlama;Test et"],["Hata Ayıklama Ustalığı","Hataları sistemli biçimde bulur.","Hata avı;Eşli kontrol;Hata listesi"],["Robotik: Sensör–Motor–Kontrol","Robotun temel parçalarını açıklar.","Robot ol oyunu;Girdi–çıktı kartları;Sanal robot"],["Sanal Robot Görevleri","Döngü ve koşullu robot görevleri çözer.","Robot Lab: Engelleri Aş;Zikzak Yol;Takım görevi"],["Yıl Sonu Proje Sergisi","Projesini sunar, gelişimini değerlendirir.","Proje planı;Yapım;Sergi ve sertifika"]],
-    "56":[["Tanışalım: Dijital Dünyada Üretmek","Üretici teknoloji kullanıcısı olmanın önemini açıklar.","Tüketici–üretici tartışması;Atölye sözleşmesi;Yıl hedefi"],["Problem Çözme ve Ayrıştırma","Karmaşık problemi alt problemlere ayırır.","Problem parçalama;Akış şeması;Sözde kod"],["Scratch ile İleri Animasyon","Çoklu kukla ve mesajlaşma kullanır.","Mesaj yayınla;Çoklu kukla;Animasyon filmi"],["İç İçe Döngü ve Koşullar","İç içe yapıları kurar.","İç içe döngü desenleri;Koşullu döngü;Mini oyun"],["Değişkenler ve Listeler","Değişken ve liste ile veri yönetir.","Skor ve can;Listeyle soru bankası;Quiz oyunu"],["Fonksiyonlar (Kendi Bloğum)","Tekrar eden işi fonksiyonla paketler.","Kendi blok;Parametre;Desen üretici"],["Oyun Projesi","Kurallı bir oyunu tasarlayıp geliştirir.","Oyun tasarım belgesi;Geliştirme;Akran testi"],["micro:bit ve MakeCode","Girdi–çıktı ile fiziksel hesaplama yapar (simülatör).","LED ile ifade;Buton olayı;Adım sayar"],["Sensörlerle Karar","Sensör verisine göre karar verir.","Işık sensörü;Sıcaklık göstergesi;Uyarı sistemi"],["Robotik Görevler","Robot görevini planlayıp kodlar.","Robot Lab zor görevler;Rota planlama;Takım yarışması"],["Python'a Giriş","Temel Python komutlarını yazar.","print ve değişken;Döngü;Basit hesap makinesi"],["Proje Sergisi","Projesini tanıtır, geri bildirimle geliştirir.","Proje;Sunum;Sergi"]],
-    "78":[["Tanışalım: Teknoloji ve Gelecek","Kodlamanın meslekler ve toplum üzerindeki etkisini tartışır.","Geleceğin meslekleri;Atölye sözleşmesi;Yıl proje fikri"],["Algoritma Tasarımı ve Verimlilik","Farklı çözümleri verimliliğe göre karşılaştırır.","Kartla sıralama algoritmaları;Adım sayma;Sözde kod"],["Python Temelleri","Değişken, veri tipi ve girdi–çıktı kullanır.","input ve print;Tip dönüşümü;Mini hesaplayıcı"],["Koşullar ve Mantıksal Operatörler","and, or, not ile karar yapıları kurar.","Not hesaplayıcı;Şifre kontrolü;Karar ağacı"],["Döngüler (for ve while)","Döngülerle tekrar eden işlemleri otomatikleştirir.","Çarpım tablosu;Tahmin oyunu;Desen"],["Listeler ve Veri İşleme","Liste ile veri toplar ve filtreler.","Sınıf verisi;Ortalama bulma;Sıralama"],["Fonksiyonlar ve Modüler Kod","Fonksiyonlarla kodu modüllere ayırır.","Fonksiyon yaz;Parametre ve dönüş;Kod düzenleme"],["Web'e Giriş (HTML/CSS)","Basit bir web sayfası tasarlar.","HTML iskeleti;CSS ile stil;Kişisel sayfa"],["Fiziksel Hesaplama ve Sensörler","Sensör verisini işleyen devre ve program tasarlar.","micro:bit veya Arduino simülatörü;Sensör okuma;Alarm sistemi"],["Robotik ve Otonom Sistemler","Otonom davranışın mantığını açıklar ve simüle eder.","Engelden kaçma mantığı;Robot Lab zor görevler;Rota planlama"],["Takım Projesi (Tasarım Döngüsü)","Problem–tasarım–test döngüsüyle ürün geliştirir.","Problem tanımı;Prototip;Test ve iyileştirme"],["Proje Sunumu ve Portfolyo","Projesini sunar, dijital portfolyo hazırlar.","Sunum;Portfolyo;Değerlendirme"]]};
-  const YZK=[["Akıllı Makineler Nerede?","Evde ve okulda akıllı makineleri fark eder.","Akıllı makine avı;Sesli asistan oyunu;Robot mu insan mı?"],["Makineler Nasıl Görür?","Makinelerin kamera ile “gördüğünü” keşfeder.","Göz–kamera eşleştirme;Emoji avı (öğretmenle);Şekil tanıma oyunu"],["Çiz, Tahmin Etsin","Çizimini makinenin tahmin edebildiğini görür.","Quick, Draw! sınıfça;Tahmin oyunu;En hızlı çizim"],["Makineye Örnek Gösterelim","Makinenin örneklerle öğrendiğini fark eder.","Meyve kartlarıyla öğretme;Renk grupları;Makine şaşırdı mı?"],["Grupla ve Sınıfla","Nesneleri özelliklerine göre gruplar.","Renk–şekil gruplama;Canlı–cansız;Büyük–küçük"],["Sesleri Tanıyan Makine","Makinenin sesleri ayırt edebildiğini görür.","Ses tahmin oyunu;Hayvan sesleri;Alkış–ıslık"],["AutoDraw ile Resim","Yapay zekânın çizime yardım ettiğini görür.","AutoDraw gösterimi;Karala–tamamla;Resim sergisi"],["Makine Yanılabilir mi?","Makinelerin de hata yapabileceğini anlar.","Yanıltma oyunu;Doğru mu yanlış mı?;Neden yanıldı?"],["Güvenli Teknoloji","Ekran ve teknoloji kurallarını bilir.","Ekran süresi kuralları;Büyüğüne sor;Güvenli kullanım kartları"],["Robot ve Yapay Zekâ Arkadaşım","Akıllı bir robotun neler yapabileceğini hayal eder.","Akıllı robot çizimi;Robotun görevleri;Rol oyunu"],["Akıllı Ev Hayali","Teknolojinin hayatı kolaylaştırdığını fark eder.","Akıllı ev tasarımı;Işık–ses komutları;Grup posteri"],["Küçük YZ Kâşifleri Sergisi","Öğrendiklerini paylaşır.","Sergi hazırlığı;Gösteri;Aile ile paylaşım"]];
-  const YZB=[["Yapay Zekâ Nedir?","YZ’yi tanımlar ve günlük hayattaki örneklerini açıklar.","“Bu YZ mi?” tahmin oyunu;Günlük hayatta YZ avı;YZ zaman tüneli"],["Örüntü Tanıma","Makinenin örüntü tanıdığını fark eder.","Quick, Draw! denemesi;Örüntü kartları;İnsan mı makine mi?"],["Veri Nedir?","Verinin ne olduğunu ve nasıl toplandığını açıklar.","Sınıf anketi;Veri tablosu;Grafiğe dök"],["Makine Örneklerden Öğrenir","Veri → model ilişkisini kavrar.","Etiketleme oyunu;Eğitim–test ayrımı;Makineyi yanılt"],["Kendi Modelini Eğit I","Örnek toplayıp basit bir görüntü modeli eğitir.","Teachable Machine: 2 sınıf;Örnek topla;Test et"],["Kendi Modelini Eğit II","Modeli test eder, veriyle iyileştirir.","Yanlış tahminleri incele;Veri ekle;Doğruluğu karşılaştır"],["Ses ve Dil","Ses ve dil tanıma uygulamalarını inceler.","Sesli asistan denemesi;Semantris kelime oyunu;Ses modeli"],["Akıllı Kararlar: Karar Ağacı","Basit bir karar ağacı kurar.","Hayvan tahmin ağacı;Akinator sohbeti;Kendi ağacını çiz"],["Üretici Yapay Zekâ","Üretici YZ’nin nasıl içerik ürettiğini açıklar.","AutoDraw ve metin örnekleri;İnsan mı YZ mi?;Doğrulama alışkanlığı"],["YZ Etiği ve Güvenlik","YZ’nin hatalarını, önyargısını ve sorumlu kullanımı tartışır.","Önyargı örnekleri;Kişisel veri kuralları;Tartışma kartları"],["YZ + Robotik: Akıllı Sistemler","YZ’yi bir tepkiye ya da robota bağlar.","Model → sahne bağlama;Akıllı robot senaryosu;Gösterim"],["YZ Proje Sergisi","YZ ürününü planlayıp sunar.","Proje planı;Yapım;Sunum ve sertifika"]];
-  const SAT=[["Tahta ve Taşlarla Tanışma","Satranç tahtasını, kareleri ve taşları tanır.","Tahtayı kur;Taş eşleştirme;“Kim nerede durur?” oyunu"],["Kale ve Fil","Kale ve filin hareketini uygular.","Kale yolculuğu;Fil çapraz oyunu;Tek taşla hedef"],["Vezir ve Şah","Vezir ve şahın hareketini uygular.","Vezir avı;Şah yürüyüşü;Mini bulmacalar"],["At ve Piyon","At ve piyonun hareketini uygular.","At zıplaması;Piyon yarışı;Piyon terfisi"],["Taş Alma ve Taş Değerleri","Taş almayı ve taşların göreli değerini bilir.","Taş değeri kartları;Al ya da alma;Puan hesaplama"],["Şah Çekme ve Savunma","Şah çekmeyi ve şahı korumayı anlar.","Şah tehdidi bulmacası;Kaç–kapat–al;Eşli alıştırma"],["Mat ve Pat","Mat ile pat arasındaki farkı ayırt eder.","Mat mı pat mı?;Tek hamlede mat;Mini oyun"],["Rok ve Özel Kurallar","Rok, terfi ve geçerken almayı uygular.","Rok yap;Terfi yarışı;Kural kartları"],["Açılış İlkeleri","Merkez kontrolü ve taş geliştirmeyi kavrar.","İyi–kötü açılış;Merkez oyunu;Kısa oyunlar"],["Taktikler: Çatal ve Açmaz","Basit taktikleri fark eder.","Çatal bulmacaları;Açmaz bulmacaları;Taktik istasyonu"],["Oyun Sonu: Temel Matlar","Kale ve vezirle temel matları bilir.","Vezir + şah matı;Kale merdiveni;Eşli alıştırma"],["Sınıf Turnuvası","Kurallara uyar, sporcu ahlakı gösterir.","Eşleşmeler;Turnuva;Ödül töreni"]];
-  const AKIL=[["Örüntü ve Dikkat","Örüntüyü fark eder ve sürdürür.","Örüntü tamamlama;Farkı bul;Dikkat oyunu"],["Hafıza Oyunları","Kısa süreli hafızasını güçlendirir.","Hafıza kartları;Kim kayboldu?;Dijital hafıza"],["Eşleştirme ve Sınıflandırma","Özelliklere göre eşleştirir ve gruplar.","Eşleştirme kartları;Grup sıralama;Hızlı eşleştir"],["Mantık Bulmacaları","Mantık yürüterek problem çözer.","Mantık ızgarası;Robot yolu bulmacası;Bulmaca istasyonu"],["Görsel-Uzamsal Düşünme","Şekilleri birleştirerek yeni şekiller oluşturur.","Tangram;Çizim robotu;Şekil tamamlama"],["Sayı Bulmacaları","Sayısal mantık bulmacalarını çözer.","Sihirli kare;Sudoku (yaşa göre);Sayı zinciri"],["Strateji Oyunları I","Basit strateji kurar, ileriyi düşünür.","Üç taş;Nim oyunu;Eşli turnuva"],["Kelime ve Dil Oyunları","Kelime bulmacalarıyla düşünme hızını artırır.","Kelime avı;Anagram;Kelime zinciri"],["Hız ve Dikkat","Hızlı ve doğru karar verir.","Köstebek vur;Balon patlat;Refleks oyunu"],["Strateji Oyunları II","Daha derin plan yapar.","Mangala;Dört taş;Strateji istasyonu"],["Bulmaca Maratonu","Farklı türde bulmacaları çözer.","İstasyonlu bulmaca turu;Takım yarışı;Süreli görev"],["Akıl Oyunları Turnuvası","Öğrendiklerini oyunda uygular; kazanmayı ve kaybetmeyi yönetir.","Turnuva;Puan tablosu;Ödül töreni"]];
+  /* ---- Yıllık Plan · Maarif konuları (ünite|kazanım|etkinlik1;2;3|beceri) — her ünite 3 ders ---- */
+  const MAARIF={
+ana:{
+robokod:`Tanışalım: Robotlar Nerede?|Çevresindeki makineleri ve robotları fark eder.|Robot resmi avı;"Robot ol" dans oyunu;Kutudan robot boyama|Merak · İletişim
+Önce–Sonra Sıralama|Günlük olayları doğru sıraya koyar.|Diş fırçalama kartları;Sandviç sıralama oyunu;Kendi sıra şeridini yap|Sıralama · Problem çözme
+Yönler: İleri–Geri–Sağ–Sol|Temel yön kavramlarını kullanır.|Yön şarkısı;Yere çizili yolda yürüme;Arkadaşını yönlendir|Uzamsal düşünme
+Oklarla Komut Verelim|Ok kartlarıyla basit bir yolu tarif eder.|Ok kartı oyunu;Halı labirenti;Hazine avı yolu|Algoritmik düşünme
+Renk ve Şekil Örüntüleri|Basit örüntüyü sürdürür ve oluşturur.|Boncuk dizme;Renk treni oyunu;Kendi örüntünü yap|Örüntü tanıma
+Tekrar Eden Hareketler|Tekrar eden hareketleri fark eder.|Alkış–zıpla dansı;Şarkıdaki tekrarlar;Tekrar kolyesi|Döngü sezgisi
+Eğer… O Zaman|Basit neden-sonuç kurallarını uygular.|Kırmızı ışıkta dur oyunu;Havaya göre kıyafet;Kural kartları|Neden-sonuç
+Hata Bul, Düzelt!|Yanlış adımı bulup düzeltir.|Karışık yol kartları;Robot şaşırdı oyunu;Düzelt ve dene|Deneme-yanılma
+Sanal Robotla Tanışma|Tahtadaki sanal robota yön komutu verir.|Robot Lab: Hedefe Git;Sırayla komut ver;Takım görevi|Dijital okuryazarlık
+Robotumu Tasarlıyorum|Hayalindeki robotu tasarlayıp anlatır.|Atık malzemeden robot;Robotuna isim ver;Robotunu tanıt|Yaratıcılık
+Birlikte Kodlayalım|Arkadaşlarıyla bir görevi birlikte tamamlar.|Takım labirenti;Sırayla kodlama;Grup yolu çizimi|İş birliği
+Küçük Mucitler Sergisi|Yaptıklarını paylaşır, arkadaşını dinler.|Sergi hazırlığı;Robot geçidi;Aile ile paylaşım|Özgüven · Paylaşım`,
+satranc:`Tanışalım: Satranç Masalı|Satranç tahtası ve taşlarla tanışır.|Satranç masalı;Taşlara dokun–tanı;Siyah-beyaz kareler|Merak
+Tahta: Açık ve Koyu Kareler|Tahtadaki renk düzenini fark eder.|Dama boyama;Kare atlama oyunu;Renk bulmacası|Görsel algı
+Piyon Asker|Piyonun ileri gidişini canlandırır.|Piyon yürüyüşü;Piyon yarışı;Piyon şarkısı|Kural takibi
+Kale Kule|Kalenin düz gidişini gösterir.|Düz yol oyunu;Kale ile hedefe git;Kule yapımı|Yön kavramı
+Fil Çapraz Gider|Filin çapraz gidişini gösterir.|Çapraz yürüyüş;Aynı renk kuralı;Fil avı|Uzamsal düşünme
+At Zıplar|Atın L hareketini oyunla dener.|L yürüyüşü;Atlı zıplama;At ile hazine|Uzamsal düşünme
+Vezir ve Şah|Vezir ve şahın özelliklerini söyler.|Saray masalı;Şahı koru oyunu;Vezirin gücü|Koruma · Sorumluluk
+Taş Yeme Oyunları|Taşların yeme kuralını uygular.|Mini oyunlar;Piyon savaşı;Yem avı|Strateji
+Şahı Koru|Şahın tehlikede olduğunu fark eder.|Şah çekme oyunu;Kaç–Koru;Tehlike avı|Dikkat
+Mini Satranç Oyunları|Az taşla oyunlar oynar.|Piyon oyunu;Kale–piyon oyunu;Takım oyunu|Sabır
+Kazanmak ve Kaybetmek|Oyun sonunda duygularını yönetir.|Tokalaşma;Tebrik etme;Duygu kartları|Sporcu ahlakı
+Minik Satranç Şenliği|Öğrendiklerini şenlikte gösterir.|Taş geçidi;Mini turnuva;Madalya töreni|Özgüven`,
+yz:`Tanışalım: Akıllı Makineler|Konuşan ve tanıyan makineleri fark eder.|Evdeki akıllı eşyalar;Makine mi insan mı?;Resim avı|Merak
+Görerek Tanıma|Nesneleri özelliklerine göre gruplar.|Renk–şekil gruplama;Meyve sepeti;Tahmin et|Sınıflama
+Sesle Tanıma|Sesleri dinleyip ayırt eder.|Hayvan sesleri;Kimin sesi?;Ses tahmini|Dikkat
+Örnekle Öğrenme|Örneklere bakarak tahmin yapar.|Kedi mi köpek mi kartları;Çok örnek–az örnek;Tahmin oyunu|Örüntü tanıma
+Canlı mı Makine mi?|Canlı ile makine arasındaki farkı söyler.|Karşılaştırma kartları;Robot hayvan tasarımı;Anlatma|Karşılaştırma
+Duygu Kartları|Yüz ifadelerinden duyguyu tanır.|Duygu kartları;Ayna oyunu;Emoji eşleştirme|Sosyal-duygusal
+Çizimi Tahmin Et|Makinenin çizim tahminini gözlemler.|Quick Draw izleme;Çiz–tahmin et;Grup oyunu|Dijital okuryazarlık
+Konuşan Asistanlar|Asistanlara nazik ve güvenli soru sorar.|Öğretmenle asistan denemesi;Nazik dil;Güvenli kullanım|Sorumluluk
+Makine de Yanılır|Makinenin de yanılabileceğini fark eder.|Yanılan tahminler;Birlikte düzelt;Sohbet|Eleştirel düşünme
+Yardımcı Robotumu Tasarla|Yardımcı bir robot hayal edip anlatır.|Robot çizimi;Ne işe yarar?;Anlatma|Yaratıcılık
+Güvenli Teknoloji|Ekran süresi ve güvenlik kurallarını bilir.|Kural şarkısı;Doğru–yanlış;Aile ile kural|Sorumluluk
+Minik Keşifçiler Sergisi|Öğrendiklerini paylaşır.|Sergi;Tasarım geçidi;Aile paylaşımı|Özgüven`,
+akil:`Tanışalım: Oyunla Düşünelim|Grup oyunlarında kurallara uyar.|Tanışma oyunu;Kural kartları;Isınma bulmacası|Kural takibi
+Eşleştirme|Aynı ve benzer olanı eşleştirir.|Gölge eşleştirme;Çiftini bul;Hafıza kartı|Görsel algı
+Farkı Bul|İki resim arasındaki farkları bulur.|Farkı bul;Eksik parça;Dikkat oyunu|Dikkat
+Renk ve Şekil Örüntüleri|Örüntüyü sürdürür.|Boncuk dizme;Renk treni;Örüntü kartı|Örüntü tanıma
+Hafıza Oyunları|Gördüklerini hatırlar.|Kim kayıp?;Tepsi oyunu;Kart hafıza|Hafıza
+Yapboz ve Parça–Bütün|Parçaları birleştirip bütünü oluşturur.|Yapboz;Kes–birleştir;Tangram tanışma|Uzamsal düşünme
+Labirent|Basit labirentte yol bulur.|Kâğıt labirent;Yer labirenti;Okla yol|Planlama
+Sayı ve Miktar Oyunları|Miktarları karşılaştırır ve sayar.|Zar oyunu;Çok–az;Sayı avı|Matematiksel düşünme
+Büyükten Küçüğe Sıralama|Nesneleri boyuta göre sıralar.|İç içe kaplar;Sıralama kartları;Kule yapma|Sıralama
+Mini Strateji Oyunları|Sıra beklemeyi ve basit stratejiyi uygular.|Üç taş;Mini nim;Takım oyunu|Strateji · Sabır
+Takım Bulmacaları|Arkadaşlarıyla birlikte bulmaca çözer.|Takım yapbozu;Birlikte labirent;Ödül|İş birliği
+Minik Dahiler Şenliği|Öğrendiği oyunları gösterir.|Oyun istasyonları;Aile oyunu;Madalya|Özgüven`},
+'12':{
+robokod:`Tanışalım: Kodlama Nedir?|Kodlamanın günlük hayattaki yerini fark eder.|Evdeki makineler sohbeti;Robot öğretmen oyunu;Atölye kural panosu|Merak
+Algoritma: Adım Adım|Bir işi adımlara böler.|Sandviç algoritması;Adım kartları;Kendi algoritmanı çiz|Algoritmik düşünme
+Yön ve Konum|Izgarada yön ve konum belirtir.|Kareli kâğıt yolları;Satır–sütun oyunu;Hazine haritası|Uzamsal düşünme
+Ekransız Kodlama Kartları|Ok komutlarıyla bir yolu programlar.|Kart dizisi;Arkadaşını kodla;Labirent görevleri|Problem çözme
+Örüntü ve Tekrar|Tekrarı fark edip kısaltır.|Desen boyama;Tekrarı say;x3 gösterimi|Örüntü tanıma
+Döngülerle Kısaltma|Tekrar eden komutları döngüyle yazar.|Dans döngüsü;Kare çizme;Robot Lab: Kare Çiz|Döngü
+Hata Ayıklama|Programdaki hatayı bulup düzeltir.|Bozuk yol kartları;Böcek avı;Düzelt–dene|Deneme-yanılma
+ScratchJr ile Tanışma|Bloklarla karakteri hareket ettirir.|ScratchJr turu;Karakteri yürüt;Ses ekle|Dijital okuryazarlık
+Olaylar: Dokun ve Başla|Bir olayla komut başlatır.|Dokununca konuşan karakter;Başla bayrağı;Mini sahne|Neden-sonuç
+Hikâye Kodlayalım|Kısa bir hikâyeyi bloklarla canlandırır.|Hikâye kurgula;Sahne ve karakter;Canlandır|Yaratıcılık
+Sanal Robot Görevleri|Hedefe ulaşan komut dizisi kurar.|Robot Lab görevleri;Engel aş;Takım yarışı|İş birliği
+Mini Proje ve Sergi|Ürününü tanıtır, arkadaşına geri bildirim verir.|Proje seçimi;Yapım;Sergi|Özgüven`,
+satranc:`Tanışalım: Satranç Tahtası|Tahtayı doğru kurar, kareleri tanır.|Tahta kurma;Satır–sütun;Kare bulma|Uzamsal düşünme
+Piyon|Piyon hareketini ve yemesini uygular.|Piyon yarışı;Çapraz yeme;Piyon savaşı|Kural takibi
+Kale ve Fil|Kale ve filin hareketlerini uygular.|Kale labirenti;Fil yolu;Taş avı|Uzamsal düşünme
+At|Atın L hareketini uygular.|At turu;Hedef kare;At bulmacası|Problem çözme
+Vezir ve Şah|Vezir ve şah hareketlerini uygular.|Vezir avı;Şah yürüyüşü;Mini oyun|Kural takibi
+Taşların Değeri|Taşların puan değerlerini karşılaştırır.|Değer kartları;Takas oyunu;Puan hesabı|Matematiksel düşünme
+Şah Çekme ve Kurtulma|Şah çekmeyi ve kurtulma yollarını bilir.|Kaç–Kapat–Ye;Bulmacalar;Eşli oyun|Problem çözme
+Mat Nedir?|Basit mat durumlarını tanır.|Mat mı değil mi?;Tek hamlede mat;Bulmaca|Analitik düşünme
+Rok ve Terfi|Özel kuralları uygular.|Rok uygulaması;Piyon terfisi;Mini oyun|Kural takibi
+Pat ve Beraberlik|Pat durumunu ayırt eder.|Pat bulmacası;Sayma oyunu;Sohbet|Eleştirel düşünme
+Tam Oyun|Kurallara uyarak tam oyun oynar.|Tam oyun;Kare adları;Tokalaşma|Sporcu ahlakı
+Sınıf Turnuvası|Turnuvada kurallara uyar, sonucu kabullenir.|Turnuva;Madalya;Değerlendirme|Özgüven`,
+yz:`Tanışalım: Yapay Zekâ Nedir?|Yapay zekâyı basitçe tanımlar.|Bu YZ mi? oyunu;Örnek avı;Sohbet|Merak
+Günlük Hayatta YZ|Çevresindeki YZ örneklerini bulur.|Evde ve okulda YZ;Resimli liste;Paylaşım|Farkındalık
+Veri Nedir?|Veriyi toplar ve gruplar.|Sınıf anketi;Resimli grafik;Yorumlama|Veri okuryazarlığı
+Örüntü Bulma|Verideki örüntüyü fark eder.|Şekil örüntüleri;Tahmin;Oyun|Örüntü tanıma
+Sınıflama|Nesneleri etiketleyip sınıflar.|Etiketleme oyunu;Sepet ayırma;Kontrol et|Sınıflama
+Makine Nasıl Öğrenir?|Örnekle öğrenmeyi canlandırır.|Öğretmen–makine oyunu;Çok örnek;Test|Model kavramı
+Teachable Machine ile Tanışma|Öğretmen eşliğinde resimle basit model eğitir.|Model eğit;Test et;Sohbet|Dijital okuryazarlık
+Çizimi Tanıyan Makine|Quick Draw ile tahmini gözlemler.|Quick Draw;AutoDraw;Karşılaştır|Deneme
+YZ Yanılabilir|Makinenin hata yapabileceğini açıklar.|Yanılan örnekler;Neden?;Düzelt|Eleştirel düşünme
+Güvenli ve Nazik Kullanım|YZ'yi güvenli kullanma kurallarını bilir.|Kural panosu;Senaryolar;Aile ile kural|Sorumluluk
+YZ ile Yaratıcılık|YZ destekli çizim ve hikâye dener.|Hikâye tamamla;Resim fikri;Paylaş|Yaratıcılık
+Proje ve Sergi|Basit bir YZ fikrini sunar.|Fikir;Poster;Sergi|Sunum`,
+akil:`Tanışalım: Akıl Oyunları|Oyun kurallarını anlar ve uygular.|Tanışma oyunu;Kural kartları;Isınma|Kural takibi
+Görsel Dikkat|Dikkatini sürdürerek ayrıntıyı fark eder.|Farkı bul;Gizli nesne;Süreli oyun|Dikkat
+Hafıza Oyunları|Görsel ve işitsel hafızasını kullanır.|Kart hafıza;Sıra hatırla;Hafıza zinciri|Hafıza
+Örüntü ve Sıralama|Şekil ve sayı örüntülerini tamamlar.|Örüntü kartı;Eksik şekil;Kendi örüntün|Örüntü tanıma
+Tangram|Parçalarla şekil oluşturur.|Hayvan şekilleri;Serbest tasarım;Eşli yarış|Uzamsal düşünme
+Labirent ve Yol|Planlayarak labirent çözer.|Kâğıt labirent;Zaman yarışı;Kendi labirentin|Planlama
+Sayı Bulmacaları|Basit sayı bulmacaları çözer.|Sayı zinciri;4x4 mini sudoku;Toplam bulmacası|Matematiksel düşünme
+Mantık Soruları|Basit mantık sorularını çözüp açıklar.|Kim nerede?;Doğru–yanlış;Sohbet|Mantıksal düşünme
+Üç Taş ve Nim|Kazanma stratejisi arar.|Üç taş;Nim;Eşli turnuva|Strateji
+Simetri ve Ayna|Simetriyi tamamlar.|Ayna çizimi;Simetri tamamla;Kelebek|Uzamsal düşünme
+Takım Bulmaca Yarışı|İş birliğiyle bulmaca çözer.|İstasyonlar;Takım puanı;Ödül|İş birliği
+Akıl Oyunları Turnuvası|Öğrendiği oyunlarda yarışır.|Turnuva;Final;Madalya|Sporcu ahlakı`},
+'34':{
+robokod:`Tanışalım: Bilgisayarla Düşünme|Problem çözme adımlarını açıklar.|Günlük problemi parçala;Algoritma kartları;Atölye kuralları|Problem çözme
+Algoritma ve Akış Şeması|Basit akış şeması çizer.|Sabah rutini şeması;Başla–Bitir sembolleri;Eşli şema|Algoritmik düşünme
+Scratch'e Giriş|Scratch arayüzünü tanır, kukla hareket ettirir.|Arayüz turu;Kuklayı yürüt;Dekor değiştir|Dijital okuryazarlık
+Olaylar ve Sıralı Komutlar|Olay bloklarıyla sahne kurar.|Tıkla–konuş;Tuşla hareket;Diyalog sahnesi|Neden-sonuç
+Döngüler|Tekrarı döngü bloklarıyla kurar.|Çokgen çizimi;Sürekli hareket;Animasyon|Döngü
+Koşullar: Eğer–İse|Koşula göre karar veren program yazar.|Kenara değince dön;Renge dokununca;Mini labirent|Karar verme
+Değişkenler ve Puan|Değişkenle skor tutar.|Skor değişkeni;Toplama oyunu;Süre sayacı|Veri kavramı
+Oyun Tasarımı|Basit bir oyunu planlayıp kodlar.|Oyun fikri;Kodlama;Test et|Tasarım
+Hata Ayıklama Ustalığı|Hataları sistemli biçimde bulur.|Hata avı;Eşli kontrol;Hata listesi|Eleştirel düşünme
+Robotik: Sensör–Motor–Kontrol|Robotun temel parçalarını açıklar.|Robot ol oyunu;Girdi–çıktı kartları;Sanal robot|Sistem düşüncesi
+Sanal Robot Görevleri|Döngü ve koşullu robot görevleri çözer.|Robot Lab: Engelleri Aş;Zikzak Yol;Takım görevi|Problem çözme
+Yıl Sonu Proje Sergisi|Projesini sunar, gelişimini değerlendirir.|Proje planı;Yapım;Sergi ve sertifika|Özgüven · Sunum`,
+satranc:`Tanışalım: Satrancın Tarihi|Satrancın tarihini ve kurallarını hatırlar.|Tarih hikâyesi;Tahta kurma;Kural tekrarı|Kültürel bilgi
+Notasyon|Hamleleri notasyonla yazar ve okur.|Kare adları;Hamle yazma;Oyun kaydı|Okuryazarlık
+Taş Değerleri ve Takas|Doğru takas kararı verir.|Takas bulmacası;Puan hesabı;Oyun|Karar verme
+Mat Kalıpları I|Vezir ve kale ile mat kurar.|Merdiven matı;Bulmaca;Eşli çalışma|Analitik düşünme
+Mat Kalıpları II|Şah ve vezir ile mat eder.|Teknik çalışma;Süreli deneme;Yarış|Planlama
+Açılış İlkeleri|Merkez ve gelişim ilkesini uygular.|İyi–kötü açılış;Çoban matını önleme;Oyun|Stratejik düşünme
+Taktik: Çatal|Çatal desenini bulur.|Çatal bulmacaları;At çatalı;Oyun|Örüntü tanıma
+Taktik: Şiş ve Bağlama|Şiş ve bağlamayı kullanır.|Bulmaca istasyonu;Eşli çözüm;Oyun|Problem çözme
+Savunma|Tehdidi fark edip savunur.|Tehdit avı;Savunma bulmacası;Oyun|Dikkat
+Oyun Sonu Temelleri|Temel piyon oyun sonlarını bilir.|Kare kuralı;Geçer piyon;Uygulama|Planlama
+Kendi Oyununu Analiz Et|Hatalarından öğrenir.|Oyun kaydı;Hata defteri;Eşli analiz|Öz değerlendirme
+Sınıf Ligi ve Final|Turnuvada stratejik oynar.|Lig maçları;Final;Ödül|Sporcu ahlakı`,
+yz:`Tanışalım: Yapay Zekâ Nedir?|YZ'yi tanımlar, insan zekâsıyla karşılaştırır.|Bu YZ mi?;Karşılaştırma;Tartışma|Eleştirel düşünme
+Veri Toplama ve Grafik|Veri toplayıp grafikle gösterir.|Sınıf anketi;Sütun grafiği;Yorum|Veri okuryazarlığı
+Örüntü ve Tahmin|Veriden tahmin yapar.|Hava durumu tahmini;Örüntü kartları;Tartışma|Analitik düşünme
+Sınıflandırma ve Etiket|Etiketli veriyle sınıflama yapar.|Etiketleme;Karar ağacı;Oyun|Sınıflama
+Görüntü Tanıma Modeli|Teachable Machine ile görüntü modeli eğitir.|Veri topla;Eğit;Test et|Model kavramı
+Ses Tanıma Modeli|Ses modeli eğitip test eder.|Ses örnekleri;Eğit;Komutla kontrol|Deneme
+Modeli İyileştirme|Daha çok ve çeşitli veriyle modeli iyileştirir.|Hatalı tahminler;Veri ekle;Karşılaştır|Deneme-yanılma
+Makine Öğrenmesi ve Scratch|Modeli bir oyuna bağlar (ML4Kids).|Proje seçimi;Model;Oyun|Algoritmik düşünme
+Üretici YZ ile Tanışma|Öğretmen eşliğinde metin ve görsel üretimini dener.|Görsel üret;Metin üret;Karşılaştır|Dijital okuryazarlık
+YZ ve Etik|Önyargı, gizlilik ve telif kavramlarını tartışır.|Vaka tartışması;Kurallar;Poster|Etik · Sorumluluk
+YZ Projesi|Bir sorunu YZ ile çözen fikir geliştirir.|Problem;Model;Demo|Problem çözme
+Proje Sunumu|YZ projesini sunar.|Sunum;Sergi;Değerlendirme|Sunum`,
+akil:`Tanışalım: Zekâ Oyunları|Oyun türlerini ve kurallarını tanır.|Oyun istasyonları;Kurallar;Isınma|Kural takibi
+Dikkat ve Hız|Dikkat ve algı hızını geliştirir.|SET oyunu;Farkı bul;Süreli görev|Dikkat
+Hafıza Teknikleri|Hafıza stratejisi kullanır.|Hikâye zinciri;Kart hafıza;Tekrar|Hafıza
+Sayısal Örüntüler|Sayı dizilerinin kuralını bulur.|Eksik sayı;Kural bul;Kendi dizini yaz|Örüntü tanıma
+Sudoku|4x4 ve 6x6 sudoku çözer.|Mini sudoku;Strateji;Yarış|Mantıksal düşünme
+KenKen ve İşlem Bulmacaları|İşlem ve mantığı birleştirir.|KenKen;İşlem bulmacası;Kendi bulmacan|Matematiksel düşünme
+Tangram ve Pentomino|Parçalarla karmaşık şekiller kurar.|Tangram;Pentomino;Tasarım|Uzamsal düşünme
+Mantık Izgaraları|Kim–nerede ızgarası çözer.|Mantık ızgarası;Eşli çözüm;Kendi ızgaran|Tümdengelim
+Strateji Oyunları|Mangala ve reversi ile strateji kurar.|Mangala;Reversi;Turnuva|Strateji
+Uzamsal Zekâ|Küp ve katlama problemlerini çözer.|Küp açınımı;Kâğıt katlama;Yarış|Uzamsal düşünme
+Bulmaca Maratonu|Farklı bulmaca türlerini çözer.|İstasyonlar;Takım;Puan|Problem çözme
+Zekâ Oyunları Turnuvası|Turnuvada stratejik oynar.|Turnuva;Final;Ödül|Sporcu ahlakı`},
+'56':{
+robokod:`Tanışalım: Dijital Dünyada Üretmek|Üretici teknoloji kullanıcısı olmanın önemini açıklar.|Tüketici–üretici tartışması;Atölye sözleşmesi;Yıl hedefi|Dijital vatandaşlık
+Problem Çözme ve Ayrıştırma|Karmaşık problemi alt problemlere ayırır.|Problem parçalama;Akış şeması;Sözde kod|Problem çözme
+Scratch ile İleri Animasyon|Çoklu kukla ve mesajlaşma kullanır.|Mesaj yayınla;Çoklu kukla;Animasyon filmi|Algoritmik düşünme
+İç İçe Döngü ve Koşullar|İç içe yapıları kurar.|İç içe döngü desenleri;Koşullu döngü;Mini oyun|Mantıksal düşünme
+Değişkenler ve Listeler|Değişken ve liste ile veri yönetir.|Skor ve can;Listeyle soru bankası;Quiz oyunu|Veri okuryazarlığı
+Fonksiyonlar (Kendi Bloğum)|Tekrar eden işi fonksiyonla paketler.|Kendi blok;Parametre;Desen üretici|Soyutlama
+Oyun Projesi|Kurallı bir oyunu tasarlayıp geliştirir.|Oyun tasarım belgesi;Geliştirme;Akran testi|Tasarım
+micro:bit ve MakeCode|Girdi–çıktı ile fiziksel hesaplama yapar (simülatör).|LED ile ifade;Buton olayı;Adım sayar|Fiziksel hesaplama
+Sensörlerle Karar|Sensör verisine göre karar verir.|Işık sensörü;Sıcaklık göstergesi;Uyarı sistemi|Sistem düşüncesi
+Robotik Görevler|Robot görevini planlayıp kodlar.|Robot Lab zor görevler;Rota planlama;Takım yarışması|Problem çözme
+Python'a Giriş|Temel Python komutlarını yazar.|print ve değişken;Döngü;Basit hesap makinesi|Dijital okuryazarlık
+Proje Sergisi|Projesini tanıtır, geri bildirimle geliştirir.|Proje;Sunum;Sergi|Sunum · Özgüven`,
+satranc:`Tanışalım: Satranç ve Düşünme|Satrancın düşünme becerilerine katkısını açıklar.|Tartışma;Seviye belirleme oyunu;Hedef|Üst biliş
+Açılış Planları|Açılışta plan ve gelişim yapar.|İtalyan açılışı;Merkez mücadelesi;Oyun|Stratejik düşünme
+Taktik Motifler I|Çatal, şiş ve bağlama motiflerini birleştirir.|Karma bulmacalar;Süreli çözüm;Oyun|Örüntü tanıma
+Taktik Motifler II|Açılan saldırı ve saptırmayı kullanır.|Bulmaca istasyonu;Eşli çözüm;Oyun|Problem çözme
+Kombinasyon Hesabı|2-3 hamlelik hesap yapar.|Hesap bulmacaları;Aday hamle;Oyun|Hesaplama
+Oyun Ortası Planı|Zayıf kare ve plan belirler.|Pozisyon analizi;Plan yazma;Oyun|Planlama
+Taş Aktivitesi|Taşları aktif karelere yerleştirir.|İyi–kötü taş;Pozisyon oyunu;Analiz|Değerlendirme
+Oyun Sonu Teknikleri|Kale ve piyon oyun sonlarını uygular.|Temel kale oyun sonları;Uygulama;Yarış|Teknik beceri
+Hızlı Satranç ve Süre|Süreyi verimli kullanır.|Saat kullanımı;Hızlı oyun;Değerlendirme|Zaman yönetimi
+Ünlü Oyunlar|Ünlü bir oyunu analiz eder.|Oyun izleme;Tartışma;Kendi yorumun|Eleştirel düşünme
+Kendi Oyun Analizim|Oyununu analiz ederek gelişim planı yapar.|Hata defteri;Motorla kontrol;Hedef|Öz değerlendirme
+Okul Turnuvası|Turnuvada sporcu ahlakıyla oynar.|Turnuva;Final;Ödül|Sporcu ahlakı`,
+yz:`Tanışalım: YZ ve Toplum|YZ'nin toplumdaki etkilerini tartışır.|Örnek vakalar;Tartışma;Yıl hedefi|Dijital vatandaşlık
+Veri Okuryazarlığı|Veri toplar, düzenler ve görselleştirir.|Veri seti;Tablo;Grafik|Veri okuryazarlığı
+Makine Öğrenmesi Türleri|Denetimli ve denetimsiz öğrenmeyi karşılaştırır.|Kartlarla ayırt et;Örnek;Tartışma|Kavramsal düşünme
+Görüntü Modeli Projesi|Görüntü modeli eğitip doğruluğunu ölçer.|Veri seti;Eğit;Doğruluk ölç|Model kavramı
+Ses ve Poz Modelleri|Ses ve poz modelleriyle etkileşimli uygulama yapar.|Ses modeli;Poz modeli;Uygulama|Deneme
+Sohbet Botları|Sohbet botunun çalışma mantığını açıklar.|Kural tabanlı bot;Karşılaştırma;Tasarım|Algoritmik düşünme
+Üretici YZ ve Prompt|Etkili prompt yazar, çıktıyı değerlendirir.|Prompt denemeleri;Karşılaştır;Doğrula|Eleştirel düşünme
+YZ ile Oyun (ML4Kids)|Modeli bir oyuna entegre eder.|Proje;Kodlama;Test|Tasarım
+Önyargı ve Adalet|Modeldeki önyargıyı fark eder.|Önyargılı veri deneyi;Tartışma;Çözüm|Etik
+Gizlilik ve Güvenlik|Kişisel veriyi korumanın yollarını bilir.|Senaryolar;Kurallar;Poster|Sorumluluk
+YZ Projesi (Tasarım Döngüsü)|Gerçek bir soruna YZ çözümü tasarlar.|Problem;Prototip;Test|Problem çözme
+Proje Sergisi|Projesini sunar, geri bildirim alır.|Sunum;Sergi;Değerlendirme|Sunum`,
+akil:`Tanışalım: Düşünme Becerileri|Farklı düşünme türlerini tanır.|Isınma bulmacası;Tartışma;Hedef|Üst biliş
+Akıl Yürütme|Tümevarım ve tümdengelim uygular.|Mantık soruları;Kural bulma;Tartışma|Mantıksal düşünme
+Sudoku (Orta–Zor)|Gelişmiş sudoku stratejisi kullanır.|Aday sayılar;Süreli çözüm;Yarış|Analitik düşünme
+Mantık Izgaraları|Çok değişkenli ızgara çözer.|Izgara;Eşli çözüm;Kendi sorun|Tümdengelim
+Uzamsal Problemler|3B düşünme problemlerini çözer.|Küp sayma;Açınım;Döndürme|Uzamsal düşünme
+Sayı Bulmacaları|KenKen ve Kakuro çözer.|KenKen;Kakuro;Yarış|Matematiksel düşünme
+Strateji ve Oyun Teorisi|Kazanma stratejisini analiz eder.|Nim stratejisi;Mangala;Analiz|Stratejik düşünme
+Hafıza ve Dikkat|Çalışma belleğini geliştirir.|N-geri oyunu;Hafıza sarayı;Tekrar|Hafıza
+Yaratıcı Düşünme|Farklı çözüm yolları üretir.|Alternatif kullanımlar;Beyin fırtınası;Sunum|Yaratıcılık
+Eleştirel Düşünme|Kanıt ve neden-sonuç ilişkisi kurar.|Senaryo;Yanıltıcı soru;Tartışma|Eleştirel düşünme
+Bulmaca Tasarımı|Kendi bulmacasını tasarlar.|Tasarım;Test;Paylaşım|Yaratıcılık
+Zekâ Oyunları Şampiyonası|Turnuvada strateji uygular.|Turnuva;Final;Ödül|Sporcu ahlakı`},
+'78':{
+robokod:`Tanışalım: Teknoloji ve Gelecek|Kodlamanın meslekler ve toplum üzerindeki etkisini tartışır.|Geleceğin meslekleri;Atölye sözleşmesi;Yıl proje fikri|Dijital vatandaşlık
+Algoritma Tasarımı ve Verimlilik|Farklı çözümleri verimliliğe göre karşılaştırır.|Kartla sıralama algoritmaları;Adım sayma;Sözde kod|Analitik düşünme
+Python Temelleri|Değişken, veri tipi ve girdi–çıktı kullanır.|input ve print;Tip dönüşümü;Mini hesaplayıcı|Dijital okuryazarlık
+Koşullar ve Mantıksal Operatörler|and, or, not ile karar yapıları kurar.|Not hesaplayıcı;Şifre kontrolü;Karar ağacı|Mantıksal düşünme
+Döngüler (for ve while)|Döngülerle tekrar eden işlemleri otomatikleştirir.|Çarpım tablosu;Tahmin oyunu;Desen|Otomasyon
+Listeler ve Veri İşleme|Liste ile veri toplar ve filtreler.|Sınıf verisi;Ortalama bulma;Sıralama|Veri okuryazarlığı
+Fonksiyonlar ve Modüler Kod|Fonksiyonlarla kodu modüllere ayırır.|Fonksiyon yaz;Parametre ve dönüş;Kod düzenleme|Soyutlama
+Web'e Giriş (HTML/CSS)|Basit bir web sayfası tasarlar.|HTML iskeleti;CSS ile stil;Kişisel sayfa|Tasarım
+Fiziksel Hesaplama ve Sensörler|Sensör verisini işleyen devre ve program tasarlar.|micro:bit veya Arduino simülatörü;Sensör okuma;Alarm sistemi|Sistem düşüncesi
+Robotik ve Otonom Sistemler|Otonom davranışın mantığını açıklar ve simüle eder.|Engelden kaçma mantığı;Robot Lab zor görevler;Rota planlama|Problem çözme
+Takım Projesi (Tasarım Döngüsü)|Problem–tasarım–test döngüsüyle ürün geliştirir.|Problem tanımı;Prototip;Test ve iyileştirme|İş birliği · Girişimcilik
+Proje Sunumu ve Portfolyo|Projesini sunar, dijital portfolyo hazırlar.|Sunum;Portfolyo;Değerlendirme|Sunum · Öz değerlendirme`,
+satranc:`Tanışalım: Stratejik Düşünme|Stratejik düşünmenin hayattaki yerini tartışır.|Tartışma;Seviye maçı;Hedef belirleme|Üst biliş
+Açılış Repertuvarı|Kendine uygun açılış seçer.|Açılış türleri;Repertuvar kartı;Oyun|Planlama
+İleri Taktik|Karmaşık kombinasyonları çözer.|Zor bulmacalar;Süreli yarış;Analiz|Hesaplama
+Pozisyonel Oyun|Pozisyonu değerlendirip plan kurar.|Piyon yapısı;Açık hat;Oyun|Değerlendirme
+Hesaplama ve Aday Hamle|Aday hamleleri sistemli değerlendirir.|Aday hamle tablosu;Karar ağacı;Oyun|Analitik düşünme
+Saldırı ve Savunma|Şah saldırısı ve savunmasını planlar.|Saldırı kalıpları;Savunma;Oyun|Stratejik düşünme
+Oyun Sonu Ustalığı|Kale oyun sonlarında teknik uygular.|Lucena ve Philidor;Uygulama;Yarış|Teknik beceri
+Satranç ve Karar Verme|Baskı altında karar verme stratejisi geliştirir.|Süreli pozisyon;Duygu yönetimi;Tartışma|Öz düzenleme
+Tarihte Strateji|Tarihî stratejiler ile satranç arasında bağ kurar.|Tarih vakası;Neden-sonuç;Sunum|Disiplinler arası
+Usta Oyunu Analizi|Usta oyunlarını yorumlar.|İzleme;Analiz;Yorum yazma|Eleştirel düşünme
+Gelişim Planım|Kendi oyununu analiz edip hedef koyar.|Hata defteri;Motor analizi;Plan|Öz değerlendirme
+Okul Şampiyonası|Turnuvada stratejik ve centilmence oynar.|Turnuva;Final;Ödül|Sporcu ahlakı`,
+yz:`Tanışalım: YZ Okuryazarlığı|YZ okuryazarlığının önemini açıklar.|Vaka;Tartışma;Yıl projesi fikri|Dijital vatandaşlık
+Veri Bilimi Temelleri|Veri setini analiz edip yorumlar.|Veri seti;Ortalama ve dağılım;Grafik|Veri okuryazarlığı
+Makine Öğrenmesi Süreci|Veri–eğitim–test–değerlendirme sürecini uygular.|Süreç şeması;Model eğit;Doğruluk|Sistem düşüncesi
+Sinir Ağlarının Mantığı|Basit sinir ağının öğrenme mantığını açıklar.|TensorFlow Playground;Deney;Yorum|Kavramsal düşünme
+Görüntü ve Ses Modelleri|Çok sınıflı model eğitip değerlendirir.|Veri seti;Eğit;Hata tablosu|Analitik düşünme
+Python ile Veri|Python ile veri işler.|Liste ve sözlük;Ortalama;Basit grafik|Algoritmik düşünme
+Doğal Dil İşleme|Metin sınıflama mantığını uygular.|Duygu analizi deneyi;Kelime sayma;Tartışma|Veri okuryazarlığı
+Prompt Mühendisliği|Rol, bağlam ve biçim içeren prompt yazar.|Prompt şablonu;Karşılaştırma;Doğrulama|Eleştirel düşünme
+Etik, Önyargı ve Telif|Etik ikilemleri tartışıp ilke önerir.|Vaka analizi;Münazara;İlke listesi|Etik
+YZ ve Meslekler|YZ'nin meslekleri nasıl değiştirdiğini araştırır.|Araştırma;Röportaj;Sunum|Kariyer farkındalığı
+Uçtan Uca YZ Projesi|Bir problemi YZ ile uçtan uca çözer.|Problem;Model;Uygulama|Problem çözme
+Proje Sunumu ve Portfolyo|Projesini sunar ve portfolyoya ekler.|Sunum;Portfolyo;Değerlendirme|Sunum`,
+akil:`Tanışalım: Üst Düzey Düşünme|Kendi düşünme sürecini fark eder.|Isınma;Düşünme günlüğü;Hedef|Üst biliş
+Mantıksal Akıl Yürütme|Karmaşık mantık problemlerini çözer.|Mantık soruları;Kanıtla;Tartışma|Tümdengelim
+İleri Sudoku ve Kakuro|İleri teknikleri uygular.|Teknik;Süreli çözüm;Yarış|Analitik düşünme
+Uzamsal Zekâ|3B döndürme ve açınım problemlerini çözer.|Döndürme;Açınım;Yarış|Uzamsal düşünme
+Oyun Teorisi ve Strateji|Stratejik karar verme modellerini tartışır.|Basit mahkûm ikilemi;Nim;Analiz|Stratejik düşünme
+Algoritmik Bulmacalar|Hanoi kulesi gibi algoritmik bulmacalar çözer.|Hanoi kulesi;Sıralama bulmacası;Genelleme|Algoritmik düşünme
+Olasılık ve Tahmin|Olasılıkla tahmin stratejisi kurar.|Zar deneyi;Tahmin oyunu;Tartışma|Matematiksel düşünme
+İleri Hafıza Teknikleri|İleri hafıza tekniklerini uygular.|Hafıza sarayı;Kodlama;Test|Hafıza
+Mantık Yanılgıları|Mantık hatalarını fark eder.|Yanıltıcı argümanlar;Tartışma;Analiz|Eleştirel düşünme
+Yaratıcı Problem Çözme|Gerçek hayat problemlerine yaratıcı çözüm üretir.|Vaka;Beyin fırtınası;Sunum|Yaratıcılık
+Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Tasarım
+Şampiyona ve Değerlendirme|Turnuvada strateji uygular, gelişimini değerlendirir.|Turnuva;Final;Değerlendirme|Öz değerlendirme`}
+};
+
   const KAZ={robokod:{ana:'sıralama, yön (ileri-geri-sağ-sol) ve sebep-sonuç ilişkisini oyunla keşfediyor','12':'adım adım düşünmeyi (algoritma) ve basit komut dizileri kurmayı öğreniyor','34':'döngü ve koşul gibi kavramlarla problemi parçalara ayırıp çözmeyi deneyimliyor','56':'tasarla-dene-düzelt döngüsüyle kendi projesini geliştirmeyi ve hatadan öğrenmeyi öğreniyor','78':'gerçek bir problemi analiz edip algoritmik çözüm üretmeyi ve fikrini savunmayı geliştiriyor'},
     satranc:{ana:'dikkat, sabır ve sıra bekleme becerisini eğlenceli bir hikâyeyle geliştiriyor','12':'taşların hareketleriyle dikkat, kural takibi ve öngörü becerisini geliştiriyor','34':'hamle öncesi düşünmeyi, plan yapmayı ve sonuçları tahmin etmeyi öğreniyor','56':'strateji kurma, alternatifleri karşılaştırma ve karar verme becerisini güçlendiriyor','78':'uzun vadeli plan, analitik düşünme ve doğru karar verme becerisini pekiştiriyor'},
     yz:{ana:'makinelerin nasıl “öğrendiğini” resimler ve oyunlarla merak ederek keşfediyor','12':'yapay zekânın günlük hayattaki yerini ve güvenli teknoloji kullanımını tanıyor','34':'verinin ne olduğunu, makinenin örneklerle nasıl öğrendiğini deneyerek görüyor','56':'basit modeller eğitip yapay zekânın güçlü ve sınırlı yanlarını sorguluyor','78':'kendi modelini eğitip yapay zekâ etiği, doğruluk ve sorumluluk üzerine tartışıyor'},
@@ -4452,67 +4979,112 @@ const DP=(function(){
   const kisaTarih=d=>d.getDate()+' '+AY[d.getMonth()];
   const genc=b=>b==='ana'||b==='12';
 
-  /* ---- haftalık dağıtım (Ders Saati / Yıllık Plan kuralı; 8. sınıf: Yapay Zekâ) ---- */
-  function dagSira(n){if(n<=1)return['R'];if(n===2)return['RY','SA'];if(n===3)return['R','Y','SA'];const q=['R','S','Y','A'];for(let i=4;i<n;i++)q.push(i%2?'SA':'RY');return q;}
-  function dagit(){const sl={},out={};PROG.forEach((row,d)=>row.forEach((c,i)=>{if(c)(sl[c]=sl[c]||[]).push({d,i});}));
-    for(const c in sl){const L=sl[c],gi=giOf(c);
-      if(gi===8){L.forEach(x=>out[c+'|'+x.d+'|'+x.i]='Y');continue;}
-      if(gi===0){L.forEach(x=>out[c+'|'+x.d+'|'+x.i]=x.d===1?'S':'SR');continue;}
+  /* ---- 🔗 Ders Saati + Yıllık Plan köprüsü (aynı site = aynı tarayıcı hafızası) ---- */
+  const KT={robokod:'R',satranc:'S',yz:'Y',akil:'A'},SUBJ='Robotik Kodlama';
+  function dsVeri(){const o=LSx.get('barisDersSaati.v1',null);if(o&&Array.isArray(o.grid)&&Array.isArray(o.periods)&&o.periods.length)return {periods:o.periods,grid:o.grid,ov:o.ov||{},subject:o.subject||SUBJ,canli:true};
+    return {periods:SAAT,grid:PROG.map(r=>r.map(c=>c?{c,s:SUBJ}:null)),ov:{},subject:SUBJ,canli:false};}
+  let DS=dsVeri();
+  const genel=s=>{s=String(s||'').trim();return !s||/^robotik[\s-]*(ve\s+)?kodlama$/i.test(s)||s===DS.subject;};
+  function dagSira(n){if(n<=1)return['D'];if(n===2)return['RY','SA'];if(n===3)return['R','Y','SA'];const q=['R','S','Y','A'];for(let i=4;i<n;i++)q.push(i%2?'SA':'RY');return q;}
+  function dagitGrid(){const sl={},out={};(DS.grid||[]).forEach((row,d)=>(row||[]).forEach((c,i)=>{if(c&&c.c)(sl[c.c]=sl[c.c]||[]).push({d,i});}));
+    for(const c in sl){const L=sl[c],gi=giOf(c);if(gi<0)continue;
+      if(gi===8){L.forEach(x=>out[x.d+'|'+x.i]='K');continue;}
+      if(gi===0){L.forEach(x=>out[x.d+'|'+x.i]=x.d===1?'S':'SR');continue;}
       const sira=dagSira(L.length),tek=['R','Y','RY'],qT=sira.filter(k=>tek.includes(k)),qO=sira.filter(k=>!tek.includes(k));
-      const blok=L.filter(x=>L.some(y=>y.d===x.d&&Math.abs(y.i-x.i)===1)),tekil=L.filter(x=>!blok.includes(x));
-      blok.forEach(x=>{out[c+'|'+x.d+'|'+x.i]=qT.length?qT.shift():qO.shift();});
-      const rest=qT.concat(qO).sort((a,b)=>sira.indexOf(a)-sira.indexOf(b));tekil.forEach(x=>{out[c+'|'+x.d+'|'+x.i]=rest.shift()||'RY';});}
+      const blk=L.filter(x=>L.some(y=>y.d===x.d&&Math.abs(y.i-x.i)===1)),tekil=L.filter(x=>!blk.includes(x));
+      blk.forEach(x=>{out[x.d+'|'+x.i]=qT.length?qT.shift():qO.shift();});
+      const rest=qT.concat(qO).sort((a,b)=>sira.indexOf(a)-sira.indexOf(b));tekil.forEach(x=>{out[x.d+'|'+x.i]=rest.shift()||'RY';});}
     return out;}
-  const DAG=dagit();
-  /* sınıfın haftalık ders yuvaları (aynı derse ait ardışık saatler birleşir) */
-  function yuvalar(c){const o=[];for(let d=0;d<5;d++)for(let i=0;i<8;i++){if(PROG[d][i]!==c)continue;const k=DAG[c+'|'+d+'|'+i],son=o[o.length-1];
-      if(son&&son.d===d&&son.i+son.sure===i&&son.k===k)son.sure++;else o.push({d,i,sure:1,k});}return o;}
+  let DAG=dagitGrid();
+  const haftaNo=d=>{const m=new Date(d.getFullYear(),d.getMonth(),d.getDate());m.setDate(m.getDate()-((m.getDay()+6)%7));return Math.round((m-new Date(2026,8,14))/(7*864e5));};
+  const DONUS=['robokod','satranc','yz','akil'];
+  function k1(s){s=String(s||'').toLocaleLowerCase('tr');if(/satran/.test(s))return 'satranc';if(/yapay|(^|[^a-zçğıöşü])yz([^a-zçğıöşü]|$)|(^|\s)ai(\s|$)/.test(s))return 'yz';if(/ko[çc]luk/.test(s))return 'kocluk';if(/ak[ıi]l|zek[aâ]|mant[ıi]k/.test(s))return 'akil';if(/robot|kod/.test(s))return 'robokod';return null;}
+  function dersKs(s,d){s=String(s||'');if(s.indexOf('↔')>=0){const pr=s.split('↔').map(x=>x.trim()).filter(Boolean),w=haftaNo(d),k=k1(pr[((w%pr.length)+pr.length)%pr.length]);return k?[k]:[];}
+    if(/d[öo]n[üu][şs][üu]ml[üu]|s[ıi]rayla|rotasyon/i.test(s))return [DONUS[((haftaNo(d)%4)+4)%4]];
+    const out=[];s.split(/\s+ve\s+|\s*[&+,\/]\s*/i).forEach(p=>{const k=k1(p);if(k&&!out.includes(k))out.push(k);});return out;}
+  const KOD_AD={R:'Robotik-Kodlama',S:'Satranç',Y:'Yapay Zekâ',A:'Akıl-Zekâ Oyunları',RY:'Robotik-Kodlama ve Yapay Zekâ',SA:'Satranç ve Akıl-Zekâ',D:'Dönüşümlü (her hafta bir ders)',K:'Eğitim Koçluğu',SR:'Satranç ↔ Robotik-Kodlama'};
+  function cellOn(date,i){const wd=(date.getDay()+6)%7;if(wd>4)return null;const o=DS.ov&&DS.ov[tarihStr(date)];if(o&&o[i]!==undefined)return (!o[i]||o[i].empty)?null:o[i];return (DS.grid[wd]&&DS.grid[wd][i])||null;}
+  function hucreKs(c,cell,date,i){const gi=giOf(c),ts=tarihStr(date),wd=(date.getDay()+6)%7;let ks;const ds=(LSx.get('dk_tahta_dsec',{})||{})[ts+'|'+c+'|'+i];
+    if(ds)ks=String(ds).split('+');else ks=dersKs(genel(cell.s)?(KOD_AD[DAG[wd+'|'+i]]||cell.s):cell.s,date);
+    ks=ks.map(k=>k==='kocluk'?(gi===8?'yz':null):k).filter(k=>k&&KT[k]);if(!ks.length)ks=[gi===8?'yz':'robokod'];return [...new Set(ks)].map(k=>KT[k]);}
   /* takvim: ders haftaları */
   function haftalar(){const out=[];let n=0;for(let w=0;w<45;w++){const pzt=gun(BAS,w*7),key=tarihStr(pzt);if(key>BITIS)break;
       if(TATIL[key]){out.push({tatil:TATIL[key],pzt,cal:w});continue;}n++;out.push({no:n,pzt,cal:w});}return out;}
-  const HAF=haftalar(),DERS_HAFTA=HAF.filter(h=>h.no).length;
-  /* ---- yıllık ders listesi (sınıf → dersler) ---- */
-  function uniteDizi(T,b){return T==='R'?ROBO[b]:T==='Y'?(genc(b)?YZK:YZB):T==='S'?SAT:AKIL;}
-  function dersler(c){const gi=giOf(c),b=bandOf(gi),Y=yuvalar(c),say={R:0,Y:0,S:0,A:0},top={R:0,Y:0,S:0,A:0},list=[];
-    const parca=(k,h)=>k==='SR'?[h.cal%2===0?'S':'R']:k==='RY'?['R','Y']:k==='SA'?['S','A']:[k];
-    HAF.forEach(h=>{if(!h.no)return;Y.forEach(y=>parca(y.k,h).forEach(T=>top[T]++));});
-    const onceki={};
-    HAF.forEach(h=>{if(h.no)Y.forEach(y=>{const tarih=gun(tarihStr(h.pzt),y.d),ts=tarihStr(tarih);
-      const parts=parca(y.k,h).map(T=>{const N=top[T],idx=say[T]++,s=N>=36?Math.min(idx,35):Math.floor(idx*36/N),u=Math.floor(s/3),st=s%3,U=uniteDizi(T,b)[u],et=String(U[2]).split(';');
-        const pek=onceki[T]===s;onceki[T]=s;
-        return {T,u,st,s,konu:U[0].replace(/^Tanışalım:\s*/,'Tanışalım: '),asama:(genc(b)?['Keşfediyoruz','Oynuyoruz','Üretiyoruz']:['Keşfet','Uygula','Üret & Paylaş'])[st]+(pek?' · Pekiştirme':''),z:U[1],etk:et[st]||et[0],pek};});
-      list.push({key:c+'|'+h.no+'|'+y.d+'|'+y.i,c,gi,b,h,tarih,ts,d:y.d,i:y.i,sure:y.sure,k:y.k,parts,resmi:RESMI[ts]||null});});});
-    return list;}
-  const CACHE={};const dersListe=c=>CACHE[c]||(CACHE[c]=dersler(c));
+  let HAF=haftalar(),DERS_HAFTA=HAF.filter(h=>h.no).length;
+  const ozelTatil=()=>new Set(LSx.get('dk_tatil',[])||[]);
+  function toplantilar(c){const out=[],ot=ozelTatil();for(const hf of HAF){if(hf.tatil)continue;for(let d=0;d<5;d++){const date=gun(tarihStr(hf.pzt),d),ts=tarihStr(date);if(ts>BITIS)break;
+      for(let i=0;i<DS.periods.length;i++){const cell=cellOn(date,i);if(!cell||cell.c!==c)continue;const T=hucreKs(c,cell,date,i),son=out[out.length-1];
+        if(son&&son.ts===ts&&son.i+son.sure===i&&son.T.join()===T.join())son.sure++;else out.push({ts,tarih:date,d,i,sure:1,T,h:hf,resmi:RESMI[ts]||(ot.has(ts)?'Okul tatili':null)});}}}return out;}
+  /* ---- konular: Yıllık Plan (Maarif ya da “Benim planım”) ---- */
+  const ADIM_G=['Keşfediyoruz','Oynuyoruz','Üretiyoruz'],ADIM_B=['Keşfet','Uygula','Üret & Paylaş'],SCACHE={};
+  function seanslar(gi,T){const b=bandOf(gi),tid=TR[T].v,kay=LSx.get('dk_plan_kaynak','maarif'),k=gi+'|'+T+'|'+kay;if(SCACHE[k])return SCACHE[k];
+    const ham=(MAARIF[b]||{})[tid]||'',A=genc(b)?ADIM_G:ADIM_B,out=[];
+    ham.trim().split('\n').forEach((l,u)=>{const p=l.split('|'),et=String(p[2]||'').split(';');for(let s=0;s<3;s++)out.push({T,u,st:s,idx:u*3+s,s:u*3+s,unite:p[0],konu:p[0],asama:A[s],z:p[1]||'',etk:et[s]||et[0]||'',bec:p[3]||''});});
+    if(kay==='ozel'){const o=LSx.get('dk_ozel_plan',{})||{},g=(o[gi]&&o[gi][tid])||{};out.forEach((x,i)=>{const y=g[i];if(y){if(y.k)x.konu=String(y.k).replace(/\s·\s(Keşfet|Uygula|Üret & Paylaş|Keşfediyoruz|Oynuyoruz|Üretiyoruz)$/,'');if(y.z)x.z=y.z;if(y.e)x.etk=y.e;x.ozel=true;}});}
+    return SCACHE[k]=out;}
+  /* ---- işlenen dersler: Ders Saati ve Yıllık Plan ile ortak (dk_ilr) + tarihleri ---- */
+  let VELI_P=null,VELI_T='';
+  function ilrSet(gi,T){if(VELI_P)return VELI_P[T]||new Set();const o=LSx.get('dk_ilr',{})||{},x=(o[gi]&&o[gi][TR[T].v])||{};return new Set(Object.keys(x).filter(k=>x[k]).map(Number));}
+  function tarihMap(gi,T){const m={},tid=TR[T].v;(LSx.get('dk_veli_akis',[])||[]).forEach(e=>{if(e&&+e.gi===gi&&e.k===tid&&e.tarih&&m[+e.idx]==null)m[+e.idx]=e.tarih;});const d=LSx.get('dp_ilr_tarih',{})||{};Object.keys(d).forEach(k=>{const p=k.split('|');if(+p[0]===gi&&p[1]===tid)m[+p[2]]=d[k];});return m;}
+  /* başka uygulamada yeni işaretlenen dersi gördüğü gün tarihlendir (ilk açılışta eskiler tarihsiz kalır) */
+  function gozle(gi,T,D,M,bugun){const o=LSx.get('dp_ilr_gor',{})||{},key=gi+'|'+T;if(o[key]===undefined){o[key]=[...D];LSx.set('dp_ilr_gor',o);return;}
+    const once=new Set(o[key]),yeni=[...D].filter(i=>!once.has(i));if(!yeni.length&&D.size===once.size)return;
+    if(yeni.length){const tm=tarihMap(gi,T),dt=LSx.get('dp_ilr_tarih',{})||{},bug=M.find(m=>m.ts===bugun&&m.T.includes(T)),gec=M.filter(m=>m.ts<bugun&&m.T.includes(T)&&!m.resmi).pop(),t=bug?bugun:gec?gec.ts:bugun;
+      yeni.forEach(i=>{if(tm[i]==null)dt[gi+'|'+TR[T].v+'|'+i]=t;});LSx.set('dp_ilr_tarih',dt);}
+    o[key]=[...D];LSx.set('dp_ilr_gor',o);}
+  const VCACHE={};
+  function veri(c){if(VCACHE[c])return VCACHE[c];const gi=giOf(c),b=bandOf(gi),M=toplantilar(c),bugun=tarihStr(new Date());
+    const Ts=[...new Set([].concat(...M.map(m=>m.T)))].sort((x,y)=>'RYSA'.indexOf(x)-'RYSA'.indexOf(y)),iz={};
+    Ts.forEach(T=>{const S=seanslar(gi,T),D=ilrSet(gi,T);if(!VELI)gozle(gi,T,D,M,bugun);const tm=VELI?{}:tarihMap(gi,T),byDate={};
+      Object.keys(tm).forEach(i=>{if(D.has(+i))(byDate[tm[i]]=byDate[tm[i]]||[]).push(+i);});iz[T]={S,D,tm,byDate,pend:S.filter(x=>!D.has(x.idx)).map(x=>x.idx),kul:new Set()};});
+    const list=[];
+    M.forEach(m=>{const key=c+'|'+m.ts+'|'+m.i,ortak={key,c,gi,b,tarih:m.tarih,ts:m.ts,d:m.d,i:m.i,sure:m.sure,h:m.h,k:m.T.join('')};
+      if(m.resmi){if(m.ts>=bugun)list.push(Object.assign(ortak,{parts:m.T.map(T=>({T,konu:TR[T].ad,asama:'',z:'',etk:'',u:0,st:0,s:0,idx:-1})),resmi:m.resmi}));return;}
+      const parts=[];m.T.forEach(T=>{const z=iz[T];let idx=null,done=false;const g=(z.byDate[m.ts]||[]).filter(i=>!z.kul.has(i));
+        if(g.length){idx=g[0];done=true;}else if(m.ts>=bugun&&z.pend.length)idx=z.pend.shift();
+        if(idx==null||!z.S[idx])return;z.kul.add(idx);parts.push(Object.assign({},z.S[idx],{done}));});
+      if(parts.length)list.push(Object.assign(ortak,{parts}));});
+    const islenen=[],kalan=[];Ts.forEach(T=>{const z=iz[T];[...z.D].sort((x,y)=>x-y).forEach(i=>{if(z.S[i])islenen.push({T,x:z.S[i],ts:z.tm[i]||null});});z.pend.forEach(i=>kalan.push({T,x:z.S[i]}));});
+    islenen.sort((x,y)=>(x.ts||'0').localeCompare(y.ts||'0')||x.x.idx-y.x.idx);
+    const ozet=Ts.map(T=>{const z=iz[T],L=list.find(x=>x.ts>=bugun&&!x.resmi&&x.parts.some(p=>p.T===T&&!p.done)),p=L&&L.parts.find(q=>q.T===T&&!q.done);return {T,n:z.S.length,d:z.D.size,sonraki:p||null,ts:L?L.ts:null};});
+    return VCACHE[c]={list,islenen,kalan,ozet,Ts};}
+  const dersListe=c=>veri(c).list;
+  function temizle(){for(const k in VCACHE)delete VCACHE[k];for(const k in SCACHE)delete SCACHE[k];}
+  function yenile(){DS=dsVeri();DAG=dagitGrid();HAF=haftalar();DERS_HAFTA=HAF.filter(h=>h.no).length;temizle();const o=$d('dpOrtu');if(o&&o.classList.contains('acik'))ciz();}
+  /* haftalık ders yuvaları (bu haftaya göre) */
+  function yuvalar(c){const o=[],pzt=gun(tarihStr(new Date()),-((new Date().getDay()+6)%7));for(let d=0;d<5;d++)for(let i=0;i<DS.periods.length;i++){const cell=DS.grid[d]&&DS.grid[d][i];if(!cell||cell.c!==c)continue;
+      const date=gun(tarihStr(pzt),d),T=hucreKs(c,cell,date,i),sr=genel(cell.s)&&DAG[d+'|'+i]==='SR'||/↔/.test(cell.s||''),dn=genel(cell.s)&&DAG[d+'|'+i]==='D'||/d[öo]n[üu][şs][üu]ml[üu]/i.test(cell.s||''),son=o[o.length-1];
+      if(son&&son.d===d&&son.i+son.sure===i&&son.T.join()===T.join())son.sure++;else o.push({d,i,sure:1,T,sr,dn});}return o;}
 
   /* ---- uygulamalar: Ders Merkezi blok bölümleri, etkinlikler, araçlar ---- */
   function blokBul(b,kvs,tercih,tohum){const c=[];DUNYALAR.forEach(d=>{const ter=(tercih||[]).includes(d.id);if(!ter&&d.ders!=='kod')return;
       (d.seviyeler[b]||[]).forEach((l,i)=>{const s=(l.kv||[]).filter(k=>kvs.includes(k)).length*2+(ter?3:0);if(s>0)c.push({d:d.id,i,ad:l.ad,dAd:d.ad,ik:d.ik,s});});});
     if(!c.length)return null;const mx=Math.max(...c.map(x=>x.s)),en=c.filter(x=>x.s===mx);return en[tohum%en.length];}
-  function oyunSpec(p,b,gi){return {T:p.T,b,u:p.u,st:p.st,konu:p.konu,asama:p.asama,z:p.z,genc:genc(b),tohum:gi*1000+p.s*10+(p.pek?5:0)+'RYSA'.indexOf(p.T),id:p.T+'_'+b+'_'+p.u+'_'+p.st};}
-  function uygulamalar(p,b,gi){const u=[],k=p.konu.toLocaleLowerCase('tr'),t=p.s;
+  function oyunSpec(p,b,gi){return {T:p.T,b,u:p.u,st:p.st,konu:p.konu,unite:p.unite,asama:p.asama,z:p.z,bec:p.bec,genc:genc(b),tohum:gi*1000+p.idx*10+'RYSA'.indexOf(p.T),id:gi+'_'+p.T+'_'+p.idx};}
+  function uygulamalar(p,b,gi){const u=[];if(!p||p.idx<0)return u;const k=String(p.konu||'').toLocaleLowerCase('tr'),t=p.s;
     if(typeof DO!=='undefined'){try{const sp=oyunSpec(p,b,gi),P=DO._test.PLAN(sp);u.push({tip:'do',ad:P.ik+' '+P.ad,sp});}catch(e){}}
     const blok=(kvs,ter)=>{const x=blokBul(b,kvs,ter,t);if(x)u.push({tip:'blok',d:x.d,i:x.i,ad:x.ik+' '+x.dAd+': '+x.ad});};
     const etk=(ders,oyun,ad,konu,mod)=>u.push({tip:'etk',ders,oyun,ad,konu,mod});
     const link=a=>{if(ARAC[a])u.push({tip:'link',ad:ARAC[a][0],url:ARAC[a][1]});};
     if(p.T==='R'){let kv=['sira'];if(/döngü|tekrar|örüntü/.test(k))kv=['dongu','icice'];else if(/koşul|eğer|karar|sensör/.test(k))kv=['kosul'];else if(/olay|mesaj|hikâye|animasyon/.test(k))kv=['olay'];
       else if(/değişken|puan|liste|veri/.test(k))kv=['degisken'];else if(/fonksiyon|bloğum|modüler/.test(k))kv=['fonksiyon'];else if(/python|web|html/.test(k))kv=['yazili','fonksiyon'];else if(/hata/.test(k))kv=['hata'];
-      blok(kv,/robot|sensör/.test(k)?['robi','sensor','ciftlik']:null);if(!u.length)blok(['sira','dongu'],['robi']);if(gi>=1)etk('mat','eslestir','🔗 Kodlama kavramları eşleştirme','Algoritma ve Kodlama');
+      const esl=kv[0]!=='sira'||/algoritma|komut|yön|ok|robot|sıra|kart|labirent|adım/.test(k);if(esl){blok(kv,/robot|sensör/.test(k)?['robi','sensor','ciftlik']:null);if(u.length<2)blok(['sira','dongu'],['robi']);}if(gi>=1)etk('mat','eslestir','🔗 Kodlama kavramları eşleştirme','Algoritma ve Kodlama');
       if(/scratchjr/.test(k))link('scratchjr');else if(/scratch|oyun|animasyon/.test(k))link(gi<=2?'scratchjr':'scratch');if(/micro:bit|fiziksel/.test(k))link('makecode');if(/python/.test(k))link('trinket');if(/web|html/.test(k))link('w3');}
-    else if(p.T==='Y'){const oy=['dy','grup','eslestir','grup','grup','eslestir','eslestir','sirala','dy','grup','eslestir','yaris'][p.u]||'eslestir',ad={dy:'✅ Doğru mu yanlış mı?',grup:'🗂️ Makineyi eğit: grupla',eslestir:'🔗 YZ kavramlarını eşleştir',sirala:'🔢 Doğru sıra',yaris:'⚡ YZ bilgi yarışı'}[oy];
-      etk('yz',oy,ad);if(oy!=='eslestir')etk('yz','eslestir','🔗 YZ kavramlarını eşleştir');
-      if(/çiz|örüntü/.test(k))link('quickdraw');if(/autodraw|üretici/.test(k))link('autodraw');if(/model|örnek göster|öğrenir/.test(k)&&gi>=3)link('teachable');if(/ses ve dil/.test(k))link('semantris');if(/karar/.test(k))link('akinator');}
-    else if(p.T==='S'){blok(['sira','dongu','kosul'],['satranc']);const mod=gi<=0?'bul':p.u===0?(gi<=2?'kare':'kare'):p.u<=3?'hamle':'al';etk('sat','satranc','♞ Satranç tahtası: '+({bul:'taşı bul',kare:'kareyi bul',hamle:'nereye gider?',al:'taşı al'})[mod],null,mod);etk('sat','eslestir','🔗 Satranç kavramları');link(gi<=2?'chesskid':'lichess');}
-    else{const M=[['sirala','mat','🔢 Doğru sıra (örüntü)'],['hafiza','tr','🧠 Hafıza kartları'],['grup','fen','🗂️ Grup sıralama'],[null],[null],['balon','mat','🎈 Balon patlat (sayı)'],['satranc','sat','♞ Strateji: satranç tahtası'],['avi','tr','🔎 Kelime avı'],['kostebek','mat','🔨 Köstebek vur'],['satranc','sat','♞ Strateji: taşı al','al'],['kutu','mat','🎁 Kutuyu aç'],['yaris','mat','⚡ Bilgi yarışı']][p.u]||[null];
-      if(p.u===3)blok(['sira','dongu'],['robi']);else if(p.u===4)blok(['dongu','icice'],['atolye']);else etk(M[1],M[0],M[2],null,M[3]);
-      if(M[0]!=='hafiza')etk('mat','hafiza','🧠 Hafıza kartları');if(p.u===3)link('lightbot');}
+    else if(p.T==='Y'){if(gi>=1)etk('yz',/etik|güven|önyargı|gizlilik/.test(k)?'dy':/sınıf|örnek|öğren|model|veri/.test(k)?'grup':'eslestir',/etik|güven|önyargı|gizlilik/.test(k)?'✅ Doğru mu yanlış mı?':/sınıf|örnek|öğren|model|veri/.test(k)?'🗂️ Makineyi eğit: grupla':'🔗 YZ kavramlarını eşleştir');
+      if(/çiz|örüntü|görerek|görüntü/.test(k))link('quickdraw');if(/yaratıcı|üretici|prompt/.test(k))link('autodraw');if(/model|teachable|öğren|sınıf|ses/.test(k)&&gi>=3)link('teachable');if(/dil|sohbet/.test(k))link('semantris');if(/karar|ağaç/.test(k))link('akinator');}
+    else if(p.T==='S'){const mod=gi<=0?'bul':/tahta|masal|tarih|notasyon|tanışalım/.test(k)?'kare':/değer|yeme|takas|taktik|çatal|şiş|kombinasyon|hesap/.test(k)?'al':'hamle';etk('sat','satranc','♞ Satranç tahtası: '+({bul:'taşı bul',kare:'kareyi bul',hamle:'nereye gider?',al:'taşı al'})[mod],null,mod);if(gi>=1)etk('sat','eslestir','🔗 Satranç kavramları');link(gi<=2?'chesskid':'lichess');}
+    else{if(/hafıza/.test(k))etk('mat','hafiza','🧠 Hafıza kartları');else if(/örüntü|sıralama/.test(k))etk('mat','sirala','🔢 Doğru sıra (örüntü)');else if(/dikkat|hız|farkı/.test(k))etk('mat','kostebek','🔨 Hızlı dikkat');else if(/sayı|sudoku|kenken|kakuro|işlem|miktar/.test(k))etk('mat','kutu','🎁 Sayı kutusu');
+      else if(/labirent|yol/.test(k))blok(['sira','dongu'],['robi']);else if(/tangram|uzamsal|simetri|yapboz|pentomino/.test(k))blok(['dongu','icice'],['atolye']);else etk('mat','hafiza','🧠 Hafıza kartları');if(/mantık|algoritmik/.test(k))link('lightbot');}
     return u;}
 
   /* ---- 🎮 dersin oyunu + 📤 Değişim ekosistemi ---- */
   function oyunu(L){if(!L||L.resmi)return null;let blk=null;for(let j=0;j<L.parts.length;j++){const U=uygulamalar(L.parts[j],L.b,L.gi);const d=U.findIndex(x=>x.tip==='do');if(d>=0)return {j,k:d,ad:U[d].ad};}for(let j=0;j<L.parts.length;j++){const U=uygulamalar(L.parts[j],L.b,L.gi);for(let k=0;k<U.length;k++){if(U[k].tip==='etk')return {j,k,ad:U[k].ad};if(U[k].tip==='blok'&&!blk)blk={j,k,ad:U[k].ad};}}return blk;}
   function adres(){const a=LSx.get('dp_adres','');if(a)return a;return /^https?:/.test(location.protocol)?location.href.split('#')[0]:'';}
   function adresSor(){const y=prompt('Ders Programım sayfasının internet adresi\n(velilere giden 🎮 oyun bağlantıları bu adresle açılır)\nÖrnek: https://ornek.github.io/ders-programim.html',LSx.get('dp_adres','')||adres()||'https://');if(y===null)return adres();const t=y.trim();LSx.set('dp_adres',/^https?:\/\/[^\s]+\.[^\s]+/.test(t)?t.split('#')[0]:'');if(adres())toast('🌐 Adres kaydedildi',1800);return adres();}
-  function oyunLink(L){const a=adres();return a?a+'#oyun='+encodeURIComponent(L.key):'';}
+  function oyunLink(L){const a=adres(),o=oyunu(L);if(!a||!o)return '';const p=L.parts[o.j];return a+'#oyun='+encodeURIComponent(L.c+'~'+p.T+'~'+p.idx);}
+  function ilerKod(c){const gi=giOf(c);return veri(c).Ts.map(T=>{const D=[...ilrSet(gi,T)].sort((a,b)=>a-b),r=[];for(let i=0;i<D.length;){let j=i;while(j+1<D.length&&D[j+1]===D[j]+1)j++;r.push(i===j?D[i]:D[i]+'-'+D[j]);i=j+1;}return T+r.join(',');}).join('~');}
+  function ilerCoz(s){const o={};String(s||'').split('~').forEach(p=>{const T=p[0];if(!T||!'RSYA'.includes(T))return;const S_=new Set();p.slice(1).split(',').filter(Boolean).forEach(r=>{const [a,b]=r.split('-').map(Number);if(isNaN(a))return;for(let i=a;i<=(isNaN(b)?a:b);i++)S_.add(i);});o[T]=S_;});return o;}
+  function veliUrl(c){const a=adres()||location.href.split('#')[0];return a+'#veli='+encodeURIComponent(c)+'&p='+encodeURIComponent(ilerKod(c))+'&t='+tarihStr(new Date());}
   const EKO_CFG={apiKey:"AIzaSyAqeO-yQyQPnLsOqKmSNvVH23WPvneIjaU",authDomain:"shaped-totem-481514-c5.firebaseapp.com",projectId:"shaped-totem-481514-c5",storageBucket:"shaped-totem-481514-c5.firebasestorage.app",messagingSenderId:"519295049418",appId:"1:519295049418:web:7d04e18c4ea36bc088de33"};
   let EKO_FB=null,EKO_MOCK=null;
   async function ekoFb(){if(EKO_MOCK)return EKO_MOCK;if(EKO_FB)return EKO_FB;const V='https://www.gstatic.com/firebasejs/11.0.1/';const A=await import(V+'firebase-app.js'),F=await import(V+'firebase-firestore.js'),Au=await import(V+'firebase-auth.js');
@@ -4535,7 +5107,7 @@ const DP=(function(){
       const ts=Date.now(),bitis=ts+7*864e5,yeni=[],hedef=[],a=adres();
       const grup={};Ls.forEach(L=>{const g=L.c+'|'+L.ts;(grup[g]=grup[g]||[]).push(L);});
       Object.values(grup).forEach((G,i)=>{const L=G[0],m=G.map(x=>veliMetin(x,true)).join('\n\n'),lk=[];
-        G.forEach(x=>{const o=oyunu(x),ol=oyunLink(x);if(o&&ol&&!lk.some(l=>l.url===ol))lk.push({url:ol,ad:('🎮 Oyunu oyna: '+o.ad).slice(0,60)});});if(a)lk.push({url:a+'#veli='+encodeURIComponent(L.c),ad:('📅 '+L.c+' yıllık ders programı').slice(0,60)});
+        G.forEach(x=>{const o=oyunu(x),ol=oyunLink(x);if(o&&ol&&!lk.some(l=>l.url===ol))lk.push({url:ol,ad:('🎮 Oyunu oyna: '+o.ad).slice(0,60)});});if(a)lk.push({url:veliUrl(L.c),ad:('📅 '+L.c+' yıllık ders programı').slice(0,60)});
         sinifEsle(L.c,okul).forEach((s,j)=>{const y={id:'dp'+ts.toString(36)+i+'_'+j+Math.random().toString(36).slice(2,6),sinif:s,metin:m,ogretmen:'Barış Öğretmen',ts:ts-(i*10+j),kaynak:'ozet',bitis,robotik:true};if(lk.length)y.linkler=lk;yeni.push(y);if(!hedef.includes(s))hedef.push(s);});});
       await F.setDoc(F.doc(fb.db,'maas_config','k12_pano'),{liste:F.arrayUnion.apply(null,yeni),guncelleme:Date.now()},{merge:true});
       const g=gonderildi();Ls.forEach(L=>{g[L.key]=ts;});LSx.set('dp_eko',g);ekoBtnYenile();
@@ -4547,13 +5119,14 @@ const DP=(function(){
   function ekoDurum(){const ts=tarihStr(new Date());return LSx.get('dp_eko_gun','')===ts?'✅ Bugünün dersleri oyun bağlantılarıyla Değişim’e gönderildi.':'📤 Bugünün dersleri, her birinin 🎮 ders oyunu bağlantısıyla Değişim’e (veli “📰 Özetler”) tek dokunuşla gider.';}
   /* 🎮 veli oyun bağlantısı (#oyun=…) karşılama */
   function oyunHash(){const m=(location.hash||'').match(/oyun=([^&]+)/);return m?decodeURIComponent(m[1]):null;}
-  function oyunKarsila(key){const L=bul(key),o=oyunu(L);if(!L||!o)return false;let w=$d('dpOy');if(!w){w=document.createElement('div');w.id='dpOy';w.className='ortu';document.body.appendChild(w);}
-    const p=L.parts[o.j];w.innerHTML='<div class="ust"><div class="kart dpPayKart dpOyKart"><div class="dpOyIk">🎮</div><h2>'+esc(L.c)+' · '+kisaTarih(L.tarih)+' dersinin oyunu</h2><div class="dpKonu">'+TR[p.T].ik+' '+esc(p.konu)+'</div><p class="dpOyAd">'+esc(o.ad)+'</p></div></div><div class="alt"><button class="btn yesil" id="dpOyBas">▶ Oyuna başla</button><button class="btn ana" id="dpOyKap">📅 Bütün dersleri gör</button></div>';
-    w.classList.add('acik');$d('dpOyBas').onclick=()=>{w.classList.remove('acik');uyg(L.key,o.j,o.k);};$d('dpOyKap').onclick=()=>{w.classList.remove('acik');const k=$d('k_'+L.key.replace(/\W/g,'_'));if(k)k.scrollIntoView({block:'center'});};return true;}
+  function oyunCoz(h){const p=String(h||'').split('~');if(p.length!==3||!SINIFLAR.includes(p[0])||!'RSYA'.includes(p[1]))return null;const gi=giOf(p[0]),x=seanslar(gi,p[1])[+p[2]];return x?{c:p[0],gi,b:bandOf(gi),x}:null;}
+  function oyunKarsila(h){const r=oyunCoz(h);if(!r)return false;const U=uygulamalar(r.x,r.b,r.gi),o=U.find(u=>u.tip==='do')||U[0];if(!o)return false;let w=$d('dpOy');if(!w){w=document.createElement('div');w.id='dpOy';w.className='ortu';document.body.appendChild(w);}
+    w.innerHTML='<div class="ust"><div class="kart dpPayKart dpOyKart"><div class="dpOyIk">🎮</div><h2>'+esc(r.c)+' · '+TR[r.x.T].ad+' dersinin oyunu</h2><div class="dpKonu">'+TR[r.x.T].ik+' '+esc(r.x.konu)+' <span class="dpAsama">'+esc(r.x.asama)+'</span></div><p class="dpOyAd">'+esc(o.ad)+'</p></div></div><div class="alt"><button class="btn yesil" id="dpOyBas">▶ Oyuna başla</button><button class="btn ana" id="dpOyKap">📅 Ders programını gör</button></div>';
+    w.classList.add('acik');$d('dpOyBas').onclick=()=>{w.classList.remove('acik');SINIF=r.b;SINIF_NO=r.gi;if(o.tip==='do')DO.ac(o.sp);else if(o.tip==='etk')ETK.oyna(o.ders,o.oyun,o.konu,o.mod);};$d('dpOyKap').onclick=()=>{w.classList.remove('acik');};return true;}
 
   /* ---- metinler ---- */
   function dersAdi(parts){return parts.map(p=>TR[p.T].ik+' '+TR[p.T].ad).join(' ve ');}
-  function saatYaz(L){return GUN[L.d]+' '+(L.i+1)+(L.sure>1?'–'+(L.i+L.sure):'')+'. ders · '+SAAT[L.i][0]+'–'+SAAT[L.i+L.sure-1][1];}
+  function saatYaz(L){const P=DS.periods,a=P[L.i]||['',''],z=P[L.i+L.sure-1]||a;return GUN[L.d]+' '+(L.i+1)+(L.sure>1?'–'+(L.i+L.sure):'')+'. ders · '+a[0]+'–'+z[1];}
   function veliMetin(L,eko){const b=L.b,bugun=L.ts===tarihStr(new Date());const s=[(bugun?'🌟 Bugün Derste':'🌟 '+GUN[L.d]+' Dersimizde')+' · '+L.c+' · '+kisaTarih(L.tarih)];
     if(L.resmi){s.push('🎉 '+L.resmi+' nedeniyle bu ders yapılmayacak.');return s.join('\n');}
     L.parts.forEach(p=>{const v=TR[p.T].v;s.push(TR[p.T].ik+' '+TR[p.T].ad+': '+p.konu+' ('+p.asama+')');s.push('📝 '+p.etk+'.');s.push('🎯 Çocuğunuz '+KAZ[v][b]+'.');});
@@ -4572,33 +5145,39 @@ const DP=(function(){
 
   /* ---- durum ---- */
   let SECILI=LSx.get('dp_sinif','3A'),VELI=null,ISLE=null;
-  const islendi=()=>LSx.get('dp_islendi',{});
   function buHafta(){const t=tarihStr(new Date());let son=null;for(const h of HAF){if(tarihStr(h.pzt)<=t)son=h;}return son;}
 
   /* ---- görünüm ---- */
   function kok(){let o=$d('dpOrtu');if(o)return o;o=document.createElement('div');o.id='dpOrtu';o.innerHTML='<div class="dpUst"><div class="dpLogo"><div class="dpLogoIk">📅</div><div><h1>Ders Programım</h1><small id="dpAlt"></small></div></div><div class="dpUstBtn" id="dpUstBtn"></div></div><div class="dpSinif" id="dpSinif"></div><div class="dpGovde" id="dpGovde"></div>';document.body.appendChild(o);return o;}
-  function ustCiz(){const veli=!!VELI;$d('dpAlt').textContent=veli?(VELI+' · Barış Öğretmen · 2026–2027'):'Barış Öğretmen · 2026–2027 · '+DERS_HAFTA+' ders haftası';
+  function ustCiz(){const veli=!!VELI;$d('dpAlt').textContent=veli?(VELI+' · Barış Öğretmen · 2026–2027'):'Barış Öğretmen · 2026–2027 · '+(DS.canli?'🔗 Ders Saati + Yıllık Plan ile senkron':DERS_HAFTA+' ders haftası');
     $d('dpUstBtn').innerHTML=veli?'<button class="dpB" onclick="DP.qr()">📲 Paylaş</button>':'<button class="dpB" onclick="DP.bugun()">📍 Bugün</button><button class="dpB" onclick="DP.veliLink()">👪 Veli bağlantısı</button><button class="dpB" onclick="DP.adresSor()" title="Oyun bağlantılarının açılacağı internet adresi">🌐</button><button class="dpB" onclick="window.print()">🖨️ Yazdır</button><button class="dpB dpA" onclick="merkezBaslat()">🧩 Ders Merkezi</button><button class="dpB" onclick="siteyeDon()">🏠</button>';
     $d('dpSinif').innerHTML=veli?'':SINIFLAR.map(c=>'<button class="dpC'+(c===SECILI?' akt':'')+'" style="--c:'+RENK[c]+'" onclick="DP.sec(\''+c+'\')">'+(c==='Ana Sınıfı'?'🧸 Ana Sınıfı':c)+'</button>').join('');}
-  function kartHTML(L,veli){const isl=islendi()[L.key],gecmis=L.ts<tarihStr(new Date()),T0=TR[L.parts[0].T],renk=L.parts.length>1?'linear-gradient(180deg,'+TR[L.parts[0].T].r[0]+','+TR[L.parts[1].T].r[0]+')':T0.r[0];
+  function kartHTML(L,veli){const isl=!L.resmi&&L.parts.length&&L.parts.every(p=>p.done),gecmis=false,T0=TR[L.parts[0].T],renk=L.parts.length>1?'linear-gradient(180deg,'+TR[L.parts[0].T].r[0]+','+TR[L.parts[1].T].r[0]+')':T0.r[0];
     let h='<div class="dpKart'+(isl||(veli&&gecmis)?' bitti':'')+(L.resmi?' resmi':'')+'" id="k_'+L.key.replace(/\W/g,'_')+'"><div class="dpSerit" style="background:'+renk+'"></div><div class="dpIc">';
     h+='<div class="dpKUst"><span class="dpDers">'+esc(dersAdi(L.parts))+(L.sure>1?' · '+L.sure+' saat':'')+'</span><span class="dpZaman">📅 '+kisaTarih(L.tarih)+' · '+saatYaz(L)+'</span>'+((isl||(veli&&gecmis))?'<span class="dpOk">✅ İşlendi</span>':'')+'</div>';
     if(L.resmi)h+='<div class="dpResmi">🎉 '+esc(L.resmi)+' — bu ders yapılmaz.</div>';
-    const oy=oyunu(L);L.parts.forEach((p,j)=>{h+='<div class="dpParca"><div class="dpKonu">'+(L.parts.length>1?TR[p.T].ik+' ':'')+esc(p.konu)+' <span class="dpAsama">'+esc(p.asama)+'</span></div><div class="dpZ">🎯 '+esc(p.z)+'</div><div class="dpE">📝 '+esc(p.etk)+'</div>';
+    const oy=oyunu(L);if(!L.resmi)L.parts.forEach((p,j)=>{h+='<div class="dpParca'+(p.done?' ok':'')+'"><div class="dpKonu">'+(L.parts.length>1?TR[p.T].ik+' ':'')+esc(p.konu)+' <span class="dpAsama">'+esc(p.asama)+'</span> <span class="dpSira">'+(p.done?'✅ ':'')+'Ders '+(p.idx+1)+'/36</span></div><div class="dpZ">🎯 '+esc(p.z)+'</div><div class="dpE">📝 '+esc(p.etk)+'</div>';
       const U=uygulamalar(p,L.b,L.gi);if(U.length)h+='<div class="dpUyg">'+U.map((x,k)=>x.tip==='link'?'<a class="dpU l" href="'+x.url+'" target="_blank" rel="noopener">'+esc(x.ad)+' ↗</a>':'<button class="dpU'+(x.tip==='do'?' oy':'')+'" onclick="DP.uyg(\''+L.key+'\','+j+','+k+')">'+(x.tip==='do'?'🎮 Ders oyunu: ':veli?'🏠 Evde dene: ':'▶ ')+esc(x.ad)+'</button>').join('')+'</div>';h+='</div>';});
-    h+='<div class="dpBtn">'+(veli?'':'<button class="dpB dpA" onclick="DP.isle(\''+L.key+'\')">🎬 Dersi işle (ekranda)</button><button class="dpB" onclick="DP.isaret(\''+L.key+'\')">'+(isl?'↩️ İşlenmedi say':'✅ İşledim')+'</button>')+'<button class="dpB" onclick="DP.veli(\''+L.key+'\')">👪 Veli mesajı</button>'+(veli||L.resmi?'':'<button class="dpB dpEkoB" data-eko="'+esc(L.key)+'" onclick="DP.eko(\''+L.key+'\')">'+ekoEtiket(L.key)+'</button>')+'</div>';
+    if(L.resmi)return h+'</div></div>';
+    h+='<div class="dpBtn">'+(veli?'':'<button class="dpB dpA" onclick="DP.isle(\''+L.key+'\')">🎬 Dersi işle (ekranda)</button><button class="dpB'+(isl?'':' dpIsle')+'" onclick="DP.isaret(\''+L.key+'\')">'+(isl?'↩️ İşaretimi geri al':'✅ Bu dersi işledim')+'</button>')+'<button class="dpB" onclick="DP.veli(\''+L.key+'\')">👪 Veli mesajı</button>'+(veli||L.resmi?'':'<button class="dpB dpEkoB" data-eko="'+esc(L.key)+'" onclick="DP.eko(\''+L.key+'\')">'+ekoEtiket(L.key)+'</button>')+'</div>';
     return h+'</div></div>';}
-  function sinifCiz(){const veli=!!VELI,c=VELI||SECILI,L=dersListe(c),bh=buHafta(),isl=islendi(),Y=yuvalar(c);
-    const yapilan=L.filter(x=>isl[x.key]).length;
-    let h='<div class="dpOzet"><div class="dpOzetBas"><span class="dpSnfRozet" style="--c:'+RENK[c]+'">'+esc(c)+'</span><b>Haftalık dersler</b></div>'+Y.map(y=>{const Lx={d:y.d,i:y.i,sure:y.sure},ks=y.k==='SR'?['S','R']:y.k==='RY'?['R','Y']:y.k==='SA'?['S','A']:[y.k];return '<div class="dpYuva">🕘 '+saatYaz(Lx)+' — '+ks.map(k=>TR[k].ik+' '+TR[k].ad).join(y.k==='SR'?' ↔ ':' ve ')+(y.k==='SR'?' <small>(haftalık dönüşümlü)</small>':'')+'</div>';}).join('')+
-      (giOf(c)===8?'<div class="dpNot">ℹ️ 8. sınıfta eğitim koçluğu yerine bu yıl Yapay Zekâ işleniyor.</div>':'')+
-      (veli?'<div class="dpNot">👪 Sayın veli, aşağıda yıl boyu işlenecek bütün dersler sırasıyla yer alıyor. Geçmiş dersler ✅ ile işaretlidir; “🏠 Evde dene” düğmeleriyle çocuğunuz aynı etkinlikleri evde de yapabilir.</div>':'<div class="dpIler"><div class="dpIlerBar"><i style="width:'+Math.round(100*yapilan/Math.max(1,L.length))+'%"></i></div><span>✅ '+yapilan+' / '+L.length+' ders işlendi</span><button class="dpB" onclick="DP.haftaOzet()">🗓️ Bu haftanın veli özeti</button></div>')+'</div>';
-    HAF.forEach(hf=>{const bu=bh&&bh.cal===hf.cal,son=tarihStr(gun(tarihStr(hf.pzt),4));
+  function sinifCiz(){const veli=!!VELI,c=VELI||SECILI,V=veri(c),L=V.list,bh=buHafta(),bugun=tarihStr(new Date()),Y=yuvalar(c);
+    let h='<div class="dpOzet"><div class="dpOzetBas"><span class="dpSnfRozet" style="--c:'+RENK[c]+'">'+esc(c)+'</span><b>'+(veli?'Ders yolculuğumuz':'Nerede kaldık?')+'</b></div>';
+    h+=V.ozet.map(o=>'<div class="dpTrk"><div class="dpYuva">'+TR[o.T].ik+' <b>'+TR[o.T].ad+'</b> · ✅ '+o.d+'/'+o.n+(o.sonraki?' · sıradaki: <b>'+esc(o.sonraki.konu)+'</b> <small>('+esc(o.sonraki.asama)+')</small> → <b>'+kisaTarih(gun(o.ts,0))+'</b>':o.d>=o.n?' · 🎉 tamamlandı':'')+'</div><div class="dpIlerBar"><i style="width:'+Math.round(100*o.d/Math.max(1,o.n))+'%"></i></div></div>').join('');
+    h+='<div class="dpYuvalar">'+Y.map(y=>'<div class="dpYuva">🕘 '+saatYaz({d:y.d,i:y.i,sure:y.sure})+' — '+(y.sr?'Satranç ↔ Robotik-Kodlama <small>(haftalık dönüşümlü)</small>':y.dn?'Dönüşümlü <small>(her hafta bir ders)</small>':y.T.map(k=>TR[k].ik+' '+TR[k].ad).join(' ve '))+'</div>').join('')+'</div>';
+    if(giOf(c)===8)h+='<div class="dpNot">ℹ️ 8. sınıfta eğitim koçluğu saatinde Yapay Zekâ işleniyor.</div>';
+    if(veli)h+='<div class="dpNot">👪 Sayın veli, ✅ işaretli dersler işlendi; diğerleri tarihleriyle sırada. Konular okulun yıllık planındaki sırayla ilerler; bir ders işlenemezse konu bir sonraki derse kayar.'+(VELI_T?' <small>(Bu bağlantı '+kisaTarih(gun(VELI_T,0))+' tarihindeki durumu gösterir.)</small>':'')+'</div>';
+    else{h+=(DS.canli?'<div class="dpNot">🔗 Program <b>Ders Saati</b>’nden, konular <b>Yıllık Plan</b>’dan geliyor. “✅ İşledim” işaretleri üçünde ortak; işlenmeyen konu bir sonraki derse kayar.</div>':'<div class="dpNot dpUyari">⚠️ Bu tarayıcıda Ders Saati verisi bulunamadı, varsayılan program kullanılıyor. Ders Programım’ı Ders Saati ve Yıllık Plan ile <b>aynı sitede</b> açarsan program ve “işledim” kayıtları otomatik eşleşir.</div>')+
+      '<div class="dpIler"><button class="dpB" onclick="DP.haftaOzet()">🗓️ Bu haftanın veli özeti</button></div>';}
+    h+='</div>';
+    if(V.islenen.length)h+='<details class="dpHafta dpIslenen"'+(veli?'':'')+'><summary class="dpHBas">✅ İşlenen dersler ('+V.islenen.length+')</summary><div class="dpIslList">'+V.islenen.map(e=>'<div class="dpIsl"><span>'+TR[e.T].ik+' <b>'+esc(e.x.konu)+'</b> <small>'+esc(e.x.asama)+' · Ders '+(e.x.idx+1)+'</small></span><em>'+(e.ts?kisaTarih(gun(e.ts,0)):'tarih kaydı yok')+'</em></div>').join('')+'</div></details>';
+    HAF.forEach(hf=>{if(bh&&hf.cal<bh.cal)return;const bu=bh&&bh.cal===hf.cal;
       if(hf.tatil){h+='<div class="dpHafta tatil'+(bu?' bu':'')+'"><div class="dpHBas">🏖️ '+esc(hf.tatil)+' · '+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+'</div></div>';return;}
-      const Lh=L.filter(x=>x.h.no===hf.no);
-      h+='<div class="dpHafta'+(bu?' bu':'')+(son<tarihStr(new Date())?' gecti':'')+'" id="h_'+hf.no+'"><div class="dpHBas"><span class="dpHNo">'+hf.no+'. hafta</span> '+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+(bu?' <span class="dpBu">📍 Bu hafta</span>':'')+'</div>'+Lh.map(x=>kartHTML(x,veli)).join('')+'</div>';});
+      const Lh=L.filter(x=>x.h.cal===hf.cal);if(!Lh.length)return;
+      h+='<div class="dpHafta'+(bu?' bu':'')+'" id="h_'+hf.no+'"><div class="dpHBas"><span class="dpHNo">'+hf.no+'. hafta</span> '+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+(bu?' <span class="dpBu">📍 Bu hafta</span>':'')+'</div>'+Lh.map(x=>kartHTML(x,veli)).join('')+'</div>';});
+    if(V.kalan.length&&!veli)h+='<div class="dpOzet dpUyari"><b>⚠️ Yıl sonuna kadar yetişmeyen '+V.kalan.length+' konu</b><div class="dpNot">Haziran’a kadarki ders sayısı yetmiyor. İstersen bazı konuları birleştirip “✅ İşledim” ile işaretleyebilirsin:</div><div class="dpIslList">'+V.kalan.slice(0,12).map(e=>'<div class="dpIsl"><span>'+TR[e.T].ik+' '+esc(e.x.konu)+' <small>'+esc(e.x.asama)+'</small></span></div>').join('')+(V.kalan.length>12?'<div class="dpNot">… ve '+(V.kalan.length-12)+' konu daha</div>':'')+'</div></div>';
     $d('dpGovde').innerHTML=h;
-    const hb=bh&&document.querySelector('#dpGovde .dpHafta.bu');if(hb)setTimeout(()=>hb.scrollIntoView({block:'start'}),60);}
+    const hb=bh&&document.querySelector('#dpGovde .dpHafta.bu');if(hb)setTimeout(()=>hb.scrollIntoView({block:'start',behavior:'instant'}),60);}
   function bugunCiz(){const t=new Date(),wd=(t.getDay()+6)%7,ts=tarihStr(t),bh=buHafta();let h='<div class="dpOzet"><div class="dpOzetBas"><b>📍 Bugün · '+(wd<5?GUN[wd]:'Hafta sonu')+' '+kisaTarih(t)+'</b></div>';
     if(!bh||bh.tatil||wd>4){h+='<div class="dpNot">'+(bh&&bh.tatil?'🏖️ '+esc(bh.tatil):'Bugün ders yok. İyi dinlenmeler! 🌿')+'</div></div>';$d('dpGovde').innerHTML=h;return;}
     h+='<div class="dpNot">Bugünkü dersler saat sırasıyla. Sınıf adına dokunarak o sınıfın yıllık programına geçebilirsin.</div><div class="dpNot dpEko" id="dpEkoDurum">'+ekoDurum()+'</div><div class="dpIler"><button class="dpB dpA" onclick="DP.bugunGonder()">📤 Bugünün tüm derslerini şimdi Değişim’e gönder</button></div></div>';
@@ -4615,7 +5194,12 @@ const DP=(function(){
     if(x.tip==='blok'){kapat();if(typeof hayaletTemizle==='function')hayaletTemizle();DUNYA=DREG[x.d];document.documentElement.style.setProperty('--yesil',DUNYA.tema);$d('merkez').style.display='none';$d('app').style.display='flex';modBasla('blok',x.i);toast('📅 Bitince üstteki “📅 Programım” ile geri dön',3000);}
     else if(x.tip==='etk')ETK.oyna(x.ders,x.oyun,x.konu,x.mod);
     else if(x.tip==='do')DO.ac(x.sp);}
-  function isaret(key){const o=islendi();if(o[key])delete o[key];else o[key]=Date.now();LSx.set('dp_islendi',o);SES.tik(1,o[key]?2400:1400);if(o[key])toast('✅ İşlendi olarak işaretlendi · 👪 Veli mesajını göndermeyi unutma',2600);ciz();}
+  function isaret(key){const L=bul(key);if(!L||L.resmi)return;const o=LSx.get('dk_ilr',{})||{},dt=LSx.get('dp_ilr_tarih',{})||{},gor=LSx.get('dp_ilr_gor',{})||{},hepsi=L.parts.every(p=>p.done);
+    L.parts.forEach(p=>{const tid=TR[p.T].v,gk=L.gi+'|'+p.T;o[L.gi]=o[L.gi]||{};o[L.gi][tid]=o[L.gi][tid]||{};
+      if(hepsi){delete o[L.gi][tid][p.idx];delete dt[L.gi+'|'+tid+'|'+p.idx];gor[gk]=(gor[gk]||[]).filter(i=>i!==p.idx);}
+      else{o[L.gi][tid][p.idx]=1;dt[L.gi+'|'+tid+'|'+p.idx]=L.ts;gor[gk]=[...new Set((gor[gk]||[]).concat([p.idx]))];}});
+    LSx.set('dk_ilr',o);LSx.set('dp_ilr_tarih',dt);LSx.set('dp_ilr_gor',gor);temizle();SES.tik(1,hepsi?1400:2400);
+    toast(hepsi?'↩️ İşaret geri alındı; konu yeniden sıraya girdi':'✅ İşlendi ('+kisaTarih(L.tarih)+') · Ders Saati ve Yıllık Plan’da da işaretlendi · 👪 veli mesajını unutma',3000);ciz();}
   function paylas(baslik,metin){let o=$d('dpPay');if(!o){o=document.createElement('div');o.id='dpPay';o.className='ortu';document.body.appendChild(o);}
     o.innerHTML='<div class="ust"><div class="kart dpPayKart"><h2>'+baslik+'</h2><textarea id="dpPayTx" rows="12">'+esc(metin)+'</textarea><p style="font-size:.95rem;font-weight:700;color:#6b5a2c;margin:.4rem 0 0">Metni düzenleyebilirsin. WhatsApp’ta kalın yazılar için * kullanılır.</p></div></div><div class="alt"><button class="btn yesil" id="dpWa">💬 WhatsApp’ta gönder</button><button class="btn" id="dpKop">📋 Kopyala</button><button class="btn ana" id="dpKap">Kapat</button></div>';
     o.classList.add('acik');$d('dpWa').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent($d('dpPayTx').value),'_blank');
@@ -4626,7 +5210,7 @@ const DP=(function(){
     const m=['🗓️ Haftalık Özet · '+c+' · '+bh.no+'. hafta ('+kisaTarih(bh.pzt)+' – '+kisaTarih(gun(tarihStr(bh.pzt),4))+')'].concat(L.map(x=>x.resmi?'🎉 '+GUN[x.d]+': '+x.resmi+' (ders yok)':x.parts.map(p=>TR[p.T].ik+' '+GUN[x.d]+' · '+TR[p.T].ad+': '+p.konu+' — '+p.etk).join('\n')));
     const v=TR[L[0]?L[0].parts[0].T:'R'].v,b=bandOf(giOf(c));m.push('🏠 Evde “'+(b==='ana'?SORU_ANA[v]:SORU[v])+'” '+EK[b]);
     const oy=L.filter(x=>oyunu(x));if(oy.length){m.push('🎮 Haftanın oyunları:');oy.forEach(x=>{const ol=oyunLink(x);m.push('• '+GUN[x.d]+': '+oyunu(x).ad+(ol?'\n  👉 '+ol:''));});}m.push('— Barış Öğretmen');paylas('🗓️ Haftalık veli özeti · '+c,m.join('\n'));}
-  function veliLink(){const c=SECILI,url=location.href.split('#')[0]+'#veli='+encodeURIComponent(c);qrGoster('👪 '+c+' veli bağlantısı','Bu bağlantıyı '+c+' velilerine gönder: yıl boyunca bütün dersler alt alta, her hafta güncel görünür.',url);}
+  function veliLink(){const c=SECILI,url=veliUrl(c);qrGoster('👪 '+c+' veli bağlantısı','Bu bağlantıyı '+c+' velilerine gönder: yıl boyunca bütün dersler alt alta, her hafta güncel görünür.',url);}
   function qr(){qrGoster('📲 Paylaş','Bu sayfanın bağlantısı',location.href);}
   function qrGoster(baslik,acik,url){let o=$d('dpQr');if(!o){o=document.createElement('div');o.id='dpQr';o.className='ortu';document.body.appendChild(o);}
     o.innerHTML='<div class="ust"><div class="kart" style="text-align:center;max-width:34rem"><h2>'+baslik+'</h2><p style="font-weight:700">'+acik+'</p><div id="dpQrK" style="display:inline-block;background:#fff;padding:12px;border-radius:12px"></div><p style="word-break:break-all;font-size:.9rem;font-weight:600">'+esc(url)+'</p>'+(location.protocol.startsWith('http')?'':'<p style="color:#c8283c;font-weight:700">ℹ️ Bağlantının çalışması için sayfa sitende yayında olmalı.</p>')+'</div></div><div class="alt"><button class="btn yesil" id="dpQrW">💬 WhatsApp</button><button class="btn" id="dpQrC">📋 Kopyala</button><button class="btn ana" id="dpQrX">Kapat</button></div>';
@@ -4658,9 +5242,12 @@ const DP=(function(){
   function sec(c){SECILI=c;SECILI_MOD='sinif';LSx.set('dp_sinif',c);SES.tik(1,1700);ciz();}
   function bugun(){SECILI_MOD='bugun';ciz();}
   function veliMi(){const m=(location.hash||'').match(/veli=([^&]+)/);return m?decodeURIComponent(m[1]):null;}
-  function baslat(){const v=veliMi(),ok=oyunHash(),oc=ok&&ok.split('|')[0];if(v&&SINIFLAR.includes(v))VELI=v;else if(oc&&SINIFLAR.includes(oc))VELI=oc;ac();document.title=VELI?'Ders Programım · '+VELI:'Ders Programım';
-    if(ok&&VELI)oyunKarsila(ok);}
-  return {baslat,ac,kapat,sec,bugun,uyg,isle,isaret,veli,haftaOzet,veliLink,qr,egGit,egKapat,egUyg,veliMi,eko,bugunGonder,adresSor,_test:{dersListe,uygulamalar,yuvalar,HAF,DAG,veliMetin,rehber,SINIFLAR,blokBul,oyunu,oyunLink,sinifEsle,bugunDersleri,ekoGonder,mock:m=>{EKO_MOCK=m;}}};
+  function hashP(ad){const m=(location.hash||'').match(new RegExp('[#&]'+ad+'=([^&]*)'));return m?decodeURIComponent(m[1]):null;}
+  function baslat(){const v=veliMi(),ok=oyunHash(),r=ok&&oyunCoz(ok);if(v&&SINIFLAR.includes(v)){VELI=v;const p=hashP('p');if(p!=null)VELI_P=ilerCoz(p);VELI_T=hashP('t')||'';}else if(r){VELI=r.c;VELI_P={};}
+    ac();document.title=VELI?'Ders Programım · '+VELI:'Ders Programım';if(r)oyunKarsila(ok);
+    addEventListener('storage',e=>{if(['dk_ilr','barisDersSaati.v1','dk_tahta_dsec','dk_ozel_plan','dk_plan_kaynak','dk_tatil','dk_veli_akis'].includes(e.key))yenile();});
+    document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!VELI)yenile();});}
+  return {baslat,ac,kapat,sec,bugun,uyg,isle,isaret,veli,haftaOzet,veliLink,qr,egGit,egKapat,egUyg,veliMi,eko,bugunGonder,adresSor,_test:{dersListe,veri,seanslar,ilrSet,ilerKod,ilerCoz,yenile,oyunCoz,uygulamalar,yuvalar,HAF:()=>HAF,DS:()=>DS,veliMetin,rehber,SINIFLAR,blokBul,oyunu,oyunLink,sinifEsle,bugunDersleri,ekoGonder,mock:m=>{EKO_MOCK=m;}}};
 })();
 
 </script>
