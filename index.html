@@ -356,6 +356,16 @@ input,textarea,select{-webkit-user-select:text;user-select:text}
 
 .dpBuNot{margin:10px 4px 2px;font-size:14px;line-height:1.5;background:#fff7ed;color:#7c2d12;border:1px dashed #fb923c;border-radius:12px;padding:10px 12px}
 .dpIsleB{display:block;margin:8px 4px 0;text-align:left;background:linear-gradient(135deg,#16a34a,#0d9488)!important;color:#fff!important}
+
+.dpSureKart h2{margin:0 0 .5rem}
+.dpSureList{display:flex;flex-direction:column;gap:6px;max-height:34vh;overflow:auto}
+.dpSureD{background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:8px 10px;font-size:14px;color:#1e293b}
+.dpSureD small{display:block;color:#64748b;font-weight:700;margin-top:2px}
+.dpSureBil{font-size:13.5px;color:#334155;background:#ecfdf5;border-radius:12px;padding:8px 10px;margin:.6rem 0}
+.dpSureBas{font-weight:900;color:#0369a1;font-size:14px;margin:.3rem 0}
+.dpSureC{display:flex;flex-wrap:wrap;gap:6px}
+.dpSureB{border:2px solid #e2e8f0;background:#fff;color:#475569;font-weight:900;font-size:14px;border-radius:999px;padding:7px 12px;cursor:pointer}
+.dpSureB.akt{background:#0284c7;border-color:#0284c7;color:#fff}
 /* ---- 🎮 Ders Oyunu ---- */
 #doOrtu{position:fixed;inset:0;z-index:62;display:none;flex-direction:column;background:linear-gradient(160deg,#eef2ff,#f5f3ff 40%,#ecfeff);color:#1e1b4b;font-weight:600}
 #doOrtu.acik{display:flex}
@@ -516,7 +526,8 @@ pre.doKod{background:#0f172a;color:#e2e8f0;border-radius:.8rem;padding:.7rem .9r
       <button class="btn" onclick="menuAc()">☰ Bölümler</button>
       <button class="btn" onclick="blokBolum(BK.sev-1)">◀</button><button class="btn" onclick="blokBolum(BK.sev+1)">▶</button>
       <span id="blokSayac" class="sayac"></span><span class="bosluk"></span>
-      <button class="btn" onclick="temizle()">🗑 Temizle</button>
+      <button class="btn" onclick="basaDon()" title="Robotu/sahneyi başlangıca al, bloklar kalsın">⏮ Başa dön</button>
+      <button class="btn" onclick="temizle()" title="Blokları sil ve başa dön">🗑 Temizle</button>
       <button id="btnGeri" class="btn" onclick="geriAl()" title="Geri al (Ctrl+Z)">↩️ Geri Al</button>
       <button id="btnIleri" class="btn" onclick="ileriAl()" title="İleri al (Ctrl+Y)">↪️ İleri Al</button>
       <button id="btnHiz" class="btn" onclick="BK.hizli=!BK.hizli;blokPanel()"></button>
@@ -1493,9 +1504,10 @@ function suruklemeBitir(e,iptal){
 }
 function derin(arr){const s=arr[arr.length-1];return s&&s.ic?derin(s.ic):arr;}
 function hayaletTemizle(){document.querySelectorAll('.hayalet').forEach(h=>{if(!SR||h!==SR.el)h.remove();});const y=$('yuvaCizgi');if(y&&!SR)y.style.display='none';}
-function temizle(){if(BK.cal)return;if(SR){if(SR.el)SR.el.remove();SR=null;}hayaletTemizle();BK.prog=[];degisti();toast('🗑 Temizlendi · ↩️ Geri Al ile geri getirebilirsin',2600);}
+function temizle(){if(BK.cal)durdur();if(SR){if(SR.el)SR.el.remove();SR=null;}hayaletTemizle();BK.prog=[];BK.S=baslangicDurum();BK.G={};degisti();toast('🗑 Temizlendi · 🤖 başa döndü · ↩️ Geri Al ile bloklar geri gelir',2600);}
+function basaDon(){if(BK.cal)durdur();BK.S=baslangicDurum();BK.G={};BK.hataId=null;document.querySelectorAll('#calisma .hatali').forEach(e=>e.classList.remove('hatali'));alanCiz();blokPanel();SES.tik&&SES.tik(1,1800);toast('⏮ Başa döndü — bloklar duruyor, tekrar ▶ Çalıştır',2200);}
 function sinirUyar(){SES.yanlis();toast('🧱 Blok sınırı: en fazla '+L().max+' blok. '+(L().kutu.some(k=>k.t==='tekrar'||k.t==='kadar')?'Döngü kullanmayı dene!':''),3200);}
-function degisti(){hayaletTemizle();BK.hataId=null;gecmisEkle();progKaydet();alanCiz();blokPanel();}
+function degisti(){hayaletTemizle();BK.hataId=null;if(!BK.cal){try{BK.S=baslangicDurum();}catch(e){}}gecmisEkle();progKaydet();alanCiz();blokPanel();}
 function gecmisEkle(){BK.gecmis=BK.gecmis||[];BK.ileri=BK.ileri||[];const a=JSON.stringify(BK.prog);if(BK.gecmis[BK.gecmis.length-1]!==a){BK.gecmis.push(a);if(BK.gecmis.length>80)BK.gecmis.shift();BK.ileri=[];}}
 function gecmisYukle(js){BK.prog=JSON.parse(js).map(yeniDugum);BK.hataId=null;hayaletTemizle();progKaydet();alanCiz();blokPanel();}
 function geriAl(){if(BK.cal||SR)return;if(!BK.gecmis||BK.gecmis.length<2){toast('↩️ Geri alınacak adım yok');return;}BK.ileri.push(BK.gecmis.pop());gecmisYukle(BK.gecmis[BK.gecmis.length-1]);SES.tik(1,1300);toast('↩️ Geri alındı',900);}
@@ -5240,7 +5252,13 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
       if(/hafıza/.test(k))ekle(etkSec('mat',[don(mk)],'78','hafiza'));if(/odak|dikkat|pomodoro/.test(k))ekle(etkSec('mat',[don(mk)],'78','kostebek'));
       if(/sözel|okudu|özet|not alma/.test(k)){ekle(etkSec('tr',[don(tk)],'78','yaris'));ekle(etkSec('tr',[tk[(t+1)%4]],'78','dy'));}
       ekle(etkSec('mat',[don(mk)],'78',don(['yaris','kutu','dy'])));ekle(etkSec('tr',[don(tk)],'78',don(['yaris','eslestir','dy'])));o.forEach(x=>{if(x)x.ad=x.ad.replace(/^(\S+) /,'$1 LGS · ');});}
-    return o.filter(Boolean).slice(0,3);}
+    const q=o.filter(Boolean).slice(0,3);
+    /* ⬆️ meydan okuma: listede üst seviye yoksa, aynı etkinliğin bir üst sınıf seviyesini ekle */
+    if(b!=='78'&&q.length&&!q.some(x=>x.ust)){const u=ustBand(b);let m=null;
+      for(const x of q){if(x.tip==='blok'){const d=DUNYALAR.find(w=>w.id===x.d),sv=d&&(d.seviyeler[u]||[]);if(sv&&sv.length){const i=Math.min(sv.length-1,x.i+1);m={tip:'blok',d:x.d,i,band:u,ust:true,ad:d.ik+' '+d.ad+': '+sv[i].ad};break;}}
+        else if(x.tip==='etk'){let K={};try{K=(ETK._test.KONU[x.ders]||{})[u]||[];}catch(e){}const w=String(x.konu).toLocaleLowerCase('tr').split(/[\s,–-]+/).filter(z=>z.length>3);const kk=K.find(z=>z.k===x.konu)||K.find(z=>w.some(y=>z.k.toLocaleLowerCase('tr').includes(y)));if(kk){m={tip:'etk',ders:x.ders,oyun:x.oyun,konu:kk.k,mod:x.mod,band:u,ust:true,ad:ETK_AD[x.oyun]+': '+kk.k};break;}}}
+      if(m)q.splice(1,0,m);}
+    return q.slice(0,4);}
   function oyunSpec(p,b,gi){return {T:p.T,b,u:p.u,st:p.st,konu:p.konu,unite:p.unite,asama:p.asama,z:p.z,bec:p.bec,genc:genc(b),tohum:gi*1000+p.idx*10+'RYSAK'.indexOf(p.T),id:gi+'_'+p.T+'_'+p.idx};}
   function uygulamalar(p,b,gi){const u=[];if(!p||p.idx<0)return u;const k=String(p.konu||'').toLocaleLowerCase('tr');
     if(typeof DO!=='undefined'){try{const sp=oyunSpec(p,b,gi),P=DO._test.PLAN(sp);u.push({tip:'do',ad:P.ik+' '+P.ad,sp});}catch(e){}}
@@ -5257,7 +5275,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   function adresSor(){const y=prompt('Ders Programım sayfasının internet adresi\n(velilere giden 🎮 oyun bağlantıları bu adresle açılır)\nÖrnek: https://ornek.github.io/ders-programim.html',LSx.get('dp_adres','')||adres()||'https://');if(y===null)return adres();const t=y.trim();LSx.set('dp_adres',/^https?:\/\/[^\s]+\.[^\s]+/.test(t)?t.split('#')[0]:'');if(adres())toast('🌐 Adres kaydedildi',1800);return adres();}
   function oyunLink(L,j,k){const a=adres(),o=oyunu(L);if(!a||!o)return '';const p=L.parts[j==null?o.j:j];return a+'#oyun='+encodeURIComponent(L.c+'~'+p.T+'~'+p.idx+(k!=null?'~'+k:''));}
   function oyunListesi(L){const o=[];L.parts.forEach((p,j)=>uygulamalar(p,L.b,L.gi).forEach((x,k)=>{if(x.tip!=='link')o.push({j,k,x,p});}));return o;}
-  function gonderiLinkleri(L){const tek=L.parts.length===1,o=[];L.parts.forEach((p,j)=>{let dm=0;uygulamalar(p,L.b,L.gi).forEach((x,k)=>{if(x.tip==='link')return;if(x.tip!=='do'){if(dm>=(tek?2:1))return;dm++;}const url=oyunLink(L,j,k);if(url)o.push({url,ad:((x.tip==='do'?'🎮 Ders oyunu: ':'🧩 Ders Merkezi: ')+x.ad).slice(0,60)});});});return o.slice(0,5);}
+  function gonderiLinkleri(L){const tek=L.parts.length===1,o=[];L.parts.forEach((p,j)=>{let dm=0;uygulamalar(p,L.b,L.gi).forEach((x,k)=>{if(x.tip==='link')return;if(x.tip!=='do'){if(dm>=(tek?4:2))return;dm++;}const url=oyunLink(L,j,k);if(url)o.push({url,ad:((x.tip==='do'?'🎮 Ders oyunu: ':'🧩 Ders Merkezi: ')+x.ad+(x.ust?' ⬆️':'')).slice(0,60)});});});return o.slice(0,10);}
   function ilerKod(c){const gi=giOf(c);return veri(c).Ts.map(T=>{const D=[...ilrSet(gi,T)].sort((a,b)=>a-b),r=[];for(let i=0;i<D.length;){let j=i;while(j+1<D.length&&D[j+1]===D[j]+1)j++;r.push(i===j?D[i]:D[i]+'-'+D[j]);i=j+1;}return T+r.join(',');}).join('~');}
   function ilerCoz(s){const o={};String(s||'').split('~').forEach(p=>{const T=p[0];if(!T||!'RSYAK'.includes(T))return;const S_=new Set();p.slice(1).split(',').filter(Boolean).forEach(r=>{const [a,b]=r.split('-').map(Number);if(isNaN(a))return;for(let i=a;i<=(isNaN(b)?a:b);i++)S_.add(i);});o[T]=S_;});return o;}
   function veliUrl(c){const a=adres()||location.href.split('#')[0];return a+'#veli='+encodeURIComponent(c)+'&p='+encodeURIComponent(ilerKod(c))+'&t='+tarihStr(new Date());}
@@ -5275,19 +5293,38 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   const saatKisa=t=>{const d=new Date(t);return String(d.getHours()).padStart(2,'0')+':'+String(d.getMinutes()).padStart(2,'0');};
   function ekoEtiket(key){const t=gonderildi()[key];return t?'✅ Değişim’e gitti · '+saatKisa(t):'📤 Değişim’e gönder';}
   function ekoBtnYenile(){document.querySelectorAll('[data-eko]').forEach(b=>{b.textContent=ekoEtiket(b.getAttribute('data-eko'));});const d=$d('dpEkoDurum');if(d)d.innerHTML=ekoDurum();}
-  async function ekoGonder(Ls,sessiz){Ls=Ls.filter(L=>L&&!L.resmi);if(!Ls.length){if(!sessiz)toast('Gönderilecek ders yok');return 0;}
+  const SURE_SECENEK=[['bugun','☀️ Bugün bitince'],['yarin','🌙 Yarın akşama'],['3','3 gün'],['7','1 hafta'],['hafta','📅 Hafta sonuna'],['30','🗓️ 1 ay'],['0','📌 Kalıcı']];
+  const SURE_ETIKET={bugun:'Bugün bitince',yarin:'Yarın akşama',3:'3 gün',7:'1 hafta',hafta:'Hafta sonuna',30:'1 ay',0:'Kalıcı'};
+  function gunSonu(ek){const d=new Date();d.setHours(23,59,0,0);d.setDate(d.getDate()+(ek||0));return d.getTime();}
+  function sureBitis(g){if(g==='bugun')return gunSonu(0);if(g==='yarin')return gunSonu(1);if(g==='hafta'){const gn=new Date().getDay();return gunSonu(gn===0?0:7-gn);}const n=Number(g||0);return n>0?Date.now()+n*864e5:0;}
+  function sureAl(){const v=LSx.get('dp_eko_sure','7');return SURE_ETIKET[v]!=null?String(v):'7';}
+  function duz(h){return String(h||'').replace(/<br\s*\/?>/gi,' ').replace(/<[^>]+>/g,'').replace(/&amp;/g,'&').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&#39;/g,"'").replace(/\s{2,}/g,' ').trim();}
+  function akildaKalsin(p,b,gi){try{if(typeof DO==='undefined')return '';const P=DO._test.PLAN(oyunSpec(p,b,gi));const o=(P.ozet||[]).map(duz).filter(Boolean);return (o.find(x=>/^💡/.test(x))||o[0]||'').replace(/^💡\s*/,'');}catch(e){return '';}}
+  function kartYap(G){const L=G[0],bugun=L.ts===tarihStr(new Date()),b=L.b,D=[];
+    G.forEach(x=>x.parts.forEach(p=>{const T=TR[p.T],v=T.v;D.push({ik:T.ik,ad:T.ad,ders:GUN[x.d]+' '+(x.i+1)+(x.sure>1?'–'+(x.i+x.sure):'')+'. ders',dr:T.r[0],dr2:T.r[1],durum:p.done?'✅ İşlendi':'',k:p.konu+(p.asama?' ('+p.asama+')':'')+(p.etk?' — 📝 '+p.etk:''),z:(p.z?p.z+' ':'')+'Çocuğunuz '+KAZ[v][b]+'.',soru:(b==='ana'?SORU_ANA[v]:SORU[v])});}));
+    const ak=[...new Set(G.flatMap(x=>x.parts.map(p=>akildaKalsin(p,b,x.gi))).filter(Boolean))].slice(0,2);
+    return {tur:bugun?'gun':'hafta',baslik:(bugun?'Bugün Derste':GUN[L.d]+' Dersimizde')+' · '+kisaTarih(L.tarih),sinif:L.c,dersler:D,not:(ak.length?'🧠 Akılda kalsın: '+ak.join(' · ')+' ':'')+'🎮 Aşağıdaki oyunları çocuğunuzla birlikte oynayabilirsiniz'+(G.some(x=>gonderiLinkleri(x).some(l=>/⬆️/.test(l.ad)))?'; ⬆️ işaretliler bir üst seviyeden — meydan okuma 💪':' 💪')};}
+  function gonderOnay(Ls,sonra){Ls=Ls.filter(L=>L&&!L.resmi);if(!Ls.length){toast('Gönderilecek ders yok');return;}let sure=sureAl();
+    let o=$d('dpSure');if(!o){o=document.createElement('div');o.id='dpSure';o.className='ortu';document.body.appendChild(o);}
+    const oy=new Set();Ls.forEach(L=>gonderiLinkleri(L).forEach(l=>oy.add(l.url)));
+    const ciz_=()=>{o.innerHTML='<div class="ust"><div class="kart dpPayKart dpSureKart"><h2>📤 Değişim’e gönder</h2><div class="dpSureList">'+Ls.map(L=>'<div class="dpSureD"><b>'+esc(L.c)+'</b> · '+kisaTarih(L.tarih)+' · '+esc(dersAdi(L.parts))+'<small>'+esc(L.parts.map(p=>p.konu).join(' + '))+'</small></div>').join('')+'</div><p class="dpSureBil">👪 Veli ve 🎒 öğrenci “📰 Özetler”de renkli ders kartı + <b>'+Math.min(10,oy.size)+' oyun</b> düğmesi görür. Yıllık ders programı gitmez.</p><div class="dpSureBas">⏳ Ne zaman kendiliğinden kalksın?</div><div class="dpSureC">'+SURE_SECENEK.map(x=>'<button class="dpSureB'+(x[0]===sure?' akt':'')+'" data-s="'+x[0]+'">'+x[1]+'</button>').join('')+'</div></div></div><div class="alt"><button class="btn yesil" id="dpSureGo">📤 Gönder · '+SURE_ETIKET[sure]+'</button><button class="btn ana" id="dpSureKap">Vazgeç</button></div>';
+      o.querySelectorAll('.dpSureB').forEach(b_=>b_.onclick=()=>{sure=b_.getAttribute('data-s');LSx.set('dp_eko_sure',sure);ciz_();});
+      $d('dpSureKap').onclick=()=>o.classList.remove('acik');
+      $d('dpSureGo').onclick=()=>{o.classList.remove('acik');ekoGonder(Ls,false,sure).then(n=>{if(sonra)sonra(n);});};};
+    ciz_();o.classList.add('acik');}
+  async function ekoGonder(Ls,sessiz,sure){Ls=Ls.filter(L=>L&&!L.resmi);if(!Ls.length){if(!sessiz)toast('Gönderilecek ders yok');return 0;}
     if(!adres()&&!sessiz)adresSor();
     if(!sessiz)toast('📤 Değişim’e gönderiliyor…',2500);
     try{const fb=await ekoFb(),F=fb.F;let okul=[];
       try{const sn=await F.getDoc(F.doc(fb.db,'maas_config','k12_ogrenciler'));((sn.exists()&&sn.data().liste)||[]).forEach(o=>{if(o&&o.sinif&&!okul.includes(o.sinif))okul.push(o.sinif);});}catch(e){}
-      const ts=Date.now(),bitis=ts+7*864e5,yeni=[],hedef=[],a=adres();
+      const ts=Date.now(),sr=sure!=null?String(sure):sureAl(),bitis=sureBitis(sr),yeni=[],hedef=[],a=adres();
       const grup={};Ls.forEach(L=>{const g=L.c+'|'+L.ts;(grup[g]=grup[g]||[]).push(L);});
       Object.values(grup).forEach((G,i)=>{const L=G[0],m=G.map(x=>veliMetin(x,true)).join('\n\n'),lk=[];
-        G.forEach(x=>gonderiLinkleri(x).forEach(l=>{if(!lk.some(y=>y.url===l.url)&&lk.length<6)lk.push(l);}));
-        sinifEsle(L.c,okul).forEach((s,j)=>{const y={id:'dp'+ts.toString(36)+i+'_'+j+Math.random().toString(36).slice(2,6),sinif:s,metin:m,ogretmen:'Barış Öğretmen',ts:ts-(i*10+j),kaynak:'ozet',bitis,robotik:true};if(lk.length)y.linkler=lk;yeni.push(y);if(!hedef.includes(s))hedef.push(s);});});
+        G.forEach(x=>gonderiLinkleri(x).forEach(l=>{if(!lk.some(y=>y.url===l.url)&&lk.length<10)lk.push(l);}));const kart=kartYap(G);
+        sinifEsle(L.c,okul).forEach((s,j)=>{const y={id:'dp'+ts.toString(36)+i+'_'+j+Math.random().toString(36).slice(2,6),sinif:s,metin:m,ogretmen:'Barış Öğretmen',ts:ts-(i*10+j),kaynak:'ozet',bitis,robotik:true,kart:Object.assign({},kart,{sinif:s})};if(lk.length)y.linkler=lk;yeni.push(y);if(!hedef.includes(s))hedef.push(s);});});
       await F.setDoc(F.doc(fb.db,'maas_config','k12_pano'),{liste:F.arrayUnion.apply(null,yeni),guncelleme:Date.now()},{merge:true});
       const g=gonderildi();Ls.forEach(L=>{g[L.key]=ts;});LSx.set('dp_eko',g);ekoBtnYenile();
-      if(!sessiz)toast('✅ Değişim’e gönderildi → '+hedef.join(', ')+' · veliler “📰 Özetler”de oyunla birlikte görüyor',5000);return Ls.length;}
+      if(!sessiz)toast('✅ Değişim’e gönderildi → '+hedef.join(', ')+' · ⏳ '+(SURE_ETIKET[sr]||'')+' · veli ve öğrenci “📰 Özetler”de oyunlarla görüyor',5000);return Ls.length;}
     catch(e){if(!sessiz){paylas('⚠️ Değişim’e gönderilemedi — metin burada',Ls.map(L=>veliMetin(L)).join('\n\n'));toast('İnternet bağlantısını kontrol et · istersen WhatsApp ya da Kopyala ile gönder',4500);}return -1;}}
   /* 🧹 Daha önce Değişim’e gönderilmiş mesajlardan “yıllık ders programı” bağlantısını kaldır (mesaj ve oyun kalır) */
   const progLinkMi=l=>l&&(/yıllık ders programı/i.test(l.ad||'')||/#veli=/.test(l.url||''));
@@ -5296,10 +5333,10 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
       if(n)await F.setDoc(ref,{liste:yeni,guncelleme:Date.now()},{merge:true});LSx.set('dp_link_temiz',Date.now());
       if(n||!sessiz)toast(n?'🧹 '+n+' mesajdan yıllık ders programı bağlantısı kaldırıldı · mesaj ve oyun yerinde':'✅ Değişim’de yıllık program bağlantısı kalmamış',4000);return n;}
     catch(e){if(!sessiz)toast('Değişim’e ulaşılamadı; internet bağlantısını kontrol edip tekrar dene',3500);return -1;}}
-  function haftaGonder(c){const bh=buHafta(),bug=tarihStr(new Date());if(!bh)return;const L=dersListe(c).filter(x=>x.h.cal===bh.cal&&!x.resmi&&x.ts<=bug&&!gonderildi()[x.key]);if(!L.length){toast('Bu hafta gönderilmemiş (bugüne kadarki) ders yok');return;}ekoGonder(L);}
-  function eko(key){const L=bul(key);if(!L)return;if(gonderildi()[key]&&!confirm(L.c+' dersi '+saatKisa(gonderildi()[key])+'’de Değişim’e gönderilmişti. Tekrar gönderilsin mi?'))return;ekoGonder([L]);}
+  function haftaGonder(c){const bh=buHafta(),bug=tarihStr(new Date());if(!bh)return;const L=dersListe(c).filter(x=>x.h.cal===bh.cal&&!x.resmi&&x.ts<=bug&&!gonderildi()[x.key]);if(!L.length){toast('Bu hafta gönderilmemiş (bugüne kadarki) ders yok');return;}gonderOnay(L);}
+  function eko(key){const L=bul(key);if(!L)return;if(gonderildi()[key]&&!confirm(L.c+' dersi '+saatKisa(gonderildi()[key])+'’de Değişim’e gönderilmişti. Tekrar gönderilsin mi?'))return;gonderOnay([L]);}
   function bugunDersleri(ts){const L=[];SINIFLAR.forEach(c=>dersListe(c).forEach(x=>{if(x.ts===ts&&!x.resmi)L.push(x);}));return L.sort((a,b)=>a.i-b.i);}
-  function bugunGonder(){const L=bugunDersleri(tarihStr(new Date()));if(!L.length){toast('Bugün gönderilecek ders yok');return;}ekoGonder(L).then(n=>{if(n>0)LSx.set('dp_eko_gun',tarihStr(new Date()));ekoBtnYenile();});}
+  function bugunGonder(){const L=bugunDersleri(tarihStr(new Date()));if(!L.length){toast('Bugün gönderilecek ders yok');return;}gonderOnay(L,n=>{if(n>0)LSx.set('dp_eko_gun',tarihStr(new Date()));ekoBtnYenile();});}
   function ekoDurum(){const ts=tarihStr(new Date());return LSx.get('dp_eko_gun','')===ts?'✅ Bugünün dersleri oyun bağlantılarıyla Değişim’e gönderildi.':'📤 Bugünün dersleri, her birinin 🎮 ders oyunu bağlantısıyla Değişim’e (veli “📰 Özetler”) tek dokunuşla gider.';}
 
   /* ---- 🔄 ORTAK İLERLEME: Ders Saati + Yıllık Plan + Ders Programım ----
@@ -5396,7 +5433,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     if(V.islenen.length)h+='<details class="dpHafta dpIslenen"'+(veli?'':'')+'><summary class="dpHBas">✅ İşlenen dersler ('+V.islenen.length+')</summary><div class="dpIslList">'+V.islenen.map(e=>'<div class="dpIsl"><span>'+TR[e.T].ik+' <b>'+esc(e.x.konu)+'</b> <small>'+esc(e.x.asama)+' · Ders '+(e.x.idx+1)+'</small></span><em>'+(e.ts?kisaTarih(gun(e.ts,0)):'tarih kaydı yok')+'</em></div>').join('')+'</div></details>';
     HAF.forEach(hf=>{if(bh&&hf.cal<bh.cal)return;const bu=bh&&bh.cal===hf.cal;
       if(hf.tatil){h+='<div class="dpHafta tatil'+(bu?' bu':'')+'"><div class="dpHBas">🏖️ '+esc(hf.tatil)+' · '+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+'</div></div>';return;}
-      const Lh=L.filter(x=>x.h.cal===hf.cal);if(!Lh.length){if(bu){const sn=L.find(x=>!x.resmi&&x.h.cal>hf.cal);h+='<div class="dpHafta bu" id="h_'+hf.no+'"><div class="dpBuBas"><span>📍 BU HAFTA</span><b>'+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+'</b><em>'+hf.no+'. hafta</em></div><div class="dpNot dpBuNot">Bu haftaki ders saati geçti ve “✅ İşledim” işaretlenmedi; konu sistemsel olarak '+(sn?'<b>'+kisaTarih(sn.tarih)+'</b> dersine':'bir sonraki derse')+' kaydı. İşlediysen tek dokunuşla işaretle; tarih bu haftaya ('+(sn?kisaTarih(gun(tarihStr(hf.pzt),sn.d)):'')+') yazılır, sonra Değişim’e gönderebilirsin.</div>'+(veli?'':kacanBtn(hf,L))+'</div></div>';}return;}
+      const Lh=L.filter(x=>x.h.cal===hf.cal);if(!Lh.length){if(bu){const sn=L.find(x=>!x.resmi&&x.h.cal>hf.cal);h+='<div class="dpHafta bu" id="h_'+hf.no+'"><div class="dpBuBas"><span>📍 BU HAFTA</span><b>'+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+'</b><em>'+hf.no+'. hafta</em></div><div class="dpNot dpBuNot">Bu haftaki ders saati geçti ve “✅ İşledim” işaretlenmedi; konu sistemsel olarak '+(sn?'<b>'+kisaTarih(sn.tarih)+'</b> dersine':'bir sonraki derse')+' kaydı. İşlediysen tek dokunuşla işaretle; tarih bu haftadaki ders gününe yazılır, sonra Değişim’e gönderebilirsin.</div>'+(veli?'':kacanBtn(hf,L))+'</div></div>';}return;}
       h+='<div class="dpHafta'+(bu?' bu':'')+'" id="h_'+hf.no+'">'+(bu?'<div class="dpBuBas"><span>📍 BU HAFTA</span><b>'+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+'</b><em>'+hf.no+'. hafta · '+Lh.length+' ders</em>'+(veli?'':'<button class="dpB dpEkoBuyuk" onclick="DP.haftaGonder(\''+esc(c)+'\')">📤 Bu haftanın derslerini Değişim’e gönder</button>')+'</div>'+(()=>{const k=veli?'':kacanBtn(hf,L);return k?'<div class="dpNot dpBuNot">Bu haftaki diğer dersin saati geçti, “İşledim” işaretlenmedi; işlediysen dokun (tarih bu haftaya yazılır):</div>'+k:'';})():'<div class="dpHBas"><span class="dpHNo">'+hf.no+'. hafta</span> '+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+'</div>')+Lh.map(x=>kartHTML(x,veli)).join('')+'</div>';});
     if(V.kalan.length&&!veli)h+='<div class="dpOzet dpUyari"><b>⚠️ Yıl sonuna kadar yetişmeyen '+V.kalan.length+' konu</b><div class="dpNot">Haziran’a kadarki ders sayısı yetmiyor. İstersen bazı konuları birleştirip “✅ İşledim” ile işaretleyebilirsin:</div><div class="dpIslList">'+V.kalan.slice(0,12).map(e=>'<div class="dpIsl"><span>'+TR[e.T].ik+' '+esc(e.x.konu)+' <small>'+esc(e.x.asama)+'</small></span></div>').join('')+(V.kalan.length>12?'<div class="dpNot">… ve '+(V.kalan.length-12)+' konu daha</div>':'')+'</div></div>';
     $d('dpGovde').innerHTML=h;
@@ -5475,7 +5512,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   function kacanBtn(hf,L){const pz=tarihStr(hf.pzt),simdi=new Date(),bu=L.filter(x=>x.h.cal===hf.cal),sn=L.find(x=>!x.resmi&&x.h.cal>hf.cal);if(!sn)return '';
     return L.filter(x=>!x.resmi&&x.h.cal===sn.h.cal&&gun(pz,x.d)<=simdi&&!bu.some(y=>y.d===x.d&&y.i===x.i)).map(x=>'<button class="dpB dpEkoBuyuk dpIsleB" onclick="DP.buHaftaIsle(\''+esc(x.key)+'\',\''+tarihStr(gun(pz,x.d))+'\')">✅ '+GUN[x.d]+' '+(x.i+1)+(x.sure>1?'–'+(x.i+x.sure):'')+'. ders işlendi · '+esc(x.parts.map(p=>TR[p.T].ik+' '+p.konu).join(' + '))+'</button>').join('');}
   function buHaftaIsle(key,ts){isaret(key,ts);}
-  return {buHaftaIsle,baslat,ac,kapat,sec,bugun,uyg,isle,isaret,veli,haftaOzet,veliLink,qr,egGit,egKapat,egUyg,veliMi,eko,bugunGonder,adresSor,esitle:()=>bsEsitle(true),haftaGonder,linkTemizle:()=>programLinkTemizle(false),_test:{dmSec,gonderiLinkleri,oyunListesi,uygAc,programLinkTemizle,bsEsitle,bsYakala,paylasTazele,hiz:v=>{DO_HIZ=v;},dersListe,veri,seanslar,ilrSet,ilerKod,ilerCoz,yenile,oyunCoz,uygulamalar,yuvalar,HAF:()=>HAF,DS:()=>DS,veliMetin,rehber,SINIFLAR,blokBul,oyunu,oyunLink,sinifEsle,bugunDersleri,ekoGonder,mock:m=>{EKO_MOCK=m;}}};
+  return {buHaftaIsle,baslat,ac,kapat,sec,bugun,uyg,isle,isaret,veli,haftaOzet,veliLink,qr,egGit,egKapat,egUyg,veliMi,eko,bugunGonder,adresSor,esitle:()=>bsEsitle(true),haftaGonder,linkTemizle:()=>programLinkTemizle(false),_test:{kartYap,sureBitis,gonderOnay,dmSec,gonderiLinkleri,oyunListesi,uygAc,programLinkTemizle,bsEsitle,bsYakala,paylasTazele,hiz:v=>{DO_HIZ=v;},dersListe,veri,seanslar,ilrSet,ilerKod,ilerCoz,yenile,oyunCoz,uygulamalar,yuvalar,HAF:()=>HAF,DS:()=>DS,veliMetin,rehber,SINIFLAR,blokBul,oyunu,oyunLink,sinifEsle,bugunDersleri,ekoGonder,mock:m=>{EKO_MOCK=m;}}};
 })();
 
 </script>
