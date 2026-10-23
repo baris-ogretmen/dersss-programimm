@@ -5323,7 +5323,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
         G.forEach(x=>gonderiLinkleri(x).forEach(l=>{if(!lk.some(y=>y.url===l.url)&&lk.length<10)lk.push(l);}));const kart=kartYap(G);
         sinifEsle(L.c,okul).forEach((s,j)=>{const y={id:'dp'+ts.toString(36)+i+'_'+j+Math.random().toString(36).slice(2,6),sinif:s,metin:m,ogretmen:'Barış Öğretmen',ts:ts-(i*10+j),kaynak:'ozet',bitis,robotik:true,kart:Object.assign({},kart,{sinif:s})};if(lk.length)y.linkler=lk;yeni.push(y);if(!hedef.includes(s))hedef.push(s);});});
       await F.setDoc(F.doc(fb.db,'maas_config','k12_pano'),{liste:F.arrayUnion.apply(null,yeni),guncelleme:Date.now()},{merge:true});
-      const g=gonderildi();Ls.forEach(L=>{g[L.key]=ts;});LSx.set('dp_eko',g);ekoBtnYenile();
+      const g=gonderildi();Ls.forEach(L=>{g[L.key]=ts;});LSx.set('dp_eko',g);try{const A=LSx.get('dk_veli_akis',[])||[];let dg=false;Ls.forEach(L=>L.parts.forEach(p=>A.forEach(e=>{if(e&&!e.gon&&+e.gi===L.gi&&e.k===TR[p.T].v&&+e.idx===p.idx){e.gon=ts;dg=true;}})));if(dg)LSx.set('dk_veli_akis',A);}catch(e){}ekoBtnYenile();
       if(!sessiz)toast('✅ Değişim’e gönderildi → '+hedef.join(', ')+' · ⏳ '+(SURE_ETIKET[sr]||'')+' · veli ve öğrenci “📰 Özetler”de oyunlarla görüyor',5000);return Ls.length;}
     catch(e){if(!sessiz){paylas('⚠️ Değişim’e gönderilemedi — metin burada',Ls.map(L=>veliMetin(L)).join('\n\n'));toast('İnternet bağlantısını kontrol et · istersen WhatsApp ya da Kopyala ile gönder',4500);}return -1;}}
   /* 🧹 Daha önce Değişim’e gönderilmiş mesajlardan “yıllık ders programı” bağlantısını kaldır (mesaj ve oyun kalır) */
@@ -5507,8 +5507,23 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   function baslat(){const v=veliMi(),ok=oyunHash(),r=ok&&oyunCoz(ok);if(v&&SINIFLAR.includes(v)){VELI=v;const p=hashP('p');if(p!=null)VELI_P=ilerCoz(p);VELI_T=hashP('t')||'';}else if(r){VELI=r.c;VELI_P={};}
     ac();document.title=VELI?'Ders Programım · '+VELI:'Ders Programım';if(r)oyunKarsila(ok);
     addEventListener('storage',e=>{if(['dk_ilr','barisDersSaati.v1','dk_tahta_dsec','dk_ozel_plan','dk_plan_kaynak','dk_tatil','dk_veli_akis'].includes(e.key)){if(e.key==='dk_ilr'){paylasTazele();bsZamanla();}yenile();}});
+    if(!VELI){try{if(/^https?:/.test(location.protocol))LSx.set('dk_dp_url',location.href.split('#')[0]);}catch(e){}setTimeout(dsGeldi,450);addEventListener('hashchange',()=>{if(dsHash())dsGeldi();});}
     if(!VELI){paylasTazele();bulutBaslat();if(!LSx.get('dp_link_temiz',0))setTimeout(()=>programLinkTemizle(true),1500);setTimeout(()=>{try{SINIFLAR.forEach(c=>veri(c));}catch(e){}},300);}
     document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!VELI)yenile();});}
+  /* ---- 🔗 Ders Saati “✅ İşledim” → buraya gelir (#ds=sınıf|tarih) ---- */
+  function dsHash(){const m=(location.hash||'').match(/[#&]ds=([^&]+)/);return m?decodeURIComponent(m[1]):null;}
+  function dsGeldi(){const h=dsHash();if(!h)return;const p=h.split('|'),c=p[0],ts=p[1]||tarihStr(new Date());try{history.replaceState(null,'',location.pathname+location.search);}catch(e){}
+    if(!document.getElementById('dpDsCss')){const st=document.createElement('style');st.id='dpDsCss';st.textContent='.dpDsVurgu{outline:4px solid #22c55e;outline-offset:3px;box-shadow:0 0 0 10px rgba(34,197,94,.22);transition:outline .3s}';document.head.appendChild(st);}
+    if(!SINIFLAR.includes(c)){toast('📅 Ders Saati’nden geldi ama “'+c+'” sınıfı bu programda yok',3500);return;}
+    try{yenile();}catch(e){}sec(c);const Ls=dersListe(c).filter(x=>x.ts===ts&&!x.resmi);
+    if(!Ls.length){toast('📅 '+c+' · '+kisaTarih(gun(ts,0))+' tarihinde ders bulunamadı',3500);return;}
+    setTimeout(()=>{const el=$d('k_'+Ls[0].key.replace(/\W/g,'_'));if(el){el.scrollIntoView({block:'center',behavior:'smooth'});el.classList.add('dpDsVurgu');setTimeout(()=>el.classList.remove('dpDsVurgu'),8000);}},200);
+    dsPanel(c,ts,Ls);}
+  function dsPanel(c,ts,Ls){let o=$d('dpDs');if(!o){o=document.createElement('div');o.id='dpDs';o.className='ortu';document.body.appendChild(o);}
+    const g=gonderildi(),hepsi=Ls.every(L=>g[L.key]);
+    o.innerHTML='<div class="ust"><div class="kart dpPayKart"><h2>✅ '+esc(c)+' · '+kisaTarih(gun(ts,0))+' dersi işlendi</h2>'+Ls.map(L=>'<div class="dpParca ok"><div class="dpKonu">'+L.parts.map(p=>TR[p.T].ik+' '+esc(p.konu)).join(' + ')+' <span class="dpSira">'+saatYaz(L)+'</span></div><div class="dpZ">'+(g[L.key]?'✅ Değişim’e gitti · '+saatKisa(g[L.key]):'📤 Henüz Değişim’e gönderilmedi')+'</div></div>').join('')+'<p style="font-size:.95rem;font-weight:700;color:#6b5a2c;margin:.6rem 0 0">Ders Saati’nde “✅ İşledim” dedin. Bu dersin veli kartı ve 🎮 ders oyunu bağlantıları tek dokunuşla Değişim’e (veli ve öğrenci “📰 Özetler”) gider; ne kadar süre görüneceğini bir sonraki ekranda seçersin.</p></div></div><div class="alt"><button class="btn yesil" id="dpDsG">'+(hepsi?'🔁 Tekrar gönder':'📤 Değişim’e gönder')+'</button><button class="btn" id="dpDsV">👪 Veli mesajı (WhatsApp)</button><button class="btn ana" id="dpDsK">Kapat</button></div>';
+    o.classList.add('acik');$d('dpDsG').onclick=()=>{if(hepsi&&!confirm('Bu ders daha önce Değişim’e gönderilmiş. Tekrar gönderilsin mi?'))return;o.classList.remove('acik');gonderOnay(Ls);};
+    $d('dpDsV').onclick=()=>{o.classList.remove('acik');veli(Ls[0].key);};$d('dpDsK').onclick=()=>o.classList.remove('acik');}
   function kacanBtn(hf,L){const pz=tarihStr(hf.pzt),simdi=new Date(),bu=L.filter(x=>x.h.cal===hf.cal),sn=L.find(x=>!x.resmi&&x.h.cal>hf.cal);if(!sn)return '';
     return L.filter(x=>!x.resmi&&x.h.cal===sn.h.cal&&gun(pz,x.d)<=simdi&&!bu.some(y=>y.d===x.d&&y.i===x.i)).map(x=>'<button class="dpB dpEkoBuyuk dpIsleB" onclick="DP.buHaftaIsle(\''+esc(x.key)+'\',\''+tarihStr(gun(pz,x.d))+'\')">✅ '+GUN[x.d]+' '+(x.i+1)+(x.sure>1?'–'+(x.i+x.sure):'')+'. ders işlendi · '+esc(x.parts.map(p=>TR[p.T].ik+' '+p.konu).join(' + '))+'</button>').join('');}
   function buHaftaIsle(key,ts){isaret(key,ts);}
