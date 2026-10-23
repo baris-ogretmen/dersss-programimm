@@ -347,6 +347,15 @@ input,textarea,select{-webkit-user-select:text;user-select:text}
 .dpUyari{border:1px solid rgba(250,204,21,.5)!important;background:rgba(250,204,21,.08)!important}
 
 .dpDis{background:#ecfeff;color:#155e75;border:1px solid #a5f3fc;border-radius:.7rem;padding:.45rem .7rem;margin-top:.5rem;font-weight:700;font-size:.95rem;line-height:1.4}
+.dpU.dm{background:#f0fdf4;color:#166534;border-color:#bbf7d0}.dpUst{font-size:.72rem;background:#fde68a;color:#78350f;border-radius:99px;padding:.05rem .4rem;margin-left:.3rem}
+.dpBtn .dpB.dpEkoB{background:linear-gradient(90deg,#16a34a,#0891b2);color:#fff;font-size:1.05rem;padding:.55rem 1.1rem;box-shadow:0 4px 12px rgba(22,163,74,.35)}
+.dpHafta.bu{outline:4px solid #facc15!important;background:rgba(250,204,21,.12)!important;box-shadow:0 0 0 8px rgba(250,204,21,.12),0 10px 30px rgba(0,0,0,.35);padding:.8rem!important}
+.dpBuBas{display:flex;flex-wrap:wrap;align-items:center;gap:.6rem;background:linear-gradient(90deg,#facc15,#fb923c);color:#1f2937;border-radius:1rem;padding:.7rem 1rem;margin-bottom:.7rem}
+.dpBuBas span{font-weight:900;font-size:1.35rem;letter-spacing:.04em}.dpBuBas b{font-size:1.2rem}.dpBuBas em{font-style:normal;font-weight:800;opacity:.8}.dpBuBas .dpEkoBuyuk{margin-left:auto;background:#1f2937;color:#fff;font-size:1.05rem}
+.dpOyList{display:flex;flex-direction:column;gap:.5rem;margin-top:.6rem}.dpOyB{border:2px solid #c7d2fe;background:#eef2ff;color:#3730a3;border-radius:.9rem;padding:.7rem 1rem;font:inherit;font-weight:800;font-size:1.05rem;text-align:left;cursor:pointer}.dpOyB.ana{background:#fef08a;border-color:#facc15;color:#713f12}
+
+.dpBuNot{margin:10px 4px 2px;font-size:14px;line-height:1.5;background:#fff7ed;color:#7c2d12;border:1px dashed #fb923c;border-radius:12px;padding:10px 12px}
+.dpIsleB{display:block;margin:8px 4px 0;text-align:left;background:linear-gradient(135deg,#16a34a,#0d9488)!important;color:#fff!important}
 /* ---- 🎮 Ders Oyunu ---- */
 #doOrtu{position:fixed;inset:0;z-index:62;display:none;flex-direction:column;background:linear-gradient(160deg,#eef2ff,#f5f3ff 40%,#ecfeff);color:#1e1b4b;font-weight:600}
 #doOrtu.acik{display:flex}
@@ -4325,6 +4334,87 @@ const ACILIS=[["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", ["e2e
     boyut3:{baslik:'🔢 Büyükten küçüğe sırala',s:['9','7','5','3','1']}});
   SISTEM.push({ad:'💬 Kural tabanlı sohbet botu',algi:[['“Merhaba” yazılırsa','👋 “Merhaba! Nasıl yardım edebilirim?”'],['“saat” kelimesi geçerse','⏰ Saati söyle'],['“hava” kelimesi geçerse','☁️ Hava durumunu göster'],['Hiçbir kural uymazsa','🤔 “Anlayamadım, tekrar yazar mısın?”']]});
 
+  /* =================== 🎯 EĞİTİM KOÇLUĞU (8. sınıf · Yıllık Plan’daki 36 konu) =================== */
+  /* ---- 🧱 Parça seçerek kur (SMART hedef, haftalık plan…) ---- */
+  function parcaTur(o){/* o:{baslik,yon,satirlar:[[etiket,[dogru,yanlis1,yanlis2]]],sonuc(secimler)->metin,neden} */return ()=>{const S_=o.satirlar.map(r=>({ad:r[0],ops:karis(r[1].map((m,i)=>({m,i})))})),secim=S_.map(()=>-1);
+    return {baslik:o.baslik,yon:o.yon,ipucu:o.ipucu,ciz(k,bit){const kk=E('div','doPrompt');k.appendChild(kk);const ciz_=()=>{kk.innerHTML='';S_.forEach((r,i)=>{const d=E('div','doPS','<b>'+r.ad+'</b>');r.ops.forEach(x=>d.appendChild(B(esc(x.m),'doPC'+(secim[i]===x.i?' sec':''),()=>{secim[i]=x.i;ciz_();})));kk.appendChild(d);});
+        kk.appendChild(E('div','doPK','<b>📝 Ortaya çıkan:</b> '+S_.map((r,i)=>secim[i]>=0?esc(o.satirlar[i][1][secim[i]]):'…').join(' · ')));
+        kk.appendChild(B('✔ Kontrol','doA',()=>{if(secim.includes(-1)){toast('Her satırdan bir seçim yap');return;}const h=secim.filter(x=>x!==0).length;bit({ok:!h,yildiz:3,neden:h?h+' parça uygun değil. Her parçayı kendine sor: net mi, ölçülebilir mi, gerçekçi mi?':o.neden});}));};this._c=ciz_;ciz_();},
+      tekrar(){},coz(){for(let i=0;i<secim.length;i++)secim[i]=0;this._c();[...document.querySelectorAll('#doSahne .doB')].find(b=>b.textContent.includes('Kontrol')).click();}};};}
+  const SMART=[['🎯 Spesifik (net)',['Matematikte üslü sayılar konusunu bitirmek','Daha çok çalışmak','Her şeyi öğrenmek']],['📏 Ölçülebilir',['her gün 20 soru çözerek','biraz biraz','canım istedikçe']],['🧗 Ulaşılabilir',['okul çıkışı 40 dakika ayırarak','günde 6 saat uyumadan','tek gecede']],['🔗 İlgili',['LGS hedefime katkı sağladığı için','arkadaşım yaptığı için','zorunlu olduğu için']],['⏰ Zamanlı',['bu ayın sonuna kadar','bir gün','sonra bakarım']]];
+  const HAFTALIK=[['🕓 Okul sonrası ilk iş',['20 dk mola, sonra en zor ders','hemen 3 saat oyun','yatağa uzanıp telefon']],['📚 Çalışma bloğu',['25 dk odak + 5 dk mola','3 saat aralıksız','10 dk çalış 50 dk mola']],['🔁 Tekrar zamanı',['Akşam kısa tekrar, hafta sonu genel tekrar','Sadece sınavdan önceki gece','Hiç tekrar yok']],['😴 Uyku',['Her gün aynı saatte, 8–9 saat','Hafta içi 5 saat, hafta sonu 12 saat','Belli değil']]];
+  Object.assign(KUTU,{
+    eisen:{baslik:'🗂️ Eisenhower matrisi: önce hangisi?',kutular:['🔥 Acil + önemli (hemen yap)','📅 Önemli, acil değil (planla)','📨 Acil, önemli değil (kısa tut)','🗑️ İkisi de değil (bırak)'],o:[['Yarın teslim edilecek proje',0],['Haftaya deneme sınavı için tekrar',1],['Arkadaşın “hemen cevap ver” mesajı',2],['Amaçsızca video kaydırmak',3],['Bu akşam bitmesi gereken ödev',0],['Düzenli spor ve uyku',1],['Grubun anlık oyun daveti',2],['Aynı oyunu 5. kez bitirmek',3]],neden:'En çok kazandıran kutu “önemli ama acil değil”: plan, tekrar, uyku. Orayı ihmal eden, sürekli “acil” işlerle boğuşur.'},
+    cornell:{baslik:'📝 Cornell defterinde nereye?',kutular:['❓ Sol sütun: ipucu ve sorular','📖 Sağ sütun: ders notları','🧾 Alt: özet'],o:[['“Fotosentez için ne gerekir?”',0],['Işık + su + karbondioksit → besin + oksijen',1],['Bitkiler ışıkla besin yapar ve oksijen verir.',2],['“Klorofil ne işe yarar?”',0],['Klorofil yaprağa yeşil rengi verir, ışığı yakalar',1],['Bugünkü dersin 2 cümlelik toparlaması',2]],neden:'Cornell: sağda not al, solda soru üret, altta özetle. Tekrar ederken sağı kapatıp soldaki sorularla kendini sına.'},
+    dikkat:{baslik:'📵 Odak dostu mu, odak düşmanı mı?',kutular:['✅ Odağa yardım eder','⚠️ Dikkatimi dağıtır'],o:[['Telefon başka odada',0],['Bildirimler açık',1],['Masada sadece o dersin kitabı',0],['Arka planda dizi açık',1],['25 dakikalık sayaç',0],['Her 5 dakikada mesajlara bakmak',1],['Su şişesi masada',0],['Sekmeler arasında atlamak',1]],neden:'Beyin her bölünmeden sonra odağa dönmek için dakikalar harcar. Ortamı düzenlemek iradeden daha güçlüdür.'},
+    hata:{baslik:'📒 Hata defteri: bu hata ne tür?',kutular:['📚 Bilgi eksiği','👀 Dikkat hatası','⏱️ Süre / strateji'],o:[['Formülü hiç bilmiyordum',0],['Soruda “değildir” kelimesini kaçırdım',1],['Son 5 soruya vakit kalmadı',2],['Konuyu hiç çalışmamıştım',0],['İşlemde 7×8’i 54 yazdım',1],['Zor soruda 6 dakika takıldım',2]],neden:'Her hata türünün çaresi farklı: bilgi eksiği → konu tekrarı · dikkat → altını çizme ve kontrol · süre → turlama tekniği.'},
+    zihniyet:{baslik:'🌱 Sabit mi, büyüme zihniyeti mi?',kutular:['🌱 Büyüme zihniyeti','🧱 Sabit zihniyet'],o:[['“Bunu henüz bilmiyorum.”',0],['“Ben matematikçi değilim.”',1],['“Hata yaptım, nereden öğrenebilirim?”',0],['“Ya bilirsin ya bilmezsin.”',1],['“Zorlanıyorsam beynim gelişiyor.”',0],['“Ondan daha zekiyim, çalışmama gerek yok.”',1],['“Farklı bir yöntem deneyeyim.”',0],['“Ben zaten hep kötüyüm.”',1]],neden:'“Henüz” kelimesi sihirlidir: beceri çalışmayla gelişir. Beyin, zorlandığında yeni bağlantılar kurar.'},
+    icses:{baslik:'💬 İç konuşmanı dönüştür',kutular:['💪 Destekleyici','🌧️ Yıpratıcı'],o:[['“Hazırlandım, elimden geleni yapacağım.”',0],['“Kesin kötü geçecek.”',1],['“Bu soruyu atlayıp sonra dönebilirim.”',0],['“Herkes benden iyi.”',1],['“Nefes al, bir soru bir soru.”',0],['“Yine beceremeyeceğim.”',1]],neden:'Kendimizle konuşma biçimimiz performansı doğrudan etkiler. Yıpratıcı cümleyi gerçekçi ve destekleyici bir cümleyle değiştir.'},
+    motiv:{baslik:'🚀 İçsel mi, dışsal motivasyon mu?',kutular:['💛 İçsel (içimden gelen)','🎁 Dışsal (ödül/ceza)'],o:[['Öğrenmek bana keyif veriyor',0],['Annem telefon alacak diye çalışıyorum',1],['Merak ettiğim için araştırıyorum',0],['Ceza almamak için ödev yapıyorum',1],['Kendimi geliştirmek istiyorum',0],['Arkadaşlarım beni övsün diye',1]],neden:'Dışsal ödüller başlatır, içsel motivasyon sürdürür. Hedefini kendi değerlerine bağla.'},
+    saglik:{baslik:'🍎 Performansı artırır mı?',kutular:['⚡ Artırır','🪫 Düşürür'],o:[['Kahvaltı yapmak',0],['Gece yarısına kadar ekran',1],['Her 45 dakikada kısa yürüyüş',0],['Sınav sabahı enerji içeceği',1],['Bol su içmek',0],['Hafta sonu öğlene kadar uyumak',1],['Akşam aynı saatte yatmak',0],['Öğün atlamak',1]],neden:'Beyin; uyku, su, düzenli beslenme ve hareketle en iyi çalışır. Ezber, uykuda kalıcı hâle gelir.'},
+    kaygi:{baslik:'😮‍💨 Kaygıyla baş etme',kutular:['✅ İşe yarar','❌ Kaygıyı artırır'],o:[['4 saniye nefes al, 6 saniye ver',0],['Sınavdan önceki gece sabaha kadar çalışmak',1],['Sınavda zor soruyu işaretleyip geçmek',0],['Arkadaşlarla “kaç net yaptın” yarışı',1],['Kas gevşetme egzersizi',0],['En kötü senaryoyu tekrar tekrar düşünmek',1]],neden:'Biraz kaygı odaklar, çok kaygı bloke eder. Nefes ve gevşeme, vücudun alarm sistemini sakinleştirir.'}});
+  Object.assign(SIRA,{
+    aralikli:{baslik:'🔁 Aralıklı tekrar takvimi',s:['📖 Konuyu öğren (0. gün)','🔁 1 gün sonra tekrar','🔁 3 gün sonra tekrar','🔁 1 hafta sonra tekrar','🔁 1 ay sonra tekrar']},
+    pomodoro:{baslik:'🍅 Pomodoro tekniği',s:['📝 Tek bir görev seç','⏲️ 25 dakikalık sayacı kur','🎯 Sayaç bitene kadar sadece o işe odaklan','☕ 5 dakika mola ver','🔁 4 turdan sonra 20 dakika uzun mola']},
+    nefes:{baslik:'🌬️ Sınav öncesi sakinleşme',s:['🪑 Dik otur, ayaklarını yere bas','👃 4 saniye burnundan nefes al','⏸️ 2 saniye tut','😮‍💨 6 saniyede ağzından ver','🔁 5 kez tekrarla','💬 “Hazırım, bir soru bir soru” de']},
+    ikidk:{baslik:'⏳ Erteleme ile baş etme',s:['🔍 Ertelediğin işi fark et','✂️ İşi çok küçük bir adıma böl','⏱️ “Sadece 2 dakika” başla','🏃 Başlayınca devam et','🎉 Bitirince kendini ödüllendir']},
+    soru:{baslik:'🧩 Soru çözme stratejisi',s:['👀 Soru kökünü dikkatle oku','✏️ Anahtar kelimelerin altını çiz','🧠 Verilenleri ve isteneni belirle','🧹 Yanlış seçenekleri ele','✅ Cevabı kontrol et']},
+    sinav:{baslik:'🏁 Sınav haftası kontrol listesi',s:['📅 Son haftada yeni konu değil, tekrar','📝 Hafif bir deneme ve hata defteri','😴 Uyku düzenini sınav saatine göre ayarla','🎒 Gece önceden kimlik, kalem, su hazırla','🍳 Sabah kahvaltı ve erken çıkış','🧘 Sınavda nefes ve turlama tekniği']},
+    turlama:{baslik:'⏱️ Turlama tekniği',s:['1️⃣ İlk tur: emin olduklarını çöz','➖ Uzun sürecekleri işaretleyip geç','2️⃣ İkinci tur: işaretlilere dön','❓ Son tur: kalan sorularda eleme yap','🧾 Optiği kontrol et']}});
+  Object.assign(SEC,{
+    kocTanis:[['Eğitim koçu ne yapar?','Hedef koymanı ve plan yapmanı destekler; seçimi sana bırakır',['Senin yerine ders çalışır','Sadece not verir']],['Koçlukta en önemli soru hangisi?','“Sen ne istiyorsun ve bunun için ne yapabilirsin?”',['“Neden hep böylesin?”','“Kaç net yaptın?”']],['Güçlü yönünü bilmek ne işe yarar?','Zorluklarda onu kullanarak ilerlersin',['Hiçbir işe yaramaz','Gelişim alanını unutturur']]],
+    tekrar:[['Hangisi “aktif tekrar”dır?','Kitabı kapatıp hatırladıklarını yazmak',['Aynı sayfayı 5 kez okumak','Fosforlu kalemle her yeri boyamak']],['Unutma eğrisine göre öğrendiğimizin büyük kısmı ne zaman unutulur?','İlk 1–2 gün içinde (tekrar yoksa)',['1 yıl sonra','Hiç unutulmaz']],['En verimli tekrar hangisi?','Aralıklarla, kendini sınayarak',['Tek seferde 5 saat','Sadece sınav gecesi']]],
+    sure:[['LGS’de 20 matematik sorusu için 40 dakika var. Soru başına ortalama?','2 dakika',['4 dakika','1 dakika']],['Bir soruda 4 dakikayı geçtin. Ne yapmalısın?','İşaretleyip geçmek, sonra dönmek',['Çözene kadar ısrar etmek','Rastgele işaretleyip sınavı bitirmek']],['Turlama tekniğinin amacı?','Kolay soruların puanını önce garantilemek',['Zor sorularla başlamak','Hiç geri dönmemek']]],
+    sozel:[['Paragrafta “ana düşünce” sorusunda ne aranır?','Yazarın asıl vermek istediği mesaj',['En uzun cümle','İlk cümledeki isim']],['Soru kökünde “değildir” varsa?','Yanlış olanı arıyoruz: altını çiz',['Doğru olanı arıyoruz','Fark etmez']],['Uzun paragraf sorularında önce ne okunur?','Soru kökü, sonra paragraf',['Sadece seçenekler','Sadece ilk cümle']]],
+    sayisal:[['Yeni nesil matematik sorusunda ilk adım?','Verilenleri ve isteneni ayırmak',['Hemen formül yazmak','Seçenekleri denemek']],['Grafik sorusunda en sık hata?','Eksen ve birimleri okumamak',['Renklere bakmak','Başlığı okumak']],['Seçenekler sayıysa ve takıldıysan?','Seçenekleri soruda deneyerek ele',['Boş bırak','En büyüğü işaretle']]],
+    erteleme:[['Ödev çok büyük göründüğü için başlamadın. Ne yaparsın?','İlk küçük adımı (2 dk) belirleyip başlarım',['Hepsini yarına bırakırım','Kendimi suçlarım']],['Telefon seni sürekli çağırıyor.','Çalışırken başka odaya koyarım',['Elimde tutarım','Bildirimleri açık bırakırım']],['“Moduma girince başlarım” düşüncesi?','Mod genelde başladıktan sonra gelir',['Doğrudur, beklemeliyim','Hiç başlamamalıyım']]],
+    destek:[['Ailene sınav stresini nasıl anlatırsın?','“Şu an kaygılıyım, sadece dinlemenizi istiyorum” diyerek',['Odaya kapanıp konuşmayarak','Bağırarak']],['Arkadaşın denemede düşük aldı ve üzgün.','Dinler, hatalarını birlikte incelemeyi öneririm',['Benim netimi söylerim','“Boş ver” der geçerim']],['Anlamadığın bir konu var.','Öğretmenime soru listesiyle giderim',['Kimseye söylemem','Kopya çekerim']]],
+    vizyon:[['Vizyon panosu ne işe yarar?','Hedefi her gün görünür kılar, motivasyonu canlı tutar',['Odayı süsler','Hiçbir işe yaramaz']],['Lise hedefini belirlerken neye bakmalı?','İlgi alanım, güçlü yönlerim ve gerçekçi bir plan',['Sadece arkadaşlarımın tercihi','Sadece okulun adı']],['Hedefe ulaşamazsam?','Planı gözden geçirip yeni yol çizerim',['Her şey biter','Bir daha hedef koymam']]]});
+  const OKUMA=[{m:'Araştırmalar, ders çalıştıktan sonra uyuyan öğrencilerin, uyumadan devam edenlere göre öğrendiklerini daha iyi hatırladığını gösteriyor. Uyku sırasında beyin, gün içinde öğrenilenleri tekrar eder ve kalıcı belleğe taşır. Bu yüzden sınav öncesi sabahlamak, beklenenin aksine başarıyı düşürebilir.',s:'Bu metnin ana düşüncesi nedir?',d:'Uyku, öğrenilenlerin kalıcı olmasını sağlar.',y:['Sınav öncesi sabahlamak gerekir.','Uyku zaman kaybıdır.','Beyin uykuda çalışmaz.']},
+    {m:'Not alırken her kelimeyi yazmaya çalışan öğrenciler, öğretmeni dinlemekte zorlanır. Oysa anahtar kavramları, kendi cümleleriyle yazanlar hem daha az yorulur hem de konuyu daha iyi anlar. İyi not, kaydedilen değil işlenen bilgidir.',s:'Yazara göre iyi not alma nasıl olmalıdır?',d:'Anahtar kavramları kendi cümleleriyle yazmak',y:['Öğretmenin her sözünü yazmak','Hiç not almamak','Sadece tahtadakileri kopyalamak']},
+    {m:'Hedef koyan öğrencilerin çoğu, hedefini yazmayan arkadaşlarına göre daha istikrarlı çalışır. Yazılı hedef, beyne bir yön verir; günlük küçük adımlar ise büyük hedefi ulaşılabilir kılar. Hedef kâğıtta kalmamalı, haftalık plana dönüşmelidir.',s:'Metne göre hedefin işe yaraması için ne gerekir?',d:'Hedefin haftalık plana ve küçük adımlara dönüşmesi',y:['Hedefin gizli tutulması','Hedefin çok büyük olması','Hedefin sık sık değiştirilmesi']}];
+  function okumaTur(){return ()=>{const o=sec(OKUMA);return secTur({baslik:'📖 Okuduğunu anla',yon:'Metni dikkatle oku. Önce soruyu, sonra metni okumak işini kolaylaştırır.',soru:'<p class="doDurum" style="text-align:left;font-weight:600;line-height:1.55">'+o.m+'</p><p><b>'+o.s+'</b></p>',secenek:[o.d,...o.y],dogru:o.d,genis:1,neden:'Ana düşünce sorularında yazarın <b>asıl mesajını</b> ara; ayrıntıya takılma. Çeldiriciler genelde metinde geçen ama ana fikir olmayan cümlelerdir.'});};}
+  function netTur(){return ()=>{const D=[['Türkçe',ri(10,19),20],['Matematik',ri(4,15),20],['Fen',ri(9,19),20],['İnkılap',ri(6,10),10],['Din',ri(6,10),10],['İngilizce',ri(5,10),10]];const or=D.map(x=>x[1]/x[2]),mi=or.indexOf(Math.min(...or));
+    return secTur({baslik:'📊 Deneme analizi: önce hangi ders?',yon:'Son denemenin netleri aşağıda. Telafi planına <b>hangi dersle</b> başlamalısın? (Yüzde olarak en düşük olan)',soru:'<div class="doGraf">'+D.map(x=>'<div><i style="height:'+Math.round(x[1]/x[2]*150)+'px"></i><b>'+x[1]+'/'+x[2]+'</b><span>'+x[0]+'</span></div>').join('')+'</div>',secenek:D.map(x=>x[0]),dogru:D[mi][0],neden:D[mi][0]+' netin '+D[mi][2]+' soruda %'+Math.round(or[mi]*100)+'. Soru sayısı farklı derslerde <b>yüzdeye</b> bakılır. Eksik konu listesini bu dersten başlat.'});};}
+  function KPLAN(u){const r=(n,tr,d)=>[n,tr,d];const L=[
+    r('Koçluğu tanı, ilk hedefini yaz.',()=>[secSetTur('kocTanis',{baslik:'🎯 Koçluk nedir?'}),parcaTur({baslik:'🎯 İlk SMART hedefin',yon:'Her satırdan en uygun parçayı seç; ortaya çıkan cümle senin hedefin olsun.',satirlar:SMART,neden:'SMART hedef: Spesifik, Ölçülebilir, Ulaşılabilir, İlgili, Zamanlı.'}),secSetTur('kocTanis',{baslik:'🎯 Koçluk nedir?'})],'Koç yol gösterir; yolu yürüyen sensin.'),
+    r('Güçlü yönlerini ve gelişim alanlarını keşfet.',()=>[secSetTur('kocTanis',{baslik:'🔍 Kendini tanı'}),kutuSet('zihniyet',6),kutuSet('motiv',6)],'Güçlü yönünü bil, gelişim alanını “henüz” diliyle konuş.'),
+    r('Değerlerini ve motivasyon kaynağını bul.',()=>[kutuSet('motiv',6),secSetTur('vizyon',{baslik:'💛 Değerlerim'}),kutuSet('icses',6)],'İçsel motivasyon uzun soluklu başarının yakıtıdır.'),
+    r('SMART hedef kur.',()=>[parcaTur({baslik:'🎯 SMART hedef kur',yon:'Belirsiz bir hedefi SMART hedefe dönüştür: her satırdan en iyi parçayı seç.',satirlar:SMART,neden:'Belirsiz hedef (“çok çalışacağım”) yerine ölçülebilir ve tarihi belli hedef koy.'}),parcaTur({baslik:'🎯 Bir SMART hedef daha',yon:'Bu kez sıralama farklı; dikkatli seç!',satirlar:SMART,neden:'Hedefin “ne, ne kadar, ne zaman” sorularına cevap veriyorsa SMART’tır.'}),secSetTur('vizyon',{baslik:'🎯 Hedef'})],'Net + ölçülebilir + gerçekçi + anlamlı + tarihli.'),
+    r('Yıllık hedefini dönemlik plana böl.',()=>[siraSet('sinav'),netTur(),parcaTur({baslik:'🗓️ Plan parçaları',yon:'Yıllık hedefi gerçek bir plana dönüştür.',satirlar:HAFTALIK,neden:'Uzun vadeli hedef, haftalık rutine dönüşünce gerçekleşir.'})],'Büyük hedef → dönem → hafta → gün.'),
+    r('Gerçekçi bir haftalık program kur.',()=>[parcaTur({baslik:'🗓️ Haftalık programını kur',yon:'Her satırdan sürdürülebilir olanı seç.',satirlar:HAFTALIK,neden:'İyi program: kısa odak blokları, düzenli tekrar, sabit uyku saati.'}),siraSet('pomodoro'),kutuSet('eisen',6)],'Program, iradeye değil alışkanlığa dayanmalı.'),
+    r('Önceliklerini Eisenhower matrisiyle belirle.',()=>[kutuSet('eisen',8),kutuSet('eisen',6),secSetTur('erteleme',{baslik:'⏳ Öncelik'})],'Önemli ama acil olmayan işlere zaman ayır.'),
+    r('Aktif tekrarı dene.',()=>[secSetTur('tekrar',{baslik:'🧠 Aktif tekrar'}),hafizaTur(5,7),secSetTur('tekrar',{baslik:'🧠 Aktif tekrar'}),hafizaTur(5,8)],'Okumak değil, hatırlamaya çalışmak öğretir.'),
+    r('Aralıklı tekrar takvimi kur.',()=>[siraSet('aralikli'),secSetTur('tekrar',{baslik:'🔁 Aralıklı tekrar'}),nBackTur(2)],'1 gün · 3 gün · 1 hafta · 1 ay.'),
+    r('Cornell yöntemiyle not al.',()=>[kutuSet('cornell',6),okumaTur(),kutuSet('cornell',6)],'Sağda not, solda soru, altta özet.'),
+    r('Özetle ve zihin haritası çıkar.',()=>[okumaTur(),agacTur('hayvan',8),okumaTur()],'Özet: ana fikir + anahtar kavramlar; zihin haritası: merkezden dallara.'),
+    r('Pomodoro ile odaklan.',()=>[siraSet('pomodoro'),schulteTur(5),kutuSet('dikkat',6),stroopTur(12)],'25 dk tam odak, 5 dk gerçek mola.'),
+    r('Dikkat dağıtıcıları ve dijital düzeni yönet.',()=>[kutuSet('dikkat',8),stroopTur(12),secSetTur('erteleme',{baslik:'📵 Dijital düzen'})],'Ortamı düzenlemek, iradeden güçlüdür.'),
+    r('1. dönemi değerlendir, hedefi güncelle.',()=>[netTur(),kutuSet('hata',6),parcaTur({baslik:'🎯 Güncellenmiş hedef',yon:'Dönem sonunda hedefini yeniden yaz.',satirlar:SMART,neden:'Değerlendirme, yeni ve daha gerçekçi hedeflerin başlangıcıdır.'})],'Ölç → değerlendir → güncelle.'),
+    r('Hafıza tekniklerini uygula.',()=>[hafizaTur(5,8),nBackTur(2),hafizaTur(5,9),secSetTur('tekrar',{baslik:'🧠 Hafıza'})],'Görselleştir, ilişkilendir, tekrar et.'),
+    r('Okuduğunu anlama stratejileri.',()=>[okumaTur(),okumaTur(),secSetTur('sozel',{baslik:'📖 Okuma stratejisi'}),okumaTur()],'Önce soru, sonra metin; ana fikri ara.'),
+    r('Soru çözme tekniklerini öğren.',()=>[siraSet('soru'),secSetTur('sayisal',{baslik:'🧩 Soru çözme'}),secSetTur('sozel',{baslik:'🧩 Soru çözme'}),islemTur(4)],'Kökü oku, altını çiz, ele, kontrol et.'),
+    r('Sınavda süreyi yönet.',()=>[secSetTur('sure',{baslik:'⏱️ Süre yönetimi'}),siraSet('turlama'),secSetTur('sure',{baslik:'⏱️ Süre yönetimi'}),schulteTur(5)],'Turlama tekniği: önce emin oldukların.'),
+    r('Deneme analizi ve hata defteri.',()=>[netTur(),kutuSet('hata',6),netTur(),kutuSet('hata',6)],'Her hata bir ders: türünü bul, çaresini uygula.'),
+    r('Konu eksiklerini tespit et ve telafi planla.',()=>[netTur(),netTur(),kutuSet('eisen',6),siraSet('aralikli')],'En düşük yüzdeden başla, küçük adımlarla kapat.'),
+    r('LGS sözel stratejileri.',()=>[secSetTur('sozel',{baslik:'📖 LGS sözel'}),okumaTur(),secSetTur('sozel',{baslik:'📖 LGS sözel'}),okumaTur()],'Soru kökü · anahtar kelime · ana düşünce.'),
+    r('LGS sayısal stratejileri.',()=>[secSetTur('sayisal',{baslik:'🔢 LGS sayısal'}),pyTur(['ortalama']),islemTur(4),oruntuTur('78',1)],'Verilen–istenen · grafiği oku · seçenekten dene.'),
+    r('Sınav kaygısıyla baş et.',()=>[siraSet('nefes'),kutuSet('kaygi',6),kutuSet('icses',6)],'Biraz kaygı odaklar; nefes ve plan kaygıyı yönetir.'),
+    r('Olumlu iç konuşma.',()=>[kutuSet('icses',6),kutuSet('zihniyet',6),kutuSet('icses',6)],'İç sesin, en yakın koçundur.'),
+    r('Büyüme zihniyeti: “henüz” dili.',()=>[kutuSet('zihniyet',8),kutuSet('zihniyet',6),secSetTur('vizyon',{baslik:'🌱 Büyüme'})],'Zorlanmak, gelişmenin işaretidir.'),
+    r('Ertelemeyle baş et.',()=>[siraSet('ikidk'),secSetTur('erteleme',{baslik:'⏳ Erteleme'}),secSetTur('erteleme',{baslik:'⏳ Erteleme'}),kutuSet('dikkat',6)],'2 dakika kuralı: başlamak, işin yarısıdır.'),
+    r('Motivasyonu sürdür.',()=>[kutuSet('motiv',6),secSetTur('vizyon',{baslik:'🚀 Motivasyon'}),parcaTur({baslik:'🎯 Mini hedef',yon:'Bu hafta için küçük bir SMART hedef kur.',satirlar:SMART,neden:'Küçük başarılar motivasyonu besler.'})],'Küçük kazanımları kutla, hedefini görünür tut.'),
+    r('Hedefini görselleştir.',()=>[secSetTur('vizyon',{baslik:'🖼️ Vizyon panosu'}),parcaTur({baslik:'🎯 Vizyon hedefi',yon:'Panona yazacağın hedefi kur.',satirlar:SMART,neden:'Gördüğün hedef, aklında kalır.'}),secSetTur('vizyon',{baslik:'🖼️ Vizyon panosu'})],'Vizyon panosu hedefi her gün hatırlatır.'),
+    r('Uyku ve dinlenme planı.',()=>[kutuSet('saglik',8),parcaTur({baslik:'😴 Uyku planı',yon:'Gerçekçi bir dinlenme rutini kur.',satirlar:HAFTALIK,neden:'Ezber uykuda kalıcı olur; düzenli uyku en güçlü çalışma tekniğidir.'})],'8–9 saat ve sabit saat.'),
+    r('Beslenme ve performans.',()=>[kutuSet('saglik',8),kutuSet('saglik',6)],'Kahvaltı, su ve düzenli öğün beyni besler.'),
+    r('Hareket ve mola düzeni.',()=>[kutuSet('saglik',6),siraSet('pomodoro'),schulteTur(5)],'Kısa hareket molaları odağı tazeler.'),
+    r('Aile ve akran desteği.',()=>[secSetTur('destek',{baslik:'🤝 Destek'}),secSetTur('destek',{baslik:'🤝 Destek'}),secSetTur('destek',{baslik:'🤝 Destek'})],'Yardım istemek güçlü olmanın parçasıdır.'),
+    r('Yardım iste, kaynakları kullan.',()=>[secSetTur('destek',{baslik:'📚 Kaynak'}),kutuSet('hata',6),netTur()],'Doğru kaynak + doğru soru = hızlı ilerleme.'),
+    r('Genel tekrar kampı.',()=>[siraSet('aralikli'),netTur(),hafizaTur(5,8),okumaTur()],'Planlı tekrar, son düzlükte fark yaratır.'),
+    r('Son düzlük: sınav haftası.',()=>[siraSet('sinav'),siraSet('nefes'),siraSet('turlama')],'Yeni konu yok; uyku, tekrar, sakinlik.'),
+    r('Değerlendirme ve gelecek vizyonu.',()=>[secSetTur('vizyon',{baslik:'🔭 Gelecek'}),parcaTur({baslik:'🎯 Lise hedefin',yon:'Gelecek için SMART hedefini kur.',satirlar:SMART,neden:'Bitiş, yeni bir başlangıçtır.'}),kutuSet('zihniyet',6)],'Ne öğrendin, nasıl büyüdün, şimdi nereye?')];
+    return L[Math.max(0,Math.min(L.length-1,u))];}
+
   /* =================== 🗺️ MAARIF KONULARI → OYUN (Satranç · YZ · Akıl-Zekâ) =================== */
   /* her satır: [nasıl oynanır, ()=>turlar, akılda kalsın cümlesi] — sıra, Yıllık Plan’daki 12 ünitenin sırasıdır */
   function MPLAN(T,b,st){const gl=b==='ana'?0:b==='12'?1:b==='34'?2:b==='56'?3:4,genc=gl<=1;
@@ -4567,8 +4657,8 @@ const ACILIS=[["rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1", ["e2e
       ['Farklı bulmaca türleri farklı beceriler çalıştırır.','Zor olanı sabırla, adım adım çöz.','Takım hâlinde düşünmek güçlendirir.'],
       ['Kurallara uymak ve saygı turnuvanın temeli.','Kazanmayı ve kaybetmeyi yönetmek.','Her oyunda bir şey öğrenirsin.']]};
   function PLAN(sp){const {T,b,u,st}=sp,genc=b==='ana'||b==='12',gl=b==='ana'?0:b==='12'?1:b==='34'?2:b==='56'?3:4;let ik='🎮',ad='',nasil='',tr=[];
-    if(T!=='R'){const row=MPLAN(T,b,st)[u];const ad2=String(sp.unite||sp.konu||'').replace(/^Tanışalım:\s*/,'').replace(/\s·\s.*$/,'');const z0=sp.z||'';
-      return {ik:{S:'♟️',Y:'🧠',A:'🧩'}[T],ad:ad2,gorev:esc(z0)+(z0?'<br>':'')+'<small>'+esc(sp.konu)+'</small>',nasil:row[0]+' Her turda bir görev var; cevaptan sonra kısa açıklamayı oku. Az hatayla bitirirsen ⭐⭐⭐!',turlar:row[1](),ozet:[z0?'🎯 '+esc(z0):'','💡 '+row[2],sp.bec?'🧩 Beceri: '+esc(sp.bec):''].filter(Boolean)};}
+    if(T!=='R'){const row=T==='K'?KPLAN(u):MPLAN(T,b,st)[u];const ad2=String(sp.unite||sp.konu||'').replace(/^Tanışalım:\s*/,'').replace(/\s·\s.*$/,'');const z0=sp.z||'';
+      return {ik:{S:'♟️',Y:'🧠',A:'🧩',K:'🎯'}[T],ad:ad2,gorev:esc(z0)+(z0?'<br>':'')+'<small>'+esc(sp.konu)+'</small>',nasil:row[0]+' Her turda bir görev var; cevaptan sonra kısa açıklamayı oku. Az hatayla bitirirsen ⭐⭐⭐!',turlar:row[1](),ozet:[z0?'🎯 '+esc(z0):'','💡 '+row[2],sp.bec?'🧩 Beceri: '+esc(sp.bec):''].filter(Boolean)};}
     const sira_=n=>tk(n,kodTur(()=>lvSira(b,st,!genc))),dongu_=n=>tk(n,kodTur(()=>lvDongu(b,st))),kosul_=n=>tk(n,kodTur(()=>lvKosul(b,st))),kural_=n=>tk(n,kodTur(()=>lvKural(b,st))),hata_=n=>tk(n,kodTur(()=>lvHata(b,st))),tah_=n=>tk(n,tahminTur(b,st)),fonk_=n=>tk(n,kodTur(()=>lvFonk(b,st)));
     const KOD='Blokları sırayla ekle, ▶ Çalıştır’a bas, robotu izle. Hata yaparsan düzeltip tekrar dene; az blokla bitirirsen 3 yıldız!';
     if(T==='R'){ik='🤖';
@@ -4710,7 +4800,7 @@ const DP=(function(){
   const PROG=[['','4A','5A','6A','2A','','1A','1A'],['','','','2A','3A','Ana Sınıfı','5A','5A'],['','4A','4A','3A','3A','','7A','7A'],['','','','','','2A','6A','6A'],['','Ana Sınıfı','8A','8A','','2A','','1A']];
   const SINIFLAR=['Ana Sınıfı','1A','2A','3A','4A','5A','6A','7A','8A'];
   const RENK={'1A':'#ffef1a','2A':'#f7981d','3A':'#f24a3f','4A':'#5b0f63','5A':'#19e6f0','6A':'#9be33c','7A':'#ff1ee8','8A':'#1e8ef5','Ana Sınıfı':'#f59ac7'};
-  const TR={R:{ad:'Robotik-Kodlama',ik:'🤖',r:['#7c3aed','#22d3ee'],v:'robokod'},Y:{ad:'Yapay Zekâ',ik:'🧠',r:['#0891b2','#22d3ee'],v:'yz'},S:{ad:'Satranç',ik:'♟️',r:['#059669','#34d399'],v:'satranc'},A:{ad:'Akıl-Zekâ Oyunları',ik:'🧩',r:['#db2777','#f472b6'],v:'akil'}};
+  const TR={K:{ad:'Eğitim Koçluğu',ik:'🎯',r:['#b45309','#f59e0b'],v:'kocluk'},R:{ad:'Robotik-Kodlama',ik:'🤖',r:['#7c3aed','#22d3ee'],v:'robokod'},Y:{ad:'Yapay Zekâ',ik:'🧠',r:['#0891b2','#22d3ee'],v:'yz'},S:{ad:'Satranç',ik:'♟️',r:['#059669','#34d399'],v:'satranc'},A:{ad:'Akıl-Zekâ Oyunları',ik:'🧩',r:['#db2777','#f472b6'],v:'akil'}};
   /* ---- Yıllık Plan · Maarif konuları (ünite|kazanım|etkinlik1;2;3|beceri) — her ünite 3 ders ---- */
   const MAARIF={
 ana:{
@@ -4960,14 +5050,14 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
 Şampiyona ve Değerlendirme|Turnuvada strateji uygular, gelişimini değerlendirir.|Turnuva;Final;Değerlendirme|Öz değerlendirme`}
 };
 
-  const KAZ={robokod:{ana:'sıralama, yön (ileri-geri-sağ-sol) ve sebep-sonuç ilişkisini oyunla keşfediyor','12':'adım adım düşünmeyi (algoritma) ve basit komut dizileri kurmayı öğreniyor','34':'döngü ve koşul gibi kavramlarla problemi parçalara ayırıp çözmeyi deneyimliyor','56':'tasarla-dene-düzelt döngüsüyle kendi projesini geliştirmeyi ve hatadan öğrenmeyi öğreniyor','78':'gerçek bir problemi analiz edip algoritmik çözüm üretmeyi ve fikrini savunmayı geliştiriyor'},
+  const KAZ={kocluk:{ana:'hedef koyma ve planlı çalışma alışkanlığı kazanıyor','12':'hedef koyma ve planlı çalışma alışkanlığı kazanıyor','34':'hedef koyma ve planlı çalışma alışkanlığı kazanıyor','56':'hedef koyma ve planlı çalışma alışkanlığı kazanıyor','78':'hedefini planlı adımlara dönüştürmeyi, etkili çalışmayı ve kendini yönetmeyi öğreniyor'},robokod:{ana:'sıralama, yön (ileri-geri-sağ-sol) ve sebep-sonuç ilişkisini oyunla keşfediyor','12':'adım adım düşünmeyi (algoritma) ve basit komut dizileri kurmayı öğreniyor','34':'döngü ve koşul gibi kavramlarla problemi parçalara ayırıp çözmeyi deneyimliyor','56':'tasarla-dene-düzelt döngüsüyle kendi projesini geliştirmeyi ve hatadan öğrenmeyi öğreniyor','78':'gerçek bir problemi analiz edip algoritmik çözüm üretmeyi ve fikrini savunmayı geliştiriyor'},
     satranc:{ana:'dikkat, sabır ve sıra bekleme becerisini eğlenceli bir hikâyeyle geliştiriyor','12':'taşların hareketleriyle dikkat, kural takibi ve öngörü becerisini geliştiriyor','34':'hamle öncesi düşünmeyi, plan yapmayı ve sonuçları tahmin etmeyi öğreniyor','56':'strateji kurma, alternatifleri karşılaştırma ve karar verme becerisini güçlendiriyor','78':'uzun vadeli plan, analitik düşünme ve doğru karar verme becerisini pekiştiriyor'},
     yz:{ana:'makinelerin nasıl “öğrendiğini” resimler ve oyunlarla merak ederek keşfediyor','12':'yapay zekânın günlük hayattaki yerini ve güvenli teknoloji kullanımını tanıyor','34':'verinin ne olduğunu, makinenin örneklerle nasıl öğrendiğini deneyerek görüyor','56':'basit modeller eğitip yapay zekânın güçlü ve sınırlı yanlarını sorguluyor','78':'kendi modelini eğitip yapay zekâ etiği, doğruluk ve sorumluluk üzerine tartışıyor'},
     akil:{ana:'eşleştirme, örüntü ve hafıza oyunlarıyla dikkatini ve görsel algısını geliştiriyor','12':'örüntü bulma, hafıza ve mantık oyunlarıyla düşünme hızını artırıyor','34':'mantık bulmacalarıyla akıl yürütme ve farklı çözüm yolları bulma becerisini geliştiriyor','56':'zorlayıcı bulmacalarla sistemli düşünme ve sabırla çözüme ulaşmayı deneyimliyor','78':'karmaşık problemlerde strateji kurma ve eleştirel düşünme becerisini pekiştiriyor'}};
-  const SORU={robokod:'Bugün robotik-kodlamada ne yaptın, bana adım adım anlatır mısın?',satranc:'Bugün satrançta ne öğrendin, bana da gösterir misin?',yz:'Bugün yapay zekâ dersinde ne keşfettin?',akil:'Bugün hangi zekâ oyununu oynadın, birlikte oynayalım mı?'};
-  const SORU_ANA={robokod:'Bugün robota nasıl yol gösterdin?',satranc:'Bugün satranç taşlarıyla ne oynadın?',yz:'Bugün akıllı makineler hakkında ne öğrendin?',akil:'Bugün hangi oyunu oynadın?'};
+  const SORU={kocluk:'Bu haftaki hedefin ne, planına uyabildin mi?',robokod:'Bugün robotik-kodlamada ne yaptın, bana adım adım anlatır mısın?',satranc:'Bugün satrançta ne öğrendin, bana da gösterir misin?',yz:'Bugün yapay zekâ dersinde ne keşfettin?',akil:'Bugün hangi zekâ oyununu oynadın, birlikte oynayalım mı?'};
+  const SORU_ANA={kocluk:'Bugün hangi hedefi koydun?',robokod:'Bugün robota nasıl yol gösterdin?',satranc:'Bugün satranç taşlarıyla ne oynadın?',yz:'Bugün akıllı makineler hakkında ne öğrendin?',akil:'Bugün hangi oyunu oynadın?'};
   const EK={ana:'diye sormanız çok değerli 💛','12':'diye sorabilirsiniz 😊','34':'diye sorup anlatmasını isteyebilirsiniz 👏','56':'diye sorabilirsiniz; anlatmak öğrenmeyi pekiştirir 🌟','78':'diye sorup fikrini dinleyebilirsiniz 💡'};
-  const KONTROL={R:['Bugünkü programda hangi adımlar vardı?','Bir adımı değiştirseydik ne olurdu?','Hatayı nasıl bulduk?'],Y:['Makine bugün neyi öğrendi?','Makine nerede yanılabilir?','Bunu günlük hayatta nerede görürüz?'],S:['Bugün hangi taşı/kuralı öğrendik?','Hamle yapmadan önce neye baktık?','Rakibin ne yapabileceğini düşündün mü?'],A:['Bu oyunu kazanmak için hangi stratejiyi kullandın?','Nerede zorlandın, nasıl çözdün?','Bir dahaki sefere neyi farklı yaparsın?']};
+  const KONTROL={K:['Bu haftaki hedefin SMART mı?','Planının en zor kısmı neydi?','Bu tekniği hangi derste kullanacaksın?'],R:['Bugünkü programda hangi adımlar vardı?','Bir adımı değiştirseydik ne olurdu?','Hatayı nasıl bulduk?'],Y:['Makine bugün neyi öğrendi?','Makine nerede yanılabilir?','Bunu günlük hayatta nerede görürüz?'],S:['Bugün hangi taşı/kuralı öğrendik?','Hamle yapmadan önce neye baktık?','Rakibin ne yapabileceğini düşündün mü?'],A:['Bu oyunu kazanmak için hangi stratejiyi kullandın?','Nerede zorlandın, nasıl çözdün?','Bir dahaki sefere neyi farklı yaparsın?']};
   const ARAC={quickdraw:['✏️ Quick, Draw!','https://quickdraw.withgoogle.com'],autodraw:['🖌️ AutoDraw','https://www.autodraw.com'],teachable:['🎓 Teachable Machine','https://teachablemachine.withgoogle.com'],semantris:['🔤 Semantris','https://research.google.com/semantris/'],akinator:['🧞 Akinator','https://tr.akinator.com'],scratch:['🐈 Scratch','https://scratch.mit.edu'],scratchjr:['🐱 ScratchJr','https://www.scratchjr.org'],makecode:['🟨 MakeCode micro:bit','https://makecode.microbit.org'],trinket:['🐍 Trinket (Python)','https://trinket.io'],lichess:['♞ Lichess Öğren','https://lichess.org/learn'],chesskid:['🦁 ChessKid','https://www.chesskid.com'],lightbot:['💡 Lightbot','https://lightbot.com'],w3:['🌐 W3Schools','https://www.w3schools.com']};
 
   /* ---- yardımcılar ---- */
@@ -4982,7 +5072,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   const genc=b=>b==='ana'||b==='12';
 
   /* ---- 🔗 Ders Saati + Yıllık Plan köprüsü (aynı site = aynı tarayıcı hafızası) ---- */
-  const KT={robokod:'R',satranc:'S',yz:'Y',akil:'A'},SUBJ='Robotik Kodlama';
+  const KT={robokod:'R',satranc:'S',yz:'Y',akil:'A',kocluk:'K'},SUBJ='Robotik Kodlama';
   function dsVeri(){const o=LSx.get('barisDersSaati.v1',null);if(o&&Array.isArray(o.grid)&&Array.isArray(o.periods)&&o.periods.length)return {periods:o.periods,grid:o.grid,ov:o.ov||{},subject:o.subject||SUBJ,canli:true};
     return {periods:SAAT,grid:PROG.map(r=>r.map(c=>c?{c,s:SUBJ}:null)),ov:{},subject:SUBJ,canli:false};}
   let DS=dsVeri();
@@ -5008,7 +5098,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   function cellOn(date,i){const wd=(date.getDay()+6)%7;if(wd>4)return null;const o=DS.ov&&DS.ov[tarihStr(date)];if(o&&o[i]!==undefined)return (!o[i]||o[i].empty)?null:o[i];return (DS.grid[wd]&&DS.grid[wd][i])||null;}
   function hucreKs(c,cell,date,i){const gi=giOf(c),ts=tarihStr(date),wd=(date.getDay()+6)%7;let ks;const ds=(LSx.get('dk_tahta_dsec',{})||{})[ts+'|'+c+'|'+i];
     if(ds)ks=String(ds).split('+');else ks=dersKs(genel(cell.s)?(KOD_AD[DAG[wd+'|'+i]]||cell.s):cell.s,date);
-    ks=ks.map(k=>k==='kocluk'?(gi===8?'yz':null):k).filter(k=>k&&KT[k]);if(!ks.length)ks=[gi===8?'yz':'robokod'];return [...new Set(ks)].map(k=>KT[k]);}
+    if(gi===8)ks=['kocluk'];else ks=ks.filter(k=>k!=='kocluk');ks=ks.filter(k=>k&&KT[k]);if(!ks.length)ks=['robokod'];return [...new Set(ks)].map(k=>KT[k]);}
   /* takvim: ders haftaları */
   function haftalar(){const out=[];let n=0;for(let w=0;w<45;w++){const pzt=gun(BAS,w*7),key=tarihStr(pzt);if(key>BITIS)break;
       if(TATIL[key]){out.push({tatil:TATIL[key],pzt,cal:w});continue;}n++;out.push({no:n,pzt,cal:w});}return out;}
@@ -5018,10 +5108,49 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
       for(let i=0;i<DS.periods.length;i++){const cell=cellOn(date,i);if(!cell||cell.c!==c)continue;const T=hucreKs(c,cell,date,i),son=out[out.length-1];
         if(son&&son.ts===ts&&son.i+son.sure===i&&son.T.join()===T.join())son.sure++;else out.push({ts,tarih:date,d,i,sure:1,T,h:hf,resmi:RESMI[ts]||(ot.has(ts)?'Okul tatili':null)});}}}return out;}
   /* ---- konular: Yıllık Plan (Maarif ya da “Benim planım”) ---- */
+  const KOCLUK=[
+ {k:'Tanışma & Koçluk Nedir?',z:'Koçluğun amacını anlar.',e:'Hedef panosu.'},
+ {k:'Kendini Tanıma: Güçlü/Gelişim',z:'Öz farkındalık geliştirir.',e:'Beceri çemberi.'},
+ {k:'Değerlerim ve Motivasyonum',z:'İçsel motivasyonunu tanır.',e:'Değer kartları.'},
+ {k:'SMART Hedef Belirleme',z:'Ölçülebilir hedef yazar.',e:'Hedef şablonu.'},
+ {k:'Yıllık ve Dönemlik Plan',z:'Uzun vadeli plan yapar.',e:'Takvim.'},
+ {k:'Haftalık Program Yapma',z:'Zamanını planlar.',e:'Program çıkarma.'},
+ {k:'Önceliklendirme',z:'Öncelik belirler.',e:'Eisenhower matrisi.'},
+ {k:'Etkili Çalışma I: Aktif Tekrar',z:'Aktif hatırlamayı kullanır.',e:'Aktif tekrar denemesi.'},
+ {k:'Etkili Çalışma II: Aralıklı Tekrar',z:'Tekrar takvimi kurar.',e:'Tekrar planı.'},
+ {k:'Not Alma (Cornell)',z:'Düzenli not alır.',e:'Cornell uygulaması.'},
+ {k:'Özetleme ve Zihin Haritası',z:'Bilgiyi düzenler.',e:'Zihin haritası.'},
+ {k:'Dikkat ve Odak (Pomodoro)',z:'Odağını yönetir.',e:'Pomodoro denemesi.'},
+ {k:'Dikkat Dağıtıcılar & Dijital Düzen',z:'Ortamını düzenler.',e:'Bildirim düzeni.'},
+ {k:'1. Dönem Değerlendirme',z:'İlerlemesini gözden geçirir.',e:'Hedef güncelleme.'},
+ {k:'Hafıza Teknikleri',z:'Hafıza tekniği uygular.',e:'Loci/zincir.'},
+ {k:'Okuduğunu Anlama',z:'Anlama stratejisi kullanır.',e:'Metin çalışması.'},
+ {k:'Soru Çözme Teknikleri',z:'Strateji geliştirir.',e:'Soru tipi analizi.'},
+ {k:'Sınavda Süre Yönetimi',z:'Süreyi yönetir.',e:'Süreli deneme.'},
+ {k:'Deneme Analizi ve Hata Defteri',z:'Hatalarından öğrenir.',e:'Hata defteri.'},
+ {k:'Konu Eksiği Tespiti ve Telafi',z:'Eksiklerini planlar.',e:'Eksik listesi.'},
+ {k:'LGS Sözel Stratejileri',z:'Sözel yaklaşım kurar.',e:'Uygulama.'},
+ {k:'LGS Sayısal Stratejileri',z:'Sayısal yaklaşım kurar.',e:'Uygulama.'},
+ {k:'Sınav Kaygısıyla Baş Etme',z:'Kaygıyı yönetir.',e:'Nefes/gevşeme.'},
+ {k:'Olumlu İç Konuşma',z:'Zihniyetini yönetir.',e:'Olumlama kartları.'},
+ {k:'Büyüme Zihniyeti',z:'Zorluğu fırsat görür.',e:'“Henüz” dili.'},
+ {k:'Ertelemeyle Baş Etme',z:'İradeyi güçlendirir.',e:'2 dakika kuralı.'},
+ {k:'Motivasyonu Sürdürme',z:'Sürekliliği sağlar.',e:'Ödül sistemi.'},
+ {k:'Hedef Görselleştirme',z:'Vizyon oluşturur.',e:'Vizyon panosu.'},
+ {k:'Uyku ve Dinlenme',z:'Dinlenmeyi planlar.',e:'Uyku günlüğü.'},
+ {k:'Beslenme ve Performans',z:'Sağlıklı rutin kurar.',e:'Rutin planı.'},
+ {k:'Hareket ve Mola Düzeni',z:'Enerjisini yönetir.',e:'Mola planı.'},
+ {k:'Aile ve Akran Desteği',z:'Destek ağını kullanır.',e:'İletişim rol oyunu.'},
+ {k:'Yardım İsteme ve Kaynak',z:'Kaynakları kullanır.',e:'Kaynak listesi.'},
+ {k:'Genel Tekrar Kampı',z:'Bütünsel tekrar yapar.',e:'Tekrar planı.'},
+ {k:'Son Düzlük: Sınav Haftası',z:'Sınav haftasını planlar.',e:'Kontrol listesi.'},
+ {k:'Değerlendirme ve Gelecek Vizyonu',z:'Gelişimini değerlendirir.',e:'Lise/hedef panosu.'}
+];
   const ADIM_G=['Keşfediyoruz','Oynuyoruz','Üretiyoruz'],ADIM_B=['Keşfet','Uygula','Üret & Paylaş'],SCACHE={};
   function seanslar(gi,T){const b=bandOf(gi),tid=TR[T].v,kay=LSx.get('dk_plan_kaynak','maarif'),k=gi+'|'+T+'|'+kay;if(SCACHE[k])return SCACHE[k];
     const ham=(MAARIF[b]||{})[tid]||'',A=genc(b)?ADIM_G:ADIM_B,out=[];
-    ham.trim().split('\n').forEach((l,u)=>{const p=l.split('|'),et=String(p[2]||'').split(';');for(let s=0;s<3;s++)out.push({T,u,st:s,idx:u*3+s,s:u*3+s,unite:p[0],konu:p[0],asama:A[s],z:p[1]||'',etk:et[s]||et[0]||'',bec:p[3]||''});});
+    if(T==='K')KOCLUK.forEach((x,i)=>out.push({T,u:i,st:0,idx:i,s:i,unite:x.k,konu:x.k,asama:'',z:x.z||'',etk:String(x.e||'').replace(/\.$/,''),bec:'Öz yönetim'}));
+    else ham.trim().split('\n').forEach((l,u)=>{const p=l.split('|'),et=String(p[2]||'').split(';');for(let s=0;s<3;s++)out.push({T,u,st:s,idx:u*3+s,s:u*3+s,unite:p[0],konu:p[0],asama:A[s],z:p[1]||'',etk:et[s]||et[0]||'',bec:p[3]||''});});
     if(kay==='ozel'){const o=LSx.get('dk_ozel_plan',{})||{},g=(o[gi]&&o[gi][tid])||{};out.forEach((x,i)=>{const y=g[i];if(y){if(y.k)x.konu=String(y.k).replace(/\s·\s(Keşfet|Uygula|Üret & Paylaş|Keşfediyoruz|Oynuyoruz|Üretiyoruz)$/,'');if(y.z)x.z=y.z;if(y.e)x.etk=y.e;x.ozel=true;}});}
     return SCACHE[k]=out;}
   /* ---- işlenen dersler: Ders Saati ve Yıllık Plan ile ortak (dk_ilr) + tarihleri ---- */
@@ -5037,7 +5166,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     o[key]=[...D];LSx.set('dp_ilr_gor',o);}
   const VCACHE={};
   function veri(c){if(VCACHE[c])return VCACHE[c];const gi=giOf(c),b=bandOf(gi),M=toplantilar(c),bugun=tarihStr(new Date());
-    const Ts=[...new Set([].concat(...M.map(m=>m.T)))].sort((x,y)=>'RYSA'.indexOf(x)-'RYSA'.indexOf(y)),iz={};
+    const Ts=[...new Set([].concat(...M.map(m=>m.T)))].sort((x,y)=>'KRYSA'.indexOf(x)-'KRYSA'.indexOf(y)),iz={};
     Ts.forEach(T=>{const S=seanslar(gi,T),D=ilrSet(gi,T);if(!VELI)gozle(gi,T,D,M,bugun);const tm=VELI?{}:tarihMap(gi,T),byDate={};
       const mt=M.filter(m=>!m.resmi&&m.T.includes(T)).map(m=>m.ts);Object.keys(tm).sort((a,b_)=>(tm[a]||'').localeCompare(tm[b_]||'')||a-b_).forEach(i=>{if(!D.has(+i))return;let g=tm[i];if(!mt.includes(g)){const once=mt.filter(x=>x<=g);g=once.length?once[once.length-1]:g;}(byDate[g]=byDate[g]||[]).push(+i);});iz[T]={S,D,tm,byDate,pend:S.filter(x=>!D.has(x.idx)).map(x=>x.idx),kul:new Set()};});
     const list=[];
@@ -5063,30 +5192,74 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   function blokBul(b,kvs,tercih,tohum){const c=[];DUNYALAR.forEach(d=>{const ter=(tercih||[]).includes(d.id);if(!ter&&d.ders!=='kod')return;
       (d.seviyeler[b]||[]).forEach((l,i)=>{const s=(l.kv||[]).filter(k=>kvs.includes(k)).length*2+(ter?3:0);if(s>0)c.push({d:d.id,i,ad:l.ad,dAd:d.ad,ik:d.ik,s});});});
     if(!c.length)return null;const mx=Math.max(...c.map(x=>x.s)),en=c.filter(x=>x.s===mx);return en[tohum%en.length];}
-  function oyunSpec(p,b,gi){return {T:p.T,b,u:p.u,st:p.st,konu:p.konu,unite:p.unite,asama:p.asama,z:p.z,bec:p.bec,genc:genc(b),tohum:gi*1000+p.idx*10+'RYSA'.indexOf(p.T),id:gi+'_'+p.T+'_'+p.idx};}
-  function uygulamalar(p,b,gi){const u=[];if(!p||p.idx<0)return u;const k=String(p.konu||'').toLocaleLowerCase('tr'),t=p.s;
+  /* ---- 🧩 ZİRVE Ders Merkezi eşlemesi: her konuya 2–3 etkinlik (blok dünyası + etkinlik merkezi) ---- */
+  const BANDLAR=['ana','12','34','56','78'],BAND_GI={ana:0,'12':1,'34':3,'56':5,'78':7};
+  const ustBand=b=>BANDLAR[Math.min(4,BANDLAR.indexOf(b)+1)];
+  const ETK_AD={eslestir:'🔗 Eşleştir',dy:'✅ Doğru mu yanlış mı?',grup:'🗂️ Grupla',bosluk:'✍️ Boşluk doldur',sirala:'🔢 Doğru sıra',anagram:'🔤 Anagram',avi:'🔎 Kelime avı',yaris:'⚡ Bilgi yarışı',balon:'🎈 Balon patlat',kutu:'🎁 Kutuyu aç',kostebek:'🔨 Köstebek vur',hafiza:'🧠 Hafıza kartları',satranc:'♞ Satranç tahtası'};
+  function blokSec(b,kvs,dunyalar,tohum,haric){const ara=bb=>{const c=[];DUNYALAR.forEach(d=>{if(dunyalar?!dunyalar.includes(d.id):d.ders!=='kod')return;if(haric&&haric.includes(d.id))return;
+      (d.seviyeler[bb]||[]).forEach((l,i)=>{const s_=(l.kv||[]).filter(k=>kvs.includes(k)).length*2+(dunyalar?dunyalar.length-dunyalar.indexOf(d.id):0);if(s_>0||!kvs.length)c.push({d,i,l,s:s_});});});
+      if(!c.length)return null;const mx=Math.max(...c.map(x=>x.s)),en=c.filter(x=>x.s===mx);return en[Math.abs(tohum)%en.length];};
+    let x=ara(b),ust=false;if(!x&&b!=='78'){x=ara(ustBand(b));ust=!!x;}if(!x)return null;
+    return {tip:'blok',d:x.d.id,i:x.i,band:ust?ustBand(b):b,ust,ad:x.d.ik+' '+x.d.ad+': '+x.l.ad};}
+  function etkSec(ders,konular,b,oyun,mod){let K={};try{K=ETK._test.KONU[ders]||{};}catch(e){}const var_=(bb,k)=>(K[bb]||[]).some(x=>x.k===k);
+    for(const k of konular){if(var_(b,k))return {tip:'etk',ders,oyun,konu:k,mod,band:b,ust:false,ad:ETK_AD[oyun]+': '+k};}
+    const u=ustBand(b);for(const k of konular){if(u!==b&&var_(u,k))return {tip:'etk',ders,oyun,konu:k,mod,band:u,ust:true,ad:ETK_AD[oyun]+': '+k};}
+    for(const k of konular){const bb=BANDLAR.slice().reverse().find(x=>var_(x,k));if(bb)return {tip:'etk',ders,oyun,konu:k,mod,band:bb,ust:BANDLAR.indexOf(bb)>BANDLAR.indexOf(b),ad:ETK_AD[oyun]+': '+k};}return null;}
+  function dmSec(p,b,gi){const k=String(p.unite||p.konu||'').toLocaleLowerCase('tr'),t=p.idx||0,o=[],ekle=x=>{if(x&&!o.some(y=>y.ad===x.ad))o.push(x);},don=a=>a[t%a.length];
+    if(p.T==='R'){let kv=['sira'],dy=null;
+      if(/döngü|tekrar|örüntü|çokgen/.test(k)){kv=['dongu','icice'];dy=['atolye','saat','robi'];}else if(/koşul|eğer|karar|sensör|otonom|robotik/.test(k)){kv=['kosul'];dy=['sensor','robi','ciftlik'];}
+      else if(/olay|mesaj|hikâye|animasyon|scratch/.test(k)){kv=['olay','sira'];dy=['hikaye','robi'];}else if(/değişken|puan|liste|veri/.test(k)){kv=['degisken'];dy=['ciftlik','hikaye','sensor'];}
+      else if(/fonksiyon|bloğum|modüler/.test(k)){kv=['fonksiyon','icice'];dy=['kopru','atolye'];}else if(/python|web|html/.test(k)){kv=['yazili','fonksiyon'];dy=['kopru'];}else if(/hata/.test(k)){kv=['hata'];dy=['saat','robi','ciftlik'];}
+      else if(/yön|ok|komut|kart|labirent|sanal robot|robot/.test(k)){kv=['sira','dongu'];dy=['robi','saat'];}else{kv=['sira'];dy=['saat','robi','atolye'];}
+      const a=blokSec(b,kv,dy,t);ekle(a);ekle(blokSec(b,kv,null,t+1,a?[a.d]:null));
+      ekle(b==='ana'?etkSec('mat',['Örüntü','Şekiller'],b,'eslestir'):etkSec('mat',['Algoritma ve Kodlama','Örüntü ve Algoritma'],b,don(['eslestir','yaris','dy'])));}
+    else if(p.T==='S'){const kv=/döngü|merdiven|zikzak/.test(k)?['dongu']:/terfi|kural|koşul/.test(k)?['kosul','dongu']:['sira','dongu'];
+      const tercih=/kale/.test(k)?'Kale':/fil/.test(k)?'Fil':/at\b|at zıp|^at$/.test(k)?'At':/vezir/.test(k)?'Vezir':/şah/.test(k)?'Şah':/piyon/.test(k)?'Piyon':'';
+      let a=null;if(tercih){const sv=(DREG.satranc&&DREG.satranc.seviyeler)||{};for(const bb of [b,ustBand(b)]){const i=(sv[bb]||[]).findIndex(l=>l.ad.toLocaleLowerCase('tr').includes(tercih.toLocaleLowerCase('tr')));if(i>=0){a={tip:'blok',d:'satranc',i,band:bb,ust:bb!==b,ad:DREG.satranc.ik+' '+DREG.satranc.ad+': '+sv[bb][i].ad};break;}}}
+      ekle(a||blokSec(b,kv,['satranc'],t));
+      const kn=/notasyon/.test(k)?['Notasyon']:/açılış|repertuvar/.test(k)?['Açılış İlkeleri']:/taktik|çatal|şiş|bağlama|kombinasyon|hesap|aday/.test(k)?['Taktikler']:/mat|oyun sonu|saldırı/.test(k)?['Mat Kalıpları']:/değer|takas|yeme/.test(k)?['Taş Puanları']:/kural|rok|terfi|pat|şah çek|savunma/.test(k)?['Kurallar']:/tahta|masal|tarih|tanışalım/.test(k)?(b==='ana'?['Tahta','Taşlar']:['Başlangıç Kareleri','Taşlar']):['Nasıl gider?','Taşlar','Taktikler'];
+      const hareket=/piyon|kale|fil|at\b|vezir|şah|taş|hareket/.test(k);
+      ekle(etkSec('sat',kn,b,hareket?'satranc':don(['eslestir','yaris','kutu']),hareket?(b==='ana'?'bul':'hamle'):undefined));
+      ekle(etkSec('sat',kn.concat(['Taktikler','Kurallar']),b,don(['yaris','eslestir','dy'])));}
+    else if(p.T==='Y'){const kn=/etik|güven|sorumlu|telif|önyargı|gizlilik|adalet/.test(k)?['YZ Etiği','Sorumlu Kullanım']:/öğren|model|veri|sınıf|eğit|sinir|örnek|görüntü|ses|tahmin|teachable|ml4/.test(k)?['Makine Öğrenmesi','YZ Kavramları','Makine Nasıl Öğrenir?','YZ Terimleri']:['Günlük Hayatta YZ','YZ Terimleri','Akıllı Makineler','YZ Kavramları'];
+      ekle(etkSec('yz',kn,b,don(['eslestir','yaris','dy','grup'])));ekle(etkSec('yz',kn.slice(1).concat(kn[0]),b,don(['dy','bosluk','yaris','eslestir'])));
+      if(/veri|grafik|olasılık/.test(k))ekle(etkSec('mat',['Veri ve Olasılık','Veri'],b,'yaris'));else if(/dil|sohbet|prompt|metin/.test(k))ekle(etkSec('tr',['Anlam İlişkileri','Eş Anlamlı','Söz Sanatları'],b,'eslestir'));
+      else if(/python/.test(k))ekle(blokSec(b,['yazili','dongu'],['kopru'],t));else if(/robot|akıllı sistem|otonom/.test(k))ekle(blokSec(b,['kosul'],['sensor','robi'],t));}
+    else if(p.T==='A'){
+      if(/örüntü|sıralama|sayısal örüntü/.test(k)){ekle(etkSec('mat',['Örüntüler','Örüntü ve Algoritma','Örüntü'],b,'sirala'));ekle(blokSec(b,['dongu'],['sayi','saat'],t));}
+      if(/hafıza/.test(k)){ekle(etkSec('mat',['Sayılar ve İşlemler'],b,'hafiza'));ekle(etkSec('tr',['Eş Anlamlı','Deyimler','Anlam İlişkileri','Resim–Kelime'],b,'hafiza'));}
+      if(/sayı|sudoku|kenken|kakuro|işlem|miktar|olasılık/.test(k)){ekle(etkSec('mat',/olasılık/.test(k)?['Veri ve Olasılık']:['Sayılar ve İşlemler','Çarpanlar ve Katlar'],b,don(['kutu','balon','yaris'])));ekle(blokSec(b,['dongu','degisken','sira'],['sayi'],t));}
+      if(/tangram|uzamsal|simetri|yapboz|pentomino|şekil/.test(k)){ekle(blokSec(b,['dongu','icice'],['atolye'],t));ekle(etkSec('mat',['Geometri ve Ölçme','Geometri ve Cebir','Şekiller'],b,'eslestir'));}
+      if(/labirent|yol|algoritmik/.test(k)){ekle(blokSec(b,['sira','dongu','kosul'],['robi','saat'],t));}
+      if(/mantık|akıl yürütme|dedektif|eleştirel|yanılgı/.test(k)){ekle(blokSec(b,['kosul'],['robi','ciftlik','sensor'],t));ekle(etkSec('tr',['Anlam İlişkileri','Zıt Anlamlı','Cümle Türleri'],b,'dy'));}
+      if(/strateji|nim|mangala|oyun teorisi|turnuva|şampiyona|üç taş/.test(k)){ekle(etkSec('sat',['Taktikler','Taş Puanları','Nasıl gider?','Taşlar'],b,'satranc',b==='ana'?'bul':'al'));ekle(etkSec('mat',['Sayılar ve İşlemler'],b,'kostebek'));}
+      if(/dikkat|hız|farkı|görsel/.test(k)){ekle(etkSec('mat',['Sayılar ve İşlemler'],b,'kostebek'));ekle(etkSec('tr',['Eş Anlamlı','Zıt Anlamlı','Renkler'],b,'avi'));}
+      if(/kelime|dil/.test(k)){ekle(etkSec('tr',['Eş Anlamlı','Deyimler','Fiilimsiler'],b,'anagram'));ekle(etkSec('tr',['Zıt Anlamlı','Atasözleri','Anlam İlişkileri'],b,'avi'));}
+      if(o.length<2){ekle(etkSec('mat',['Örüntüler','Örüntü ve Algoritma','Örüntü','Sayılar ve İşlemler'],b,don(['sirala','hafiza','kutu'])));ekle(blokSec(b,['sira','dongu'],['robi','atolye','saat'],t));}}
+    else if(p.T==='K'){const mk=['Denklemler','Üslü ve Kareköklü','Çarpanlar ve Katlar','Veri ve Olasılık','Geometri ve Cebir','Sayılar ve İşlemler'],tk=['Anlam İlişkileri','Cümle Türleri','Fiilimsiler','Söz Sanatları'];
+      if(/hafıza/.test(k))ekle(etkSec('mat',[don(mk)],'78','hafiza'));if(/odak|dikkat|pomodoro/.test(k))ekle(etkSec('mat',[don(mk)],'78','kostebek'));
+      if(/sözel|okudu|özet|not alma/.test(k)){ekle(etkSec('tr',[don(tk)],'78','yaris'));ekle(etkSec('tr',[tk[(t+1)%4]],'78','dy'));}
+      ekle(etkSec('mat',[don(mk)],'78',don(['yaris','kutu','dy'])));ekle(etkSec('tr',[don(tk)],'78',don(['yaris','eslestir','dy'])));o.forEach(x=>{if(x)x.ad=x.ad.replace(/^(\S+) /,'$1 LGS · ');});}
+    return o.filter(Boolean).slice(0,3);}
+  function oyunSpec(p,b,gi){return {T:p.T,b,u:p.u,st:p.st,konu:p.konu,unite:p.unite,asama:p.asama,z:p.z,bec:p.bec,genc:genc(b),tohum:gi*1000+p.idx*10+'RYSAK'.indexOf(p.T),id:gi+'_'+p.T+'_'+p.idx};}
+  function uygulamalar(p,b,gi){const u=[];if(!p||p.idx<0)return u;const k=String(p.konu||'').toLocaleLowerCase('tr');
     if(typeof DO!=='undefined'){try{const sp=oyunSpec(p,b,gi),P=DO._test.PLAN(sp);u.push({tip:'do',ad:P.ik+' '+P.ad,sp});}catch(e){}}
-    const blok=(kvs,ter)=>{const x=blokBul(b,kvs,ter,t);if(x)u.push({tip:'blok',d:x.d,i:x.i,ad:x.ik+' '+x.dAd+': '+x.ad});};
-    const etk=(ders,oyun,ad,konu,mod)=>u.push({tip:'etk',ders,oyun,ad,konu,mod});
+    try{dmSec(p,b,gi).forEach(x=>u.push(x));}catch(e){}
     const link=a=>{if(ARAC[a])u.push({tip:'link',ad:ARAC[a][0],url:ARAC[a][1]});};
-    if(p.T==='R'){let kv=['sira'];if(/döngü|tekrar|örüntü/.test(k))kv=['dongu','icice'];else if(/koşul|eğer|karar|sensör/.test(k))kv=['kosul'];else if(/olay|mesaj|hikâye|animasyon/.test(k))kv=['olay'];
-      else if(/değişken|puan|liste|veri/.test(k))kv=['degisken'];else if(/fonksiyon|bloğum|modüler/.test(k))kv=['fonksiyon'];else if(/python|web|html/.test(k))kv=['yazili','fonksiyon'];else if(/hata/.test(k))kv=['hata'];
-      const esl=kv[0]!=='sira'||/algoritma|komut|yön|ok|robot|sıra|kart|labirent|adım/.test(k);if(esl){blok(kv,/robot|sensör/.test(k)?['robi','sensor','ciftlik']:null);if(u.length<2)blok(['sira','dongu'],['robi']);}if(gi>=1)etk('mat','eslestir','🔗 Kodlama kavramları eşleştirme','Algoritma ve Kodlama');
-      if(/scratchjr/.test(k))link('scratchjr');else if(/scratch|oyun|animasyon/.test(k))link(gi<=2?'scratchjr':'scratch');if(/micro:bit|fiziksel/.test(k))link('makecode');if(/python/.test(k))link('trinket');if(/web|html/.test(k))link('w3');}
-    else if(p.T==='Y'){if(gi>=1)etk('yz',/etik|güven|önyargı|gizlilik/.test(k)?'dy':/sınıf|örnek|öğren|model|veri/.test(k)?'grup':'eslestir',/etik|güven|önyargı|gizlilik/.test(k)?'✅ Doğru mu yanlış mı?':/sınıf|örnek|öğren|model|veri/.test(k)?'🗂️ Makineyi eğit: grupla':'🔗 YZ kavramlarını eşleştir');
-      if(/çiz|örüntü|görerek|görüntü/.test(k))link('quickdraw');if(/yaratıcı|üretici|prompt/.test(k))link('autodraw');if(/model|teachable|öğren|sınıf|ses/.test(k)&&gi>=3)link('teachable');if(/dil|sohbet/.test(k))link('semantris');if(/karar|ağaç/.test(k))link('akinator');}
-    else if(p.T==='S'){const mod=gi<=0?'bul':/tahta|masal|tarih|notasyon|tanışalım/.test(k)?'kare':/değer|yeme|takas|taktik|çatal|şiş|kombinasyon|hesap/.test(k)?'al':'hamle';etk('sat','satranc','♞ Satranç tahtası: '+({bul:'taşı bul',kare:'kareyi bul',hamle:'nereye gider?',al:'taşı al'})[mod],null,mod);if(gi>=1)etk('sat','eslestir','🔗 Satranç kavramları');link(gi<=2?'chesskid':'lichess');}
-    else{if(/hafıza/.test(k))etk('mat','hafiza','🧠 Hafıza kartları');else if(/örüntü|sıralama/.test(k))etk('mat','sirala','🔢 Doğru sıra (örüntü)');else if(/dikkat|hız|farkı/.test(k))etk('mat','kostebek','🔨 Hızlı dikkat');else if(/sayı|sudoku|kenken|kakuro|işlem|miktar/.test(k))etk('mat','kutu','🎁 Sayı kutusu');
-      else if(/labirent|yol/.test(k))blok(['sira','dongu'],['robi']);else if(/tangram|uzamsal|simetri|yapboz|pentomino/.test(k))blok(['dongu','icice'],['atolye']);else etk('mat','hafiza','🧠 Hafıza kartları');if(/mantık|algoritmik/.test(k))link('lightbot');}
+    if(p.T==='R'){if(/scratchjr/.test(k))link('scratchjr');else if(/scratch|oyun|animasyon/.test(k))link(gi<=2?'scratchjr':'scratch');if(/micro:bit|fiziksel/.test(k))link('makecode');if(/python/.test(k))link('trinket');if(/web|html/.test(k))link('w3');}
+    else if(p.T==='Y'){if(/çiz|örüntü|görerek|görüntü/.test(k))link('quickdraw');if(/yaratıcı|üretici|prompt/.test(k))link('autodraw');if(/model|teachable|öğren|sınıf|ses/.test(k)&&gi>=3)link('teachable');if(/dil|sohbet/.test(k))link('semantris');if(/karar|ağaç/.test(k))link('akinator');}
+    else if(p.T==='S')link(gi<=2?'chesskid':'lichess');else if(p.T==='A'&&/mantık|algoritmik/.test(k))link('lightbot');
     return u;}
 
   /* ---- 🎮 dersin oyunu + 📤 Değişim ekosistemi ---- */
   function oyunu(L){if(!L||L.resmi)return null;let blk=null;for(let j=0;j<L.parts.length;j++){const U=uygulamalar(L.parts[j],L.b,L.gi);const d=U.findIndex(x=>x.tip==='do');if(d>=0)return {j,k:d,ad:U[d].ad};}for(let j=0;j<L.parts.length;j++){const U=uygulamalar(L.parts[j],L.b,L.gi);for(let k=0;k<U.length;k++){if(U[k].tip==='etk')return {j,k,ad:U[k].ad};if(U[k].tip==='blok'&&!blk)blk={j,k,ad:U[k].ad};}}return blk;}
   function adres(){const a=LSx.get('dp_adres','');if(a)return a;return /^https?:/.test(location.protocol)?location.href.split('#')[0]:'';}
   function adresSor(){const y=prompt('Ders Programım sayfasının internet adresi\n(velilere giden 🎮 oyun bağlantıları bu adresle açılır)\nÖrnek: https://ornek.github.io/ders-programim.html',LSx.get('dp_adres','')||adres()||'https://');if(y===null)return adres();const t=y.trim();LSx.set('dp_adres',/^https?:\/\/[^\s]+\.[^\s]+/.test(t)?t.split('#')[0]:'');if(adres())toast('🌐 Adres kaydedildi',1800);return adres();}
-  function oyunLink(L){const a=adres(),o=oyunu(L);if(!a||!o)return '';const p=L.parts[o.j];return a+'#oyun='+encodeURIComponent(L.c+'~'+p.T+'~'+p.idx);}
+  function oyunLink(L,j,k){const a=adres(),o=oyunu(L);if(!a||!o)return '';const p=L.parts[j==null?o.j:j];return a+'#oyun='+encodeURIComponent(L.c+'~'+p.T+'~'+p.idx+(k!=null?'~'+k:''));}
+  function oyunListesi(L){const o=[];L.parts.forEach((p,j)=>uygulamalar(p,L.b,L.gi).forEach((x,k)=>{if(x.tip!=='link')o.push({j,k,x,p});}));return o;}
+  function gonderiLinkleri(L){const tek=L.parts.length===1,o=[];L.parts.forEach((p,j)=>{let dm=0;uygulamalar(p,L.b,L.gi).forEach((x,k)=>{if(x.tip==='link')return;if(x.tip!=='do'){if(dm>=(tek?2:1))return;dm++;}const url=oyunLink(L,j,k);if(url)o.push({url,ad:((x.tip==='do'?'🎮 Ders oyunu: ':'🧩 Ders Merkezi: ')+x.ad).slice(0,60)});});});return o.slice(0,5);}
   function ilerKod(c){const gi=giOf(c);return veri(c).Ts.map(T=>{const D=[...ilrSet(gi,T)].sort((a,b)=>a-b),r=[];for(let i=0;i<D.length;){let j=i;while(j+1<D.length&&D[j+1]===D[j]+1)j++;r.push(i===j?D[i]:D[i]+'-'+D[j]);i=j+1;}return T+r.join(',');}).join('~');}
-  function ilerCoz(s){const o={};String(s||'').split('~').forEach(p=>{const T=p[0];if(!T||!'RSYA'.includes(T))return;const S_=new Set();p.slice(1).split(',').filter(Boolean).forEach(r=>{const [a,b]=r.split('-').map(Number);if(isNaN(a))return;for(let i=a;i<=(isNaN(b)?a:b);i++)S_.add(i);});o[T]=S_;});return o;}
+  function ilerCoz(s){const o={};String(s||'').split('~').forEach(p=>{const T=p[0];if(!T||!'RSYAK'.includes(T))return;const S_=new Set();p.slice(1).split(',').filter(Boolean).forEach(r=>{const [a,b]=r.split('-').map(Number);if(isNaN(a))return;for(let i=a;i<=(isNaN(b)?a:b);i++)S_.add(i);});o[T]=S_;});return o;}
   function veliUrl(c){const a=adres()||location.href.split('#')[0];return a+'#veli='+encodeURIComponent(c)+'&p='+encodeURIComponent(ilerKod(c))+'&t='+tarihStr(new Date());}
   const EKO_CFG={apiKey:"AIzaSyAqeO-yQyQPnLsOqKmSNvVH23WPvneIjaU",authDomain:"shaped-totem-481514-c5.firebaseapp.com",projectId:"shaped-totem-481514-c5",storageBucket:"shaped-totem-481514-c5.firebasestorage.app",messagingSenderId:"519295049418",appId:"1:519295049418:web:7d04e18c4ea36bc088de33"};
   let EKO_FB=null,EKO_MOCK=null;
@@ -5110,7 +5283,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
       const ts=Date.now(),bitis=ts+7*864e5,yeni=[],hedef=[],a=adres();
       const grup={};Ls.forEach(L=>{const g=L.c+'|'+L.ts;(grup[g]=grup[g]||[]).push(L);});
       Object.values(grup).forEach((G,i)=>{const L=G[0],m=G.map(x=>veliMetin(x,true)).join('\n\n'),lk=[];
-        G.forEach(x=>{const o=oyunu(x),ol=oyunLink(x);if(o&&ol&&!lk.some(l=>l.url===ol))lk.push({url:ol,ad:('🎮 Oyunu oyna: '+o.ad).slice(0,60)});});
+        G.forEach(x=>gonderiLinkleri(x).forEach(l=>{if(!lk.some(y=>y.url===l.url)&&lk.length<6)lk.push(l);}));
         sinifEsle(L.c,okul).forEach((s,j)=>{const y={id:'dp'+ts.toString(36)+i+'_'+j+Math.random().toString(36).slice(2,6),sinif:s,metin:m,ogretmen:'Barış Öğretmen',ts:ts-(i*10+j),kaynak:'ozet',bitis,robotik:true};if(lk.length)y.linkler=lk;yeni.push(y);if(!hedef.includes(s))hedef.push(s);});});
       await F.setDoc(F.doc(fb.db,'maas_config','k12_pano'),{liste:F.arrayUnion.apply(null,yeni),guncelleme:Date.now()},{merge:true});
       const g=gonderildi();Ls.forEach(L=>{g[L.key]=ts;});LSx.set('dp_eko',g);ekoBtnYenile();
@@ -5123,6 +5296,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
       if(n)await F.setDoc(ref,{liste:yeni,guncelleme:Date.now()},{merge:true});LSx.set('dp_link_temiz',Date.now());
       if(n||!sessiz)toast(n?'🧹 '+n+' mesajdan yıllık ders programı bağlantısı kaldırıldı · mesaj ve oyun yerinde':'✅ Değişim’de yıllık program bağlantısı kalmamış',4000);return n;}
     catch(e){if(!sessiz)toast('Değişim’e ulaşılamadı; internet bağlantısını kontrol edip tekrar dene',3500);return -1;}}
+  function haftaGonder(c){const bh=buHafta(),bug=tarihStr(new Date());if(!bh)return;const L=dersListe(c).filter(x=>x.h.cal===bh.cal&&!x.resmi&&x.ts<=bug&&!gonderildi()[x.key]);if(!L.length){toast('Bu hafta gönderilmemiş (bugüne kadarki) ders yok');return;}ekoGonder(L);}
   function eko(key){const L=bul(key);if(!L)return;if(gonderildi()[key]&&!confirm(L.c+' dersi '+saatKisa(gonderildi()[key])+'’de Değişim’e gönderilmişti. Tekrar gönderilsin mi?'))return;ekoGonder([L]);}
   function bugunDersleri(ts){const L=[];SINIFLAR.forEach(c=>dersListe(c).forEach(x=>{if(x.ts===ts&&!x.resmi)L.push(x);}));return L.sort((a,b)=>a.i-b.i);}
   function bugunGonder(){const L=bugunDersleri(tarihStr(new Date()));if(!L.length){toast('Bugün gönderilecek ders yok');return;}ekoGonder(L).then(n=>{if(n>0)LSx.set('dp_eko_gun',tarihStr(new Date()));ekoBtnYenile();});}
@@ -5164,10 +5338,12 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     setInterval(()=>{if(document.visibilityState==='visible')bsEsitle(false);},60000);bsZamanla();}
   /* 🎮 veli oyun bağlantısı (#oyun=…) karşılama */
   function oyunHash(){const m=(location.hash||'').match(/oyun=([^&]+)/);return m?decodeURIComponent(m[1]):null;}
-  function oyunCoz(h){const p=String(h||'').split('~');if(p.length!==3||!SINIFLAR.includes(p[0])||!'RSYA'.includes(p[1]))return null;const gi=giOf(p[0]),x=seanslar(gi,p[1])[+p[2]];return x?{c:p[0],gi,b:bandOf(gi),x}:null;}
-  function oyunKarsila(h){const r=oyunCoz(h);if(!r)return false;const U=uygulamalar(r.x,r.b,r.gi),o=U.find(u=>u.tip==='do')||U[0];if(!o)return false;let w=$d('dpOy');if(!w){w=document.createElement('div');w.id='dpOy';w.className='ortu';document.body.appendChild(w);}
-    w.innerHTML='<div class="ust"><div class="kart dpPayKart dpOyKart"><div class="dpOyIk">🎮</div><h2>'+esc(r.c)+' · '+TR[r.x.T].ad+' dersinin oyunu</h2><div class="dpKonu">'+TR[r.x.T].ik+' '+esc(r.x.konu)+' <span class="dpAsama">'+esc(r.x.asama)+'</span></div><p class="dpOyAd">'+esc(o.ad)+'</p></div></div><div class="alt"><button class="btn yesil" id="dpOyBas">▶ Oyuna başla</button><button class="btn ana" id="dpOyKap">📅 Ders programını gör</button></div>';
-    w.classList.add('acik');$d('dpOyBas').onclick=()=>{w.classList.remove('acik');SINIF=r.b;SINIF_NO=r.gi;if(o.tip==='do')DO.ac(o.sp);else if(o.tip==='etk')ETK.oyna(o.ders,o.oyun,o.konu,o.mod);};$d('dpOyKap').onclick=()=>{w.classList.remove('acik');};return true;}
+  function oyunCoz(h){const p=String(h||'').split('~');if(p.length<3||!SINIFLAR.includes(p[0])||!'RSYAK'.includes(p[1]))return null;const gi=giOf(p[0]),x=seanslar(gi,p[1])[+p[2]];return x?{c:p[0],gi,b:bandOf(gi),x}:null;}
+  function oyunKarsila(h){const r=oyunCoz(h);if(!r)return false;const sec_=+String(h).split('~')[3];const H=uygulamalar(r.x,r.b,r.gi),U=H.filter(u=>u.tip!=='link');if(!U.length)return false;const ana=isNaN(sec_)?0:Math.max(0,U.indexOf(H[sec_]));
+    let w=$d('dpOy');if(!w){w=document.createElement('div');w.id='dpOy';w.className='ortu';document.body.appendChild(w);}
+    w.innerHTML='<div class="ust"><div class="kart dpPayKart dpOyKart"><div class="dpOyIk">🎮</div><h2>'+esc(r.c)+' · '+TR[r.x.T].ad+'</h2><div class="dpKonu">'+TR[r.x.T].ik+' '+esc(r.x.konu)+(r.x.asama?' <span class="dpAsama">'+esc(r.x.asama)+'</span>':'')+'</div><p class="dpOyAd">Bu dersin oyunları — istediğine dokun:</p><div class="dpOyList" id="dpOyList"></div></div></div><div class="alt"><button class="btn ana" id="dpOyKap">📅 Kapat</button></div>';
+    const lst=$d('dpOyList');U.forEach((x,i)=>{const b_=document.createElement('button');b_.className='dpOyB'+(i===ana?' ana':'');b_.innerHTML=(x.tip==='do'?'🎮 Ders oyunu: ':'🧩 Ders Merkezi: ')+esc(x.ad);b_.onclick=()=>{w.classList.remove('acik');uygAc(x,r.b,r.gi);};lst.appendChild(b_);});
+    w.classList.add('acik');$d('dpOyKap').onclick=()=>{w.classList.remove('acik');};return true;}
 
   /* ---- metinler ---- */
   function dersAdi(parts){return parts.map(p=>TR[p.T].ik+' '+TR[p.T].ad).join(' ve ');}
@@ -5176,7 +5352,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     if(L.resmi){s.push('🎉 '+L.resmi+' nedeniyle bu ders yapılmayacak.');return s.join('\n');}
     L.parts.forEach(p=>{const v=TR[p.T].v;s.push(TR[p.T].ik+' '+TR[p.T].ad+': '+p.konu+' ('+p.asama+')');s.push('📝 '+p.etk+'.');s.push('🎯 Çocuğunuz '+KAZ[v][b]+'.');});
     const v=TR[L.parts[0].T].v;s.push('🏠 Evde “'+(b==='ana'?SORU_ANA[v]:SORU[v])+'” '+EK[b]);
-    const o=oyunu(L),ol=oyunLink(L),ads=[];L.parts.forEach(p=>{const U=uygulamalar(p,L.b,L.gi).filter(x=>x.tip==='do');if(U.length)ads.push(U[0].ad);});if(o){s.push('🎮 '+(bugun?'Bugünün':'Dersin')+' '+(ads.length>1?'oyunları: '+ads.join(' · '):'oyunu: '+o.ad));if(eko)s.push('👇 Aşağıdaki “🎮 Oyunu oyna” düğmesine dokunarak çocuğunuzla birlikte oynayabilirsiniz.');else if(ol)s.push('👉 '+ol);}
+    const o=oyunu(L),ol=oyunLink(L),G=gonderiLinkleri(L).map(x=>x.ad);const ads=G.length?G:oyunListesi(L).slice(0,4).map(x=>(x.x.tip==='do'?'🎮 ':'🧩 ')+x.x.ad);if(o){s.push('🎮 '+(bugun?'Bugünün':'Dersin')+' oyunları:');ads.forEach(a=>s.push('• '+a.replace(/^🎮 Ders oyunu: /,'🎮 ').replace(/^🧩 Ders Merkezi: /,'🧩 ')));if(eko)s.push('👇 Aşağıdaki düğmelerden çocuğunuzla birlikte oynayabilirsiniz.');else if(ol)s.push('👉 '+ol);}
     s.push('— Barış Öğretmen');return s.join('\n');}
   function rehber(L){const R=[],b=L.b;
     L.parts.forEach((p,j)=>{const T=TR[p.T];
@@ -5201,8 +5377,8 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     let h='<div class="dpKart'+(isl||(veli&&gecmis)?' bitti':'')+(L.resmi?' resmi':'')+'" id="k_'+L.key.replace(/\W/g,'_')+'"><div class="dpSerit" style="background:'+renk+'"></div><div class="dpIc">';
     h+='<div class="dpKUst"><span class="dpDers">'+esc(dersAdi(L.parts))+(L.sure>1?' · '+L.sure+' saat':'')+'</span><span class="dpZaman">📅 '+kisaTarih(L.tarih)+' · '+saatYaz(L)+'</span>'+((isl||(veli&&gecmis))?'<span class="dpOk">✅ İşlendi</span>':'')+'</div>';
     if(L.resmi)h+='<div class="dpResmi">🎉 '+esc(L.resmi)+' — bu ders yapılmaz.</div>';
-    const oy=oyunu(L);if(!L.resmi)L.parts.forEach((p,j)=>{h+='<div class="dpParca'+(p.done?' ok':'')+'"><div class="dpKonu">'+(L.parts.length>1?TR[p.T].ik+' ':'')+esc(p.konu)+' <span class="dpAsama">'+esc(p.asama)+'</span> <span class="dpSira">'+(p.done?'✅ ':'')+'Ders '+(p.idx+1)+'/36</span></div><div class="dpZ">🎯 '+esc(p.z)+'</div><div class="dpE">📝 '+esc(p.etk)+'</div>';
-      const U=uygulamalar(p,L.b,L.gi);if(U.length)h+='<div class="dpUyg">'+U.map((x,k)=>x.tip==='link'?'<a class="dpU l" href="'+x.url+'" target="_blank" rel="noopener">'+esc(x.ad)+' ↗</a>':'<button class="dpU'+(x.tip==='do'?' oy':'')+'" onclick="DP.uyg(\''+L.key+'\','+j+','+k+')">'+(x.tip==='do'?'🎮 Ders oyunu: ':veli?'🏠 Evde dene: ':'▶ ')+esc(x.ad)+'</button>').join('')+'</div>';h+='</div>';});
+    const oy=oyunu(L);if(!L.resmi)L.parts.forEach((p,j)=>{h+='<div class="dpParca'+(p.done?' ok':'')+'"><div class="dpKonu">'+(L.parts.length>1?TR[p.T].ik+' ':'')+esc(p.konu)+(p.asama?' <span class="dpAsama">'+esc(p.asama)+'</span>':'')+' <span class="dpSira">'+(p.done?'✅ ':'')+'Ders '+(p.idx+1)+'/36</span></div><div class="dpZ">🎯 '+esc(p.z)+'</div><div class="dpE">📝 '+esc(p.etk)+'</div>';
+      const U=uygulamalar(p,L.b,L.gi);if(U.length)h+='<div class="dpUyg">'+U.map((x,k)=>x.tip==='link'?'<a class="dpU l" href="'+x.url+'" target="_blank" rel="noopener">'+esc(x.ad)+' ↗</a>':'<button class="dpU'+(x.tip==='do'?' oy':' dm')+'" onclick="DP.uyg(\''+L.key+'\','+j+','+k+')">'+(x.tip==='do'?'🎮 Ders oyunu: ':'🧩 ')+esc(x.ad)+(x.ust?' <small class="dpUst">⬆️ üst seviye</small>':'')+'</button>').join('')+'</div>';h+='</div>';});
     if(L.resmi)return h+'</div></div>';
     if(!veli&&L.parts.some(p=>p.done)){const kyn=LSx.get('dp_ilr_kaynak',{})||{},dis=L.parts.filter(p=>p.done&&kyn[L.gi+'|'+TR[p.T].v+'|'+p.idx]!=='dp');
       if(dis.length)h+='<div class="dpDis">🔗 '+dis.map(p=>TR[p.T].ik+' '+esc(p.konu)).join(', ')+' — <b>Ders Saati / Yıllık Plan’da işlendi</b> olarak işaretlendi. Yanlışsa “↩️ Geri al” ile kaldır; üç uygulamadan da kalkar.</div>';}
@@ -5212,7 +5388,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     let h='<div class="dpOzet"><div class="dpOzetBas"><span class="dpSnfRozet" style="--c:'+RENK[c]+'">'+esc(c)+'</span><b>'+(veli?'Ders yolculuğumuz':'Nerede kaldık?')+'</b></div>';
     h+=V.ozet.map(o=>'<div class="dpTrk"><div class="dpYuva">'+TR[o.T].ik+' <b>'+TR[o.T].ad+'</b> · ✅ '+o.d+'/'+o.n+(o.sonraki?' · sıradaki: <b>'+esc(o.sonraki.konu)+'</b> <small>('+esc(o.sonraki.asama)+')</small> → <b>'+kisaTarih(gun(o.ts,0))+'</b>':o.d>=o.n?' · 🎉 tamamlandı':'')+'</div><div class="dpIlerBar"><i style="width:'+Math.round(100*o.d/Math.max(1,o.n))+'%"></i></div></div>').join('');
     h+='<div class="dpYuvalar">'+Y.map(y=>'<div class="dpYuva">🕘 '+saatYaz({d:y.d,i:y.i,sure:y.sure})+' — '+(y.sr?'Satranç ↔ Robotik-Kodlama <small>(haftalık dönüşümlü)</small>':y.dn?'Dönüşümlü <small>(her hafta bir ders)</small>':y.T.map(k=>TR[k].ik+' '+TR[k].ad).join(' ve '))+'</div>').join('')+'</div>';
-    if(giOf(c)===8)h+='<div class="dpNot">ℹ️ 8. sınıfta eğitim koçluğu saatinde Yapay Zekâ işleniyor.</div>';
+    if(giOf(c)===8)h+='<div class="dpNot">🎯 8. sınıfta yalnızca Eğitim Koçluğu işlenir (Yıllık Plan ve Ders Saati ile aynı 36 konu).</div>';
     if(veli)h+='<div class="dpNot">👪 Sayın veli, ✅ işaretli dersler işlendi; diğerleri tarihleriyle sırada. Konular okulun yıllık planındaki sırayla ilerler; bir ders işlenemezse konu bir sonraki derse kayar.'+(VELI_T?' <small>(Bu bağlantı '+kisaTarih(gun(VELI_T,0))+' tarihindeki durumu gösterir.)</small>':'')+'</div>';
     else{h+=(DS.canli?'<div class="dpNot">🔗 Program <b>Ders Saati</b>’nden, konular <b>Yıllık Plan</b>’dan geliyor. “✅ İşledim” işaretleri üçünde ortak; işlenmeyen konu bir sonraki derse kayar.</div>':'<div class="dpNot dpUyari">⚠️ Bu tarayıcıda Ders Saati verisi bulunamadı, varsayılan program kullanılıyor. Ders Programım’ı Ders Saati ve Yıllık Plan ile <b>aynı sitede</b> açarsan program ve “işledim” kayıtları otomatik eşleşir.</div>')+
       '<div class="dpIler"><button class="dpB" onclick="DP.haftaOzet()">🗓️ Bu haftanın veli özeti</button></div>';}
@@ -5220,8 +5396,8 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     if(V.islenen.length)h+='<details class="dpHafta dpIslenen"'+(veli?'':'')+'><summary class="dpHBas">✅ İşlenen dersler ('+V.islenen.length+')</summary><div class="dpIslList">'+V.islenen.map(e=>'<div class="dpIsl"><span>'+TR[e.T].ik+' <b>'+esc(e.x.konu)+'</b> <small>'+esc(e.x.asama)+' · Ders '+(e.x.idx+1)+'</small></span><em>'+(e.ts?kisaTarih(gun(e.ts,0)):'tarih kaydı yok')+'</em></div>').join('')+'</div></details>';
     HAF.forEach(hf=>{if(bh&&hf.cal<bh.cal)return;const bu=bh&&bh.cal===hf.cal;
       if(hf.tatil){h+='<div class="dpHafta tatil'+(bu?' bu':'')+'"><div class="dpHBas">🏖️ '+esc(hf.tatil)+' · '+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+'</div></div>';return;}
-      const Lh=L.filter(x=>x.h.cal===hf.cal);if(!Lh.length)return;
-      h+='<div class="dpHafta'+(bu?' bu':'')+'" id="h_'+hf.no+'"><div class="dpHBas"><span class="dpHNo">'+hf.no+'. hafta</span> '+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+(bu?' <span class="dpBu">📍 Bu hafta</span>':'')+'</div>'+Lh.map(x=>kartHTML(x,veli)).join('')+'</div>';});
+      const Lh=L.filter(x=>x.h.cal===hf.cal);if(!Lh.length){if(bu){const sn=L.find(x=>!x.resmi&&x.h.cal>hf.cal);h+='<div class="dpHafta bu" id="h_'+hf.no+'"><div class="dpBuBas"><span>📍 BU HAFTA</span><b>'+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+'</b><em>'+hf.no+'. hafta</em></div><div class="dpNot dpBuNot">Bu haftaki ders saati geçti ve “✅ İşledim” işaretlenmedi; konu sistemsel olarak '+(sn?'<b>'+kisaTarih(sn.tarih)+'</b> dersine':'bir sonraki derse')+' kaydı. İşlediysen tek dokunuşla işaretle; tarih bu haftaya ('+(sn?kisaTarih(gun(tarihStr(hf.pzt),sn.d)):'')+') yazılır, sonra Değişim’e gönderebilirsin.</div>'+(veli?'':kacanBtn(hf,L))+'</div></div>';}return;}
+      h+='<div class="dpHafta'+(bu?' bu':'')+'" id="h_'+hf.no+'">'+(bu?'<div class="dpBuBas"><span>📍 BU HAFTA</span><b>'+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+'</b><em>'+hf.no+'. hafta · '+Lh.length+' ders</em>'+(veli?'':'<button class="dpB dpEkoBuyuk" onclick="DP.haftaGonder(\''+esc(c)+'\')">📤 Bu haftanın derslerini Değişim’e gönder</button>')+'</div>'+(()=>{const k=veli?'':kacanBtn(hf,L);return k?'<div class="dpNot dpBuNot">Bu haftaki diğer dersin saati geçti, “İşledim” işaretlenmedi; işlediysen dokun (tarih bu haftaya yazılır):</div>'+k:'';})():'<div class="dpHBas"><span class="dpHNo">'+hf.no+'. hafta</span> '+kisaTarih(hf.pzt)+' – '+kisaTarih(gun(tarihStr(hf.pzt),4))+'</div>')+Lh.map(x=>kartHTML(x,veli)).join('')+'</div>';});
     if(V.kalan.length&&!veli)h+='<div class="dpOzet dpUyari"><b>⚠️ Yıl sonuna kadar yetişmeyen '+V.kalan.length+' konu</b><div class="dpNot">Haziran’a kadarki ders sayısı yetmiyor. İstersen bazı konuları birleştirip “✅ İşledim” ile işaretleyebilirsin:</div><div class="dpIslList">'+V.kalan.slice(0,12).map(e=>'<div class="dpIsl"><span>'+TR[e.T].ik+' '+esc(e.x.konu)+' <small>'+esc(e.x.asama)+'</small></span></div>').join('')+(V.kalan.length>12?'<div class="dpNot">… ve '+(V.kalan.length-12)+' konu daha</div>':'')+'</div></div>';
     $d('dpGovde').innerHTML=h;
     const hb=bh&&document.querySelector('#dpGovde .dpHafta.bu');if(hb)setTimeout(()=>hb.scrollIntoView({block:'start',behavior:'instant'}),60);}
@@ -5237,16 +5413,17 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   /* ---- eylemler ---- */
   function bul(key){const c=key.split('|')[0];return dersListe(c).find(x=>x.key===key);}
   function seviyeAyarla(L){SINIF=bandOf(L.gi);SINIF_NO=L.gi;}
-  function uyg(key,j,k){const L=bul(key);if(!L)return;const x=uygulamalar(L.parts[j],L.b,L.gi)[k];if(!x)return;seviyeAyarla(L);
-    if(x.tip==='blok'){kapat();if(typeof hayaletTemizle==='function')hayaletTemizle();DUNYA=DREG[x.d];document.documentElement.style.setProperty('--yesil',DUNYA.tema);$d('merkez').style.display='none';$d('app').style.display='flex';modBasla('blok',x.i);toast('📅 Bitince üstteki “📅 Programım” ile geri dön',3000);}
+  function uygAc(x,b,gi){if(!x)return;const bb=x.band||b;SINIF=bb;SINIF_NO=x.band&&x.band!==b?BAND_GI[bb]:gi;
+    if(x.tip==='blok'){kapat();const w=$d('dpOy');if(w)w.classList.remove('acik');if(typeof hayaletTemizle==='function')hayaletTemizle();DUNYA=DREG[x.d];document.documentElement.style.setProperty('--yesil',DUNYA.tema);$d('merkez').style.display='none';$d('app').style.display='flex';modBasla('blok',x.i);toast('📅 Bitince üstteki “📅 Programım” ile geri dön',3000);}
     else if(x.tip==='etk')ETK.oyna(x.ders,x.oyun,x.konu,x.mod);
     else if(x.tip==='do')DO.ac(x.sp);}
-  function isaret(key){const L=bul(key);if(!L||L.resmi)return;const o=LSx.get('dk_ilr',{})||{},dt=LSx.get('dp_ilr_tarih',{})||{},gor=LSx.get('dp_ilr_gor',{})||{},kyn=LSx.get('dp_ilr_kaynak',{})||{},hepsi=L.parts.every(p=>p.done);
+  function uyg(key,j,k){const L=bul(key);if(!L)return;const x=uygulamalar(L.parts[j],L.b,L.gi)[k];if(!x)return;uygAc(x,L.b,L.gi);}
+  function isaret(key,ts0){const L=bul(key);if(!L||L.resmi)return;const o=LSx.get('dk_ilr',{})||{},dt=LSx.get('dp_ilr_tarih',{})||{},gor=LSx.get('dp_ilr_gor',{})||{},kyn=LSx.get('dp_ilr_kaynak',{})||{},hepsi=L.parts.every(p=>p.done);
     L.parts.forEach(p=>{const tid=TR[p.T].v,gk=L.gi+'|'+p.T;o[L.gi]=o[L.gi]||{};o[L.gi][tid]=o[L.gi][tid]||{};
       if(hepsi){delete o[L.gi][tid][p.idx];delete dt[L.gi+'|'+tid+'|'+p.idx];delete kyn[L.gi+'|'+tid+'|'+p.idx];gor[gk]=(gor[gk]||[]).filter(i=>i!==p.idx);}
-      else{o[L.gi][tid][p.idx]=1;dt[L.gi+'|'+tid+'|'+p.idx]=L.ts;kyn[L.gi+'|'+tid+'|'+p.idx]='dp';gor[gk]=[...new Set((gor[gk]||[]).concat([p.idx]))];}});
+      else{o[L.gi][tid][p.idx]=1;dt[L.gi+'|'+tid+'|'+p.idx]=ts0||L.ts;kyn[L.gi+'|'+tid+'|'+p.idx]='dp';gor[gk]=[...new Set((gor[gk]||[]).concat([p.idx]))];}});
     LSx.set('dk_ilr',o);LSx.set('dp_ilr_tarih',dt);LSx.set('dp_ilr_gor',gor);LSx.set('dp_ilr_kaynak',kyn);paylasTazele();try{bsYakala();}catch(e){}bsZamanla();temizle();SES.tik(1,hepsi?1400:2400);
-    toast(hepsi?'↩️ İşaret geri alındı; Ders Saati ve Yıllık Plan’dan da kalktı':'✅ İşlendi ('+kisaTarih(L.tarih)+') · Ders Saati ve Yıllık Plan’da da işaretlendi · ☁️ diğer cihazlara gidiyor',3200);ciz();}
+    toast(hepsi?'↩️ İşaret geri alındı; Ders Saati ve Yıllık Plan’dan da kalktı':'✅ İşlendi ('+kisaTarih(ts0?gun(ts0,0):L.tarih)+') · Ders Saati ve Yıllık Plan’da da işaretlendi · ☁️ diğer cihazlara gidiyor',3200);ciz();}
   function paylas(baslik,metin){let o=$d('dpPay');if(!o){o=document.createElement('div');o.id='dpPay';o.className='ortu';document.body.appendChild(o);}
     o.innerHTML='<div class="ust"><div class="kart dpPayKart"><h2>'+baslik+'</h2><textarea id="dpPayTx" rows="12">'+esc(metin)+'</textarea><p style="font-size:.95rem;font-weight:700;color:#6b5a2c;margin:.4rem 0 0">Metni düzenleyebilirsin. WhatsApp’ta kalın yazılar için * kullanılır.</p></div></div><div class="alt"><button class="btn yesil" id="dpWa">💬 WhatsApp’ta gönder</button><button class="btn" id="dpKop">📋 Kopyala</button><button class="btn ana" id="dpKap">Kapat</button></div>';
     o.classList.add('acik');$d('dpWa').onclick=()=>window.open('https://wa.me/?text='+encodeURIComponent($d('dpPayTx').value),'_blank');
@@ -5295,7 +5472,10 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     addEventListener('storage',e=>{if(['dk_ilr','barisDersSaati.v1','dk_tahta_dsec','dk_ozel_plan','dk_plan_kaynak','dk_tatil','dk_veli_akis'].includes(e.key)){if(e.key==='dk_ilr'){paylasTazele();bsZamanla();}yenile();}});
     if(!VELI){paylasTazele();bulutBaslat();if(!LSx.get('dp_link_temiz',0))setTimeout(()=>programLinkTemizle(true),1500);setTimeout(()=>{try{SINIFLAR.forEach(c=>veri(c));}catch(e){}},300);}
     document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!VELI)yenile();});}
-  return {baslat,ac,kapat,sec,bugun,uyg,isle,isaret,veli,haftaOzet,veliLink,qr,egGit,egKapat,egUyg,veliMi,eko,bugunGonder,adresSor,esitle:()=>bsEsitle(true),linkTemizle:()=>programLinkTemizle(false),_test:{programLinkTemizle,bsEsitle,bsYakala,paylasTazele,hiz:v=>{DO_HIZ=v;},dersListe,veri,seanslar,ilrSet,ilerKod,ilerCoz,yenile,oyunCoz,uygulamalar,yuvalar,HAF:()=>HAF,DS:()=>DS,veliMetin,rehber,SINIFLAR,blokBul,oyunu,oyunLink,sinifEsle,bugunDersleri,ekoGonder,mock:m=>{EKO_MOCK=m;}}};
+  function kacanBtn(hf,L){const pz=tarihStr(hf.pzt),simdi=new Date(),bu=L.filter(x=>x.h.cal===hf.cal),sn=L.find(x=>!x.resmi&&x.h.cal>hf.cal);if(!sn)return '';
+    return L.filter(x=>!x.resmi&&x.h.cal===sn.h.cal&&gun(pz,x.d)<=simdi&&!bu.some(y=>y.d===x.d&&y.i===x.i)).map(x=>'<button class="dpB dpEkoBuyuk dpIsleB" onclick="DP.buHaftaIsle(\''+esc(x.key)+'\',\''+tarihStr(gun(pz,x.d))+'\')">✅ '+GUN[x.d]+' '+(x.i+1)+(x.sure>1?'–'+(x.i+x.sure):'')+'. ders işlendi · '+esc(x.parts.map(p=>TR[p.T].ik+' '+p.konu).join(' + '))+'</button>').join('');}
+  function buHaftaIsle(key,ts){isaret(key,ts);}
+  return {buHaftaIsle,baslat,ac,kapat,sec,bugun,uyg,isle,isaret,veli,haftaOzet,veliLink,qr,egGit,egKapat,egUyg,veliMi,eko,bugunGonder,adresSor,esitle:()=>bsEsitle(true),haftaGonder,linkTemizle:()=>programLinkTemizle(false),_test:{dmSec,gonderiLinkleri,oyunListesi,uygAc,programLinkTemizle,bsEsitle,bsYakala,paylasTazele,hiz:v=>{DO_HIZ=v;},dersListe,veri,seanslar,ilrSet,ilerKod,ilerCoz,yenile,oyunCoz,uygulamalar,yuvalar,HAF:()=>HAF,DS:()=>DS,veliMetin,rehber,SINIFLAR,blokBul,oyunu,oyunLink,sinifEsle,bugunDersleri,ekoGonder,mock:m=>{EKO_MOCK=m;}}};
 })();
 
 </script>
