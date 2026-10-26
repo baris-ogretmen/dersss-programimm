@@ -4944,7 +4944,7 @@ const DP=(function(){
   const SAAT=[['09:10','09:50'],['10:00','10:40'],['10:50','11:30'],['11:40','12:20'],['12:50','13:30'],['13:40','14:20'],['14:30','15:10'],['15:20','16:00']];
   const GUN=['Pazartesi','Salı','Çarşamba','Perşembe','Cuma'];
   const AY=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-  const PROG=[['','4A','5A','6A','2A','','1A','1A'],['','','','2A','3A','Ana Sınıfı','5A','5A'],['','4A','4A','3A','3A','','7A','7A'],['','','','','','2A','6A','6A'],['','Ana Sınıfı','8A','8A','','2A','','1A']];
+  const PROG=[['','4A','','6A','2A','2A','1A','1A'],['','','5A','','3A','Ana Sınıfı','5A','5A'],['','4A','4A','3A','3A','','7A','7A'],['','','','','','2A','6A','6A'],['','Ana Sınıfı','8A','8A','','2A','','1A']];
   const SINIFLAR=['Ana Sınıfı','1A','2A','3A','4A','5A','6A','7A','8A'];
   const RENK={'1A':'#ffef1a','2A':'#f7981d','3A':'#f24a3f','4A':'#5b0f63','5A':'#19e6f0','6A':'#9be33c','7A':'#ff1ee8','8A':'#1e8ef5','Ana Sınıfı':'#f59ac7'};
   const TR={K:{ad:'Eğitim Koçluğu',ik:'🎯',r:['#b45309','#f59e0b'],v:'kocluk'},R:{ad:'Robotik-Kodlama',ik:'🤖',r:['#7c3aed','#22d3ee'],v:'robokod'},Y:{ad:'Yapay Zekâ',ik:'🧠',r:['#0891b2','#22d3ee'],v:'yz'},S:{ad:'Satranç',ik:'♟️',r:['#059669','#34d399'],v:'satranc'},A:{ad:'Akıl-Zekâ Oyunları',ik:'🧩',r:['#db2777','#f472b6'],v:'akil'}};
@@ -5644,7 +5644,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     if(L.resmi){s.push('🎉 '+L.resmi+' nedeniyle bu ders yapılmayacak.');return s.join('\n');}
     L.parts.forEach(p=>{const v=TR[p.T].v;s.push(TR[p.T].ik+' '+TR[p.T].ad+': '+p.konu+' ('+p.asama+')');s.push('📝 '+p.etk+'.');s.push('🎯 Çocuğunuz '+KAZ[v][b]+'.');const hc=hayatCumle(p,b);if(hc)s.push('🌱 Hayata dokunsun: '+hc);});
     const v=TR[L.parts[0].T].v;s.push('🏠 Evde “'+(b==='ana'?SORU_ANA[v]:SORU[v])+'” '+EK[b]);
-    const o=oyunu(L),ol=oyunLink(L),G=gonderiLinkleri(L).map(x=>x.ad);const ads=G.length?G:oyunListesi(L).slice(0,4).map(x=>(x.x.tip==='do'?'🎮 ':'🧩 ')+x.x.ad);if(o){s.push('🎮 '+(bugun?'Bugünün':'Dersin')+' oyunları:');ads.forEach(a=>s.push('• '+a.replace(/^🎮 Ders oyunu: /,'🎮 ').replace(/^🧩 Ders Merkezi: /,'🧩 ')));if(eko)s.push('👇 Aşağıdaki düğmelerden çocuğunuzla birlikte oynayabilirsiniz.');else if(ol)s.push('👉 '+ol);}
+    const o=oyunu(L),ol=oyunLink(L),G=gonderiLinkleri(L).map(x=>x.ad);const ads=G.length?G:oyunListesi(L).slice(0,4).map(x=>(x.x.tip==='do'?'🎮 ':'🧩 ')+x.x.ad);if(o){s.push('🎮 '+(bugun?'Bugünün':'Dersin')+' oyunları:');ads.forEach(a=>s.push('• '+a.replace(/^🎮 Ders oyunu: /,'🎮 ').replace(/^🧩 Ders Merkezi: /,'🧩 ')));if(eko)s.push('👇 Aşağıdaki düğmelerden çocuğunuzla birlikte oynayabilirsiniz.');else if(ol)s.push('👉 '+ol);s.push('💛 Oyunlar isteğe bağlıdır; vakti uygunsa birini seçmesi yeterli.');}
     s.push('— Barış Öğretmen');return s.join('\n');}
   function rehber(L){const R=[],b=L.b;
     L.parts.forEach((p,j)=>{const T=TR[p.T];
@@ -5772,6 +5772,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     if(OM_H){document.title='🎮 '+VELI+' · Oyunlar';omBaslat();return;}
     ac();document.title=VELI?'Ders Programım · '+VELI:'Ders Programım';
     addEventListener('storage',e=>{if(['dk_ilr','barisDersSaati.v1','dk_tahta_dsec','dk_ozel_plan','dk_plan_kaynak','dk_tatil','dk_veli_akis'].includes(e.key)){if(e.key==='dk_ilr'){paylasTazele();bsZamanla();}yenile();}});
+    addEventListener('dersProgramGeldi',()=>{try{yenile();}catch(e){}});
     if(!VELI){try{if(/^https?:/.test(location.protocol))LSx.set('dk_dp_url',location.href.split('#')[0]);}catch(e){}setTimeout(dsGeldi,450);addEventListener('hashchange',()=>{if(dsHash())dsGeldi();});}
     if(!VELI){paylasTazele();bulutBaslat();if(!LSx.get('dp_link_temiz',0))setTimeout(()=>programLinkTemizle(true),1500);setTimeout(()=>{try{SINIFLAR.forEach(c=>veri(c));}catch(e){}},300);}
     document.addEventListener('visibilitychange',()=>{if(!document.hidden&&!VELI)yenile();});}
@@ -5829,5 +5830,128 @@ function merkezBaslat(){DP.kapat();if(window._mbOk){merkezAc();return;}window._m
 if(!ETK.ogrenciAnket()){DP.baslat();surumKontrol();}
 addEventListener('pagehide',ilerlemeKaydet);
 </script>
+<script>
+/* ============================================================
+   🔗 DERS PROGRAMI KÖPRÜSÜ (Ders Saati · Ders Programım · Yıllık Plan — üçünde aynı kod)
+   • Tek kaynak: Ders Saati’ndeki haftalık tablo (barisDersSaati.v1 → grid / periods / ov)
+   • Bulut: maas_config/ders_programi_baris (ayrı belge; Okula Gönder / pano / ödev / işaret belgelerine dokunmaz)
+   • Hangi cihazda değiştirilirse (tahta, iPhone, ana ekran simgesi) diğerlerinde anında güncellenir
+   • 26.10.2026 programı (son fotoğraf): Pazartesi 2A 5–6. ders · 5A Salı 3. derse kaydı
+   Yalnız EKLEME: önceki tüm davranışlar aynen korunur; bulut yoksa her şey eskisi gibi çalışır.
+   ============================================================ */
+(function(){
+'use strict';
+if(window.DP_KOPRU||window.DP_KOPRU_KAPALI) return;
+if(/[#&]oyun=/.test(location.hash||'')) return;               /* veli/öğrenci oyun bağlantısı: programa gerek yok */
+var KEY='barisDersSaati.v1', META='dk_prog_meta', GOC='dk_prog_goc_20261026', BELGE='ders_programi_baris';
+var GOC_T=Date.UTC(2026,9,26,8,0,0);                             /* 26.10.2026 11:00 (Türkiye) */
+var SUBJ='Robotik Kodlama';
+var YENI=[['','4A','','6A','2A','2A','1A','1A'],['','','5A','','3A','Ana Sınıfı','5A','5A']];   /* Pazartesi, Salı */
+var CFG={apiKey:"AIzaSyAqeO-yQyQPnLsOqKmSNvVH23WPvneIjaU",authDomain:"shaped-totem-481514-c5.firebaseapp.com",projectId:"shaped-totem-481514-c5",storageBucket:"shaped-totem-481514-c5.firebasestorage.app",messagingSenderId:"519295049418",appId:"1:519295049418:web:7d04e18c4ea36bc088de33"};
+var K={hazir:false,fb:null,mesgul:false,uzakT:0,uzakImza:'',dinliyor:false,zm:null};
+
+function oku(){ try{ return JSON.parse(localStorage.getItem(KEY)||'null'); }catch(e){ return null; } }
+function metaOku(){ try{ return JSON.parse(localStorage.getItem(META)||'null'); }catch(e){ return null; } }
+function metaYaz(m){ try{ localStorage.setItem(META,JSON.stringify(m)); }catch(e){} }
+function kopya(o){ return JSON.parse(JSON.stringify(o)); }
+function kanon(v){ if(v===undefined||v===null) return 'null'; if(typeof v!=='object') return JSON.stringify(v);
+  if(Array.isArray(v)) return '['+v.map(kanon).join(',')+']';
+  return '{'+Object.keys(v).sort().filter(function(k){ return v[k]!==undefined; }).map(function(k){ return JSON.stringify(k)+':'+kanon(v[k]); }).join(',')+'}'; }
+function paket(o){ if(!o||!Array.isArray(o.grid)||!Array.isArray(o.periods)||!o.periods.length) return null;
+  return {grid:o.grid,periods:o.periods,ov:(o.ov&&typeof o.ov==='object')?o.ov:{}}; }
+var SON={ham:undefined,p:null};
+function yerel(){ var ham=null; try{ ham=localStorage.getItem(KEY); }catch(e){} if(ham===SON.ham) return SON.p;   /* değişmediyse yeniden çözmez */
+  var o=null; try{ o=JSON.parse(ham||'null'); }catch(e){} SON.ham=ham; SON.p=paket(o); return SON.p; }
+function imza(p){ return p?kanon(p):''; }
+function bugunK(){ var d=new Date(); return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); }
+/* ekranda görünen fark var mı? (haftalık tablo, saatler, bugün ve sonrası için gün değişiklikleri) */
+function gorunur(p){ if(!p) return ''; var b=bugunK(), ov={}; Object.keys(p.ov||{}).forEach(function(k){ if(k>=b) ov[k]=p.ov[k]; }); return kanon({g:p.grid,p:p.periods,o:ov}); }
+function cihaz(){ var u=navigator.userAgent, ana=false; try{ ana=matchMedia('(display-mode: standalone)').matches||navigator.standalone===true; }catch(e){}
+  return /iPhone/.test(u)?'iPhone'+(ana?' (ana ekran)':''):/iPad/.test(u)?'iPad':/Android/.test(u)?'Android':/Windows/.test(u)?'tahta/bilgisayar':'bilgisayar'; }
+
+/* ---- ekrana net bildirim ---- */
+function bildir(m){ try{ var t=document.getElementById('dpkToast');
+  if(!t){ t=document.createElement('div'); t.id='dpkToast'; t.setAttribute('role','status');
+    t.style.cssText='position:fixed;left:50%;bottom:6vh;transform:translateX(-50%);z-index:2147483000;background:#0f172a;color:#fff;font:800 clamp(16px,2.6vh,30px)/1.35 system-ui,-apple-system,Segoe UI,sans-serif;padding:14px 24px;border-radius:16px;box-shadow:0 10px 40px rgba(0,0,0,.45);border:2px solid #38bdf8;max-width:92vw;text-align:center;transition:opacity .3s;pointer-events:none';
+    document.body.appendChild(t); }
+  t.textContent=m; t.style.opacity='1'; clearTimeout(bildir.z); bildir.z=setTimeout(function(){ t.style.opacity='0'; },6000); }catch(e){} }
+
+/* ---- uygula: Ders Saati açıksa doğrudan onun hafızasına, değilse tarayıcı hafızasına ---- */
+function uygula(p){ p=kopya(p);
+  if(typeof window.DP_KOPRU_UYGULA==='function'){ try{ window.DP_KOPRU_UYGULA(p); }catch(e){} }
+  else { var o=oku()||{}; o.grid=p.grid; o.periods=p.periods; o.ov=p.ov||{}; try{ localStorage.setItem(KEY,JSON.stringify(o)); }catch(e){} }
+  try{ window.dispatchEvent(new CustomEvent('dersProgramGeldi',{detail:p})); }catch(e){} }
+
+/* ---- 26.10.2026: Pazartesi ve Salı son programa göre (bir kez; ders adları korunur) ---- */
+function goc(){ var bayrak=null; try{ bayrak=localStorage.getItem(GOC); }catch(e){ return; } if(bayrak) return;
+  var p=yerel();
+  if(p){ var g=kopya(p.grid), n=p.periods.length, eski=[(g[0]||[]).slice(),(g[1]||[]).slice()], degisti=false;
+    function bul(c,d){ var sira=[1-d,d]; for(var a=0;a<2;a++){ var r=eski[sira[a]]; for(var i=0;i<r.length;i++){ var x=r[i]; if(x&&x.c===c) return kopya(x); } } return null; }
+    [0,1].forEach(function(d){ var r=[]; for(var i=0;i<n;i++){ var c=YENI[d][i]||'', x=eski[d][i];
+        if(!c) r.push(null); else if(x&&x.c===c) r.push(x); else r.push(bul(c,d)||{c:c,s:SUBJ}); }
+      if(kanon(r)!==kanon(g[d])){ g[d]=r; degisti=true; } });
+    var yeni={grid:g,periods:p.periods,ov:p.ov};
+    var m=metaOku(); if(degisti) uygula(yeni);
+    metaYaz({t:Math.max(GOC_T,(m&&m.t)||0),imza:imza(yerel()||yeni)}); }
+  try{ localStorage.setItem(GOC,'1'); }catch(e){} }
+
+/* ---- bulut ---- */
+async function baglan(){ if(K.fb) return K.fb; var V='https://www.gstatic.com/firebasejs/11.0.1/';
+  var A=await import(V+'firebase-app.js'), F=await import(V+'firebase-firestore.js'), Au=await import(V+'firebase-auth.js');
+  var app; try{ app=A.getApp('dersProgKopru'); }catch(e){ app=A.initializeApp(CFG,'dersProgKopru'); }
+  try{ await Au.signInAnonymously(Au.getAuth(app)); }catch(e){}
+  var db=F.getFirestore(app); K.fb={F:F,db:db,ref:F.doc(db,'maas_config',BELGE)}; return K.fb; }
+function uzakPaket(u){ try{ if(!u||!u.prog) return null; return paket(JSON.parse(u.prog)); }catch(e){ return null; } }
+
+/* bu cihazdaki değişikliği yakala (yalnız ilk eşitlemeden sonra; açılıştaki kendiliğinden temizlik değişiklik sayılmaz) */
+function yerelYakala(){ if(!K.hazir) return; var p=yerel(); if(!p) return; var s=imza(p), m=metaOku();
+  if(!m){ metaYaz({t:0,imza:s}); return; }
+  if(m.imza!==s){ metaYaz({t:Date.now(),imza:s}); gonderZamanla(); } }
+function gonderZamanla(){ clearTimeout(K.zm); K.zm=setTimeout(gonder,600); }
+async function gonder(){ if(!K.hazir||K.mesgul) return; var p=yerel(), m=metaOku(); if(!p||!m) return;
+  if(K.uzakImza===m.imza) return; if(navigator.onLine===false) return;
+  K.mesgul=true;
+  try{ var fb=await baglan(), F=fb.F, sonuc=null;
+    await F.runTransaction(fb.db,async function(tx){ var sn=await tx.get(fb.ref), u=sn.exists()?sn.data():null;
+      if(u&&(u.t||0)>m.t){ sonuc=u; return; }
+      tx.set(fb.ref,{prog:JSON.stringify(p),t:m.t,cihaz:cihaz(),guncelleme:Date.now()},{merge:true}); });
+    if(sonuc) karar(sonuc); else { K.uzakT=m.t; K.uzakImza=m.imza; }
+  }catch(e){ try{console.warn('Program köprüsü: gönderilemedi',e);}catch(_){} }
+  K.mesgul=false; }
+
+/* buluttan gelen ile bu cihazdakini karşılaştır: yeni olan kazanır (eşitse bulut esas) */
+function karar(u){ var up=uzakPaket(u), ut=(u&&u.t)||0;
+  if(K.hazir) yerelYakala();
+  var p=yerel(), m=metaOku()||{t:0,imza:''}, s=imza(p);
+  if(up){ K.uzakT=ut; K.uzakImza=imza(up); }
+  if(up&&ut>=m.t&&imza(up)!==s){
+    var once=gorunur(p), vardi=!!p; uygula(up); metaYaz({t:ut,imza:imza(yerel()||up)}); K.uzakImza=imza(up);
+    if(vardi&&once!==gorunur(up)) bildir('🗓️ Ders programı güncellendi'+(u.cihaz?' ('+u.cihaz+' üzerinden)':'')+' — tahta, telefon ve tüm sayfalarda aynı');
+  } else if(up&&imza(up)===s){ if(ut>m.t) metaYaz({t:ut,imza:s}); }
+  else if(p){ /* bulut boş ya da eski: bu cihazdaki program gönderilir */
+    if(!K.hazir&&s!==m.imza) metaYaz({t:Math.max(Date.now(),ut+1),imza:s});
+    else if(!metaOku()) metaYaz({t:Math.max(GOC_T,ut),imza:s});
+    K.hazir=true; gonderZamanla(); }
+  K.hazir=true; }
+
+async function dinle(){ if(K.dinliyor) return; try{ var fb=await baglan(); K.dinliyor=true;
+    fb.F.onSnapshot(fb.ref,function(sn){ try{ if(sn.metadata&&sn.metadata.hasPendingWrites) return; karar(sn.exists()?sn.data():null); }catch(e){} },
+      function(){ K.dinliyor=false; });
+  }catch(e){ K.dinliyor=false; } }
+async function yokla(){ if(navigator.onLine===false) return; try{ var fb=await baglan(), sn=await fb.F.getDoc(fb.ref); karar(sn.exists()?sn.data():null); }catch(e){} if(!K.dinliyor) dinle(); }
+
+function basla(){ goc();
+  setInterval(function(){ try{ yerelYakala(); }catch(e){} },2000);
+  window.addEventListener('storage',function(e){ if(e.key===KEY) setTimeout(yerelYakala,50); });
+  window.addEventListener('online',yokla);
+  document.addEventListener('visibilitychange',function(){ if(document.visibilityState==='visible') yokla(); });
+  setInterval(function(){ if(document.visibilityState==='visible') yokla(); },60000);
+  setTimeout(yokla,700); }
+
+window.DP_KOPRU={surum:'1.0',esitle:yokla,durum:function(){ return {hazir:K.hazir,dinliyor:K.dinliyor,uzakT:K.uzakT,meta:metaOku()}; }};
+if(document.readyState==='loading') document.addEventListener('DOMContentLoaded',basla); else basla();
+})();
+</script>
+
 </body>
 </html>
