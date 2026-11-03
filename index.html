@@ -569,6 +569,10 @@ function dpOdakSerit(){ if(!window.DP_ODAK) return; var s=document.getElementByI
   if(k&&k.parentNode){ if(s.nextSibling!==k) k.parentNode.insertBefore(s,k); } else if(!s.parentNode) document.body.insertBefore(s,document.body.firstChild); }
 function dpOdakKapat(){ window.DP_ODAK=null; clearInterval(dpOdakAc.t); document.body.classList.remove('dpOdakMod'); var s=document.getElementById('dpOdakSerit'); if(s) s.remove(); }
 </script>
+<script>
+/* 📅 Ders Saati “✅ İşledim” bu adresi açsın diye: Ders Programım kendi adresini aynı sitedeki uygulamalara bildirir (veli/oyun bağlantılarında değil) */
+try{ if(/^https?:$/.test(location.protocol)&&!/[#&](oyun|oyunlar|veli)=/.test(location.hash)) localStorage.setItem('dk_dp_url',JSON.stringify(location.href.split('#')[0].split('?')[0])); }catch(e){}
+</script>
 
 <div id="merkez">
   <div id="mUst">
@@ -6018,7 +6022,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   function dsPanel(c,ts,Ls){let o=$d('dpDs');if(!o){o=document.createElement('div');o.id='dpDs';o.className='ortu';document.body.appendChild(o);}
     const g=gonderildi(),hepsi=Ls.every(L=>g[L.key]);
     o.innerHTML='<div class="ust"><div class="kart dpPayKart"><h2>✅ '+esc(c)+' · '+kisaTarih(gun(ts,0))+' dersi işlendi</h2>'+Ls.map(L=>'<div class="dpParca ok"><div class="dpKonu">'+L.parts.map(p=>TR[p.T].ik+' '+esc(p.konu)+(p.done?' ✅':' <small style="color:#b45309">⏳ işlenmedi — gitmez</small>')).join(' + ')+' <span class="dpSira">'+saatYaz(L)+'</span></div><div class="dpZ">'+(g[L.key]?'✅ Değişim’e gitti · '+saatKisa(g[L.key]):'📤 Henüz Değişim’e gönderilmedi')+'</div></div>').join('')+'<p style="font-size:.95rem;font-weight:700;color:#6b5a2c;margin:.6rem 0 0">Yalnız ✅ işlenen dersler gider. Bir sonraki ekranda her şeyi görürsün: hangi dersin gideceğini seçersin, yazıları değiştirirsin, oyunları ▶ Oyna ile denersin, kendi bağlantını eklersin; beğenince gönderirsin.</p></div></div><div class="alt"><button class="btn yesil" id="dpDsG">'+(hepsi?'🔁 Önizle · tekrar gönder':'👁️ Önizle · düzenle · gönder')+'</button><button class="btn" id="dpDsV">👪 Veli mesajı (WhatsApp)</button><button class="btn ana" id="dpDsK">Kapat</button></div>';
-    o.classList.add('acik');$d('dpDsG').onclick=()=>{if(hepsi&&!confirm('Bu ders daha önce Değişim’e gönderilmiş. Tekrar gönderilsin mi?'))return;o.classList.remove('acik');gonderOnay(Ls);};
+    o.classList.add('acik');if(Ls.some(L=>L.parts.some(p=>!p.done))){const bI=document.createElement('button');bI.className='btn';bI.id='dpDsI';bI.textContent='✅ Bugünkü dersi işledim say';const al=o.querySelector('.alt');if(al)al.insertBefore(bI,al.firstChild);bI.onclick=()=>{Ls.forEach(L=>{if(L.parts.some(p=>!p.done))isaret(L.key,ts);});temizle();dsPanel(c,ts,dersListe(c).filter(x=>x.ts===ts&&!x.resmi));};}$d('dpDsG').onclick=()=>{if(hepsi&&!confirm('Bu ders daha önce Değişim’e gönderilmiş. Tekrar gönderilsin mi?'))return;o.classList.remove('acik');gonderOnay(Ls);};
     $d('dpDsV').onclick=()=>{o.classList.remove('acik');veli(Ls[0].key);};$d('dpDsK').onclick=()=>o.classList.remove('acik');}
   function kacanBtn(hf,L){const pz=tarihStr(hf.pzt),simdi=new Date(),bu=L.filter(x=>x.h.cal===hf.cal),sn=L.find(x=>!x.resmi&&x.h.cal>hf.cal);if(!sn)return '';
     return L.filter(x=>!x.resmi&&x.h.cal===sn.h.cal&&gun(pz,x.d)<=simdi&&!bu.some(y=>y.d===x.d&&y.i===x.i)).map(x=>'<button class="dpB dpEkoBuyuk dpIsleB" onclick="DP.buHaftaIsle(\''+esc(x.key)+'\',\''+tarihStr(gun(pz,x.d))+'\')">✅ '+GUN[x.d]+' '+(x.i+1)+(x.sure>1?'–'+(x.i+x.sure):'')+'. ders işlendi · '+esc(x.parts.map(p=>TR[p.T].ik+' '+p.konu).join(' + '))+'</button>').join('');}
