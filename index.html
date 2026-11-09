@@ -5658,6 +5658,10 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
       '.dpPkUst{display:flex;gap:.4rem;flex-wrap:wrap;margin:.4rem 0}.dpPkQ{flex:1;min-width:10rem;font:700 1rem Nunito,system-ui,sans-serif;border:2px solid #99f6e4;border-radius:.7rem;padding:.4rem .6rem}'+
       '.dpPkL,.dpPkAra{display:grid;gap:.3rem;max-height:22rem;overflow:auto}.dpPkS{display:flex;align-items:center;gap:.4rem;background:#fff;border-radius:.8rem;padding:.35rem .5rem;border:1px solid #ccfbf1}'+
       '.dpPkA{flex:1;min-width:0;display:flex;flex-direction:column}.dpPkA b{font-size:.95rem}.dpPkA small{color:#64748b;font-weight:700;font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.dpPkV{font-weight:900;color:#0f766e;font-size:.85rem;padding:0 .4rem}'+
+      '.dpOnzL.dpParla{outline:4px solid #facc15;box-shadow:0 0 0 6px rgba(250,204,21,.35);transition:outline .2s}.dpPkS{cursor:pointer}.dpPkS:active{background:#ccfbf1}'+
+      '.dpPk,.dpPk *{box-sizing:border-box}.dpPk{max-width:100%;overflow:hidden}.dpPk summary{white-space:normal;overflow-wrap:anywhere}.dpPkA b{overflow-wrap:anywhere}'+
+      '@media(max-width:640px){.dpPkS{flex-wrap:wrap}.dpPkA{flex-basis:100%}.dpPkA small{white-space:normal}.dpPkS .dpKucB,.dpPkV{flex:1;text-align:center;padding:.55rem .6rem;font-size:1rem}.dpPkQ{min-width:0;width:100%}.dpPkUst .dpKucB{flex:1}'+
+      '.dpOnzKart{padding-left:.6rem!important;padding-right:.6rem!important}.dpOnzIc{padding:.3rem}.dpOnzS,.dpOnzNot{margin:.25rem .2rem}.dpEk input{min-width:0;flex-basis:100%}}'+
       '.dpNo{font-size:1.3rem;flex:none;min-width:1.8rem;text-align:center}'+
       '.dpOyna,.dpSil,.dpKucB{flex:none;font:900 .95rem Nunito,system-ui,sans-serif;border:0;border-radius:99px;padding:.45rem .8rem;cursor:pointer;background:#fff;color:#1e293b}'+
       '.dpOyna{background:#22c55e;color:#fff}.dpSil{background:#fee2e2;color:#b91c1c}.dpKucB{background:#e0e7ff;color:#3730a3;margin:.2rem .3rem .2rem 0}'+
@@ -5708,7 +5712,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
     const yaziTazele=gk=>{clearTimeout(yaziTazele.t);yaziTazele.t=setTimeout(()=>{const b=[...o.querySelectorAll('.dpYaz')].find(x=>x.getAttribute('data-yz')===gk);if(b&&GM[gk])b.innerHTML=yaziOneri(GM[gk],gk,lkHepsi(GM[gk],gk));},500);};
     const sitePick=(G,gk,LA)=>{let U=[];try{U=siteUygun(G);}catch(e){}const D=(typeof siteDurum==='function')?siteDurum():{n:0,t:0},var_=new Set(LA.map(l=>l.url));
       return '<details class="dpPk"'+(PICK[gk]?' open':'')+' data-pk="'+esc(gk)+'"><summary>🌐 Sitemden seç — bu derse uygun '+U.length+' çalışma <small>(sitende toplam '+D.n+(D.t?' · son tarama '+saatKisa(D.t):'')+')</small></summary>'+
-        '<div class="dpPkUst"><input class="dpPkQ" placeholder="🔎 Sitende ara (ör. dikkat, satranç, algoritma)…"><button class="dpKucB" data-ptar="1">🔄 Sitemi şimdi tara</button></div>'+
+        '<div class="dpPkUst"><input class="dpPkQ" placeholder="🔎 Sitende ara (ör. dikkat, satranç, algoritma)…"><div class="dpIpucu" style="flex-basis:100%">👆 Bir çalışmaya dokun → hemen veliye gidecek bağlantılara eklenir.</div><button class="dpKucB" data-ptar="1">🔄 Sitemi şimdi tara</button></div>'+
         '<div class="dpPkL">'+(U.length?U.slice(0,40).map(st=>pickSatir(st,var_.has(st.url))).join(''):'<div class="dpIpucu">Bu derse uyan site çalışması bulunamadı. Yukarıdan arayabilir ya da panelde çalışmaya alan + sınıf kategorisi verebilirsin.</div>')+'</div><div class="dpPkAra"></div></details>';};
     const kartHtml=(G,gk)=>{const {K,fk}=kartSon(G,gk),LA=lkHepsi(G,gk);let no=0;const g=TS['G|'+gk]||{};
       return '<div class="dpOnz" data-g="'+esc(gk)+'"><div class="dpOnzB"><input class="dpEdB" data-a="baslik" value="'+esc(K.baslik)+'" aria-label="Kart başlığı"><span>'+esc(K.sinif)+'</span></div><div class="dpOnzIc">'+
@@ -5760,12 +5764,15 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
       if(t.matches('input[data-so]')){LSx.set('dp_site_oto',t.checked);kaydirKoru(ciz_);return;}
       if(t.matches('input[data-s]')){SEC[t.getAttribute('data-s')]=t.checked;kaydirKoru(ciz_);return;}
       if(t.matches('input[data-lc]')){const gk=grupAl(t),j=+t.getAttribute('data-lc'),l=lkHepsi(GM[gk],gk)[j];if(!l)return;const g=gT(gk);if(l.ek)g.ek[l.j].sec=t.checked;else{g.lk=g.lk||{};(g.lk[l.url]=g.lk[l.url]||{}).sec=t.checked;}tsK();kaydirKoru(ciz_);}};
-    o.onclick=e=>{const t=e.target.closest('button');if(!t)return;const gk=grupAl(t);
+    const vurgula=(gk,u)=>{setTimeout(()=>{const ky=[...o.querySelectorAll('[data-gk]')].find(x=>x.getAttribute('data-gk')===gk);if(!ky)return;const LA=lkHepsi(GM[gk],gk),j=LA.findIndex(l=>l.url===u);const el=j>=0?ky.querySelector('input[data-lc="'+j+'"]'):null,row=el&&el.closest('.dpOnzL');
+      if(row){row.scrollIntoView({behavior:'smooth',block:'center'});row.classList.add('dpParla');setTimeout(()=>row.classList.remove('dpParla'),1800);}},60);};
+    o.onclick=e=>{const sr=e.target.closest('.dpPkS');if(sr&&!e.target.closest('button')){const be=sr.querySelector('[data-pe]');if(be){be.click();}else{const pa=sr.querySelector('[data-pa]'),gk=grupAl(sr);if(pa&&gk)vurgula(gk,pa.getAttribute('data-pa'));}return;}
+      const t=e.target.closest('button');if(!t)return;const gk=grupAl(t);
       if(t.hasAttribute('data-ptar')){t.disabled=true;t.textContent='⏳ Taranıyor…';siteYenile(true).then(y=>{try{ciz();}catch(e){}kaydirKoru(ciz_);toast(y?'🌐 Siten tarandı'+(siteYenile.yeni?' — '+siteYenile.yeni+' yeni çalışma':' — liste güncel'):'🌐 Sitene şu an ulaşılamadı; kayıtlı liste kullanılıyor',3500);});return;}
       if(t.hasAttribute('data-pa')){oyna(t.getAttribute('data-pa'));return;}
       if(t.hasAttribute('data-su')){sure=t.getAttribute('data-su');LSx.set('dp_eko_sure',sure);kaydirKoru(ciz_);return;}
       if(!gk)return;const G=GM[gk];
-      if(t.hasAttribute('data-pe')){const u=t.getAttribute('data-pe');if(lkHepsi(G,gk).some(l=>l.url===u)){const g=gT(gk);g.lk=g.lk||{};(g.lk[u]=g.lk[u]||{}).sec=true;}else{const g=gT(gk);(g.ek=g.ek||[]).push({ad:t.getAttribute('data-pn').slice(0,60),url:u,sec:true});}tsK();PICK[gk]=true;kaydirKoru(ciz_);toast('➕ Eklendi — veliye gidecek bağlantılar arasında');return;}
+      if(t.hasAttribute('data-pe')){const u=t.getAttribute('data-pe');if(lkHepsi(G,gk).some(l=>l.url===u)){const g=gT(gk);g.lk=g.lk||{};(g.lk[u]=g.lk[u]||{}).sec=true;}else{const g=gT(gk);(g.ek=g.ek||[]).push({ad:t.getAttribute('data-pn').slice(0,60),url:u,sec:true});}tsK();PICK[gk]=true;kaydirKoru(ciz_);vurgula(gk,u);toast('➕ Eklendi — veliye gidecek bağlantılara geçti (yukarıda yeşil yanıp sönüyor)',3500);return;}
       if(t.hasAttribute('data-lo')){const l=lkHepsi(G,gk)[+t.getAttribute('data-lo')];if(l)oyna(l.url);return;}
       if(t.hasAttribute('data-ls')){const l=lkHepsi(G,gk)[+t.getAttribute('data-ls')];if(l&&l.ek){gT(gk).ek.splice(l.j,1);tsK();kaydirKoru(ciz_);}return;}
       if(t.classList.contains('dpEkB')){const k=t.closest('.dpEk'),ad=k.querySelector('.dpEkA').value.trim(),u=k.querySelector('.dpEkU').value.trim();
