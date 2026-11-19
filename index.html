@@ -5025,7 +5025,7 @@ const DP=(function(){
   const SAAT=[['09:10','09:50'],['10:00','10:40'],['10:50','11:30'],['11:40','12:20'],['12:50','13:30'],['13:40','14:20'],['14:30','15:10'],['15:20','16:00']];
   const GUN=['Pazartesi','Salı','Çarşamba','Perşembe','Cuma'];
   const AY=['Ocak','Şubat','Mart','Nisan','Mayıs','Haziran','Temmuz','Ağustos','Eylül','Ekim','Kasım','Aralık'];
-  const PROG=[['','4A','','6A','2A','','1A','1A'],['','','5A','2A','3A','Ana Sınıfı','5A','5A'],['','4A','4A','3A','3A','','7A','7A'],['','','','','','2A','6A','6A'],['','Ana Sınıfı','8A','8A','','2A','','1A']];
+  const PROG=[['','4A','','6A','2A','2A','1A','1A'],['','','5A','2A','3A','Ana Sınıfı','5A','5A'],['','4A','4A','3A','3A','','7A','7A'],['','','','','','','6A','6A'],['','Ana Sınıfı','8A','8A','','','','1A']];   /* 19.11.2026 programı (yedek; asıl kaynak Ders Saati) */
   const SINIFLAR=['Ana Sınıfı','1A','2A','3A','4A','5A','6A','7A','8A'];
   const RENK={'1A':'#ffef1a','2A':'#f7981d','3A':'#f24a3f','4A':'#5b0f63','5A':'#19e6f0','6A':'#9be33c','7A':'#ff1ee8','8A':'#1e8ef5','Ana Sınıfı':'#f59ac7'};
   const TR={K:{ad:'Eğitim Koçluğu',ik:'🎯',r:['#b45309','#f59e0b'],v:'kocluk'},R:{ad:'Robotik-Kodlama',ik:'🤖',r:['#7c3aed','#22d3ee'],v:'robokod'},Y:{ad:'Yapay Zekâ',ik:'🧠',r:['#0891b2','#22d3ee'],v:'yz'},S:{ad:'Satranç',ik:'♟️',r:['#059669','#34d399'],v:'satranc'},A:{ad:'Akıl-Zekâ Oyunları',ik:'🧩',r:['#db2777','#f472b6'],v:'akil'}};
@@ -5309,7 +5309,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   function dagitGrid(){const sl={},out={};(DS.grid||[]).forEach((row,d)=>(row||[]).forEach((c,i)=>{if(c&&c.c)(sl[c.c]=sl[c.c]||[]).push({d,i});}));
     for(const c in sl){const L=sl[c],gi=giOf(c);if(gi<0)continue;
       if(gi===8){L.forEach(x=>out[x.d+'|'+x.i]='K');continue;}
-      if(gi===0){L.forEach(x=>out[x.d+'|'+x.i]=x.d===1?'S':'SR');continue;}
+      if(gi===0){L.forEach(x=>{const _c=DS.grid[x.d]&&DS.grid[x.d][x.i],_sb=_c&&_c.sb;out[x.d+'|'+x.i]=(_sb==='B'||(!_sb&&x.d===1))?'S':'SR';});continue;}   /* B şubesi Satranç · A şubesi Satranç ↔ Robotik */
       const sira=dagSira(L.length),tek=['R','Y','RY'],qT=sira.filter(k=>tek.includes(k)),qO=sira.filter(k=>!tek.includes(k));
       const blk=L.filter(x=>L.some(y=>y.d===x.d&&Math.abs(y.i-x.i)===1)),tekil=L.filter(x=>!blk.includes(x));
       blk.forEach(x=>{out[x.d+'|'+x.i]=qT.length?qT.shift():qO.shift();});
@@ -5414,7 +5414,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   /* haftalık ders yuvaları (bu haftaya göre) */
   function yuvalar(c){const o=[],pzt=gun(tarihStr(new Date()),-((new Date().getDay()+6)%7));for(let d=0;d<5;d++)for(let i=0;i<DS.periods.length;i++){const cell=DS.grid[d]&&DS.grid[d][i];if(!cell||cell.c!==c)continue;
       const date=gun(tarihStr(pzt),d),T=hucreKs(c,cell,date,i),sr=genel(cell.s)&&DAG[d+'|'+i]==='SR'||/↔/.test(cell.s||''),dn=genel(cell.s)&&DAG[d+'|'+i]==='D'||/d[öo]n[üu][şs][üu]ml[üu]/i.test(cell.s||''),son=o[o.length-1];
-      if(son&&son.d===d&&son.i+son.sure===i&&son.T.join()===T.join())son.sure++;else o.push({d,i,sure:1,T,sr,dn});}return o;}
+      if(son&&son.d===d&&son.i+son.sure===i&&son.T.join()===T.join())son.sure++;else o.push({d,i,sure:1,T,sr,dn,sb:cell.sb||''});}return o;}
 
   /* ---- uygulamalar: Ders Merkezi blok bölümleri, etkinlikler, araçlar ---- */
   function blokBul(b,kvs,tercih,tohum){const c=[];DUNYALAR.forEach(d=>{const ter=(tercih||[]).includes(d.id);if(!ter&&d.ders!=='kod')return;
@@ -6000,7 +6000,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
   function sinifCiz(){const veli=!!VELI,c=VELI||SECILI,V=veri(c),L=V.list,bh=buHafta(),bugun=tarihStr(new Date()),Y=yuvalar(c);
     let h='<div class="dpOzet"><div class="dpOzetBas"><span class="dpSnfRozet" style="--c:'+RENK[c]+'">'+esc(c)+'</span><b>'+(veli?'Ders yolculuğumuz':'Nerede kaldık?')+'</b></div>';
     h+=V.ozet.map(o=>'<div class="dpTrk"><div class="dpYuva">'+TR[o.T].ik+' <b>'+TR[o.T].ad+'</b> · ✅ '+o.d+'/'+o.n+(o.sonraki?' · sıradaki: <b>'+esc(o.sonraki.konu)+'</b> <small>('+esc(o.sonraki.asama)+')</small> → <b>'+kisaTarih(gun(o.ts,0))+'</b>':o.d>=o.n?' · 🎉 tamamlandı':'')+'</div><div class="dpIlerBar"><i style="width:'+Math.round(100*o.d/Math.max(1,o.n))+'%"></i></div></div>').join('');
-    h+='<div class="dpYuvalar">'+Y.map(y=>'<div class="dpYuva">🕘 '+saatYaz({d:y.d,i:y.i,sure:y.sure})+' — '+(y.sr?'Satranç ↔ Robotik-Kodlama <small>(haftalık dönüşümlü)</small>':y.dn?'Dönüşümlü <small>(her hafta bir ders)</small>':y.T.map(k=>TR[k].ik+' '+TR[k].ad).join(' ve '))+'</div>').join('')+'</div>';
+    h+='<div class="dpYuvalar">'+Y.map(y=>'<div class="dpYuva">🕘 '+saatYaz({d:y.d,i:y.i,sure:y.sure})+(y.sb?' <b>· '+y.sb+' şubesi</b>':'')+' — '+(y.sr?'Satranç ↔ Robotik-Kodlama <small>(haftalık dönüşümlü)</small>':y.dn?'Dönüşümlü <small>(her hafta bir ders)</small>':y.T.map(k=>TR[k].ik+' '+TR[k].ad).join(' ve '))+'</div>').join('')+'</div>';
     if(giOf(c)===8)h+='<div class="dpNot">🎯 8. sınıfta yalnızca Eğitim Koçluğu işlenir (Yıllık Plan ve Ders Saati ile aynı 36 konu).</div>';
     if(veli)h+='<div class="dpNot">👪 Sayın veli, ✅ işaretli dersler işlendi; diğerleri tarihleriyle sırada. Konular okulun yıllık planındaki sırayla ilerler; bir ders işlenemezse konu bir sonraki derse kayar.'+(VELI_T?' <small>(Bu bağlantı '+kisaTarih(gun(VELI_T,0))+' tarihindeki durumu gösterir.)</small>':'')+'</div>';
     else{h+=(DS.canli?'<div class="dpNot">🔗 Program <b>Ders Saati</b>’nden, konular <b>Yıllık Plan</b>’dan geliyor. “✅ İşledim” işaretleri üçünde ortak; işlenmeyen konu bir sonraki derse kayar.</div>':'<div class="dpNot dpUyari">⚠️ Bu tarayıcıda Ders Saati verisi bulunamadı, varsayılan program kullanılıyor. Ders Programım’ı Ders Saati ve Yıllık Plan ile <b>aynı sitede</b> açarsan program ve “işledim” kayıtları otomatik eşleşir.</div>')+
@@ -6368,6 +6368,34 @@ function goc(){ var bayrak=null; try{ bayrak=localStorage.getItem(GOC); }catch(e
     metaYaz({t:degisti?Math.max(GOC_T,((m&&m.t)||0)+1):Math.max(GOC_T,(m&&m.t)||0),imza:imza(yerel()||yeni)}); }
   try{ localStorage.setItem(GOC,'1'); }catch(e){} }
 
+/* ---- 19.11.2026: YENİ PROGRAM — 5 günün tamamı (bir kez; ders adları korunur, Ana Sınıfı A/B şube etiketi) ----
+   Değişenler: Pzt 6. ders +2A · Salı 6. ders Ana Sınıfı B · Prş 6. ders 2A kalktı · Cuma 2. ders Ana Sınıfı A · Cuma 6. ders 2A kalktı
+   Eski tek seferlik geçişler (26.10 / 27.10) bu cihazda bir daha çalışmasın diye kapatılır. */
+var GOC2='dk_prog_goc_20261119', GOC2_T=Date.UTC(2026,10,19,11,30,0);   /* 19.11.2026 14:30 (Türkiye) */
+var YENI2=[
+  ['','4A','','6A','2A','2A','1A','1A'],
+  ['','','5A','2A','3A','Ana Sınıfı B','5A','5A'],
+  ['','4A','4A','3A','3A','','7A','7A'],
+  ['','','','','','','6A','6A'],
+  ['','Ana Sınıfı A','8A','8A','','','','1A']];
+var VARS_SAAT=[['09:10','09:50'],['10:00','10:40'],['10:50','11:30'],['11:40','12:20'],['12:50','13:30'],['13:40','14:20'],['14:30','15:10'],['15:20','16:00']];
+function sbAyir(ad){ var m=String(ad||'').trim().match(/^ana\s*s[ıi]n[ıi]f[ıi]\s*[-–]?\s*([a-zçğıöşü])$/i);
+  return m?{c:'Ana Sınıfı',sb:m[1].toLocaleUpperCase('tr')}:{c:String(ad||'').trim(),sb:''}; }
+function goc2(){ var bayrak=null; try{ bayrak=localStorage.getItem(GOC2); }catch(e){ return; } if(bayrak) return;
+  ['dk_prog_goc_20261027','dk_prog_goc_20261026b','dk_prog_goc_20261026'].forEach(function(k){ try{ if(!localStorage.getItem(k)) localStorage.setItem(k,'1'); }catch(e){} });
+  var p=yerel(), periods=(p&&p.periods&&p.periods.length===8)?p.periods:VARS_SAAT, g0=p?kopya(p.grid):[], g=[], degisti=!p;
+  function bul(c,d){ for(var a=0;a<6;a++){ var dd=a===0?d:a-1; if(a>0&&dd===d) continue; var r=g0[dd]||[]; for(var i=0;i<r.length;i++){ var x=r[i]; if(x&&x.c===c) return kopya(x); } } return null; }
+  for(var d=0;d<5;d++){ var r=[], eski=g0[d]||[];
+    for(var i=0;i<periods.length;i++){ var ad=YENI2[d][i]||'', x=eski[i];
+      if(!ad){ r.push(null); continue; }
+      var a=sbAyir(ad), y=(x&&x.c===a.c)?kopya(x):(bul(a.c,d)||{c:a.c,s:SUBJ});
+      if(a.sb) y.sb=a.sb; else delete y.sb; r.push(y); }
+    if(kanon(r)!==kanon(g0[d])) degisti=true; g.push(r); }
+  var yeni={grid:g,periods:periods,ov:(p&&p.ov)||{}};
+  var m=metaOku(); if(degisti) uygula(yeni);
+  metaYaz({t:degisti?Math.max(GOC2_T,((m&&m.t)||0)+1):Math.max(GOC2_T,(m&&m.t)||0),imza:imza(yerel()||yeni)});
+  try{ localStorage.setItem(GOC2,'1'); }catch(e){} }
+
 /* ---- bulut ---- */
 async function baglan(){ if(K.fb) return K.fb; var V='https://www.gstatic.com/firebasejs/11.0.1/';
   var A=await import(V+'firebase-app.js'), F=await import(V+'firebase-firestore.js'), Au=await import(V+'firebase-auth.js');
@@ -6415,7 +6443,7 @@ async function dinle(){ if(K.dinliyor) return; try{ var fb=await baglan(); K.din
   }catch(e){ K.dinliyor=false; } }
 async function yokla(){ if(navigator.onLine===false) return; try{ var fb=await baglan(), sn=await fb.F.getDoc(fb.ref); karar(sn.exists()?sn.data():null); }catch(e){} if(!K.dinliyor) dinle(); }
 
-function basla(){ goc();
+function basla(){ goc(); goc2();
   setInterval(function(){ try{ yerelYakala(); }catch(e){} },2000);
   window.addEventListener('storage',function(e){ if(e.key===KEY) setTimeout(yerelYakala,50); });
   window.addEventListener('online',yokla);
