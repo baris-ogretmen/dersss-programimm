@@ -9190,7 +9190,7 @@ Zekâ Oyunu Tasarımı|Kurallı bir zekâ oyunu tasarlar.|Tasarım;Test;Sunum|Ta
       if(gol===null){Object.keys(su).forEach(k=>{if(!ts[k])ts[k]={v:1,t:1};});}
       else{Object.keys(su).forEach(k=>{if(!gol[k]){ts[k]={v:1,t};deg=true;}});Object.keys(gol).forEach(k=>{if(!su[k]){ts[k]={v:0,t};deg=true;}});}
       LSx.set('zstd_bs_gol_'+a.k,su);LSx.set('zstd_bs_ts_'+a.k,ts);});return deg;}
-  function bsUygula(a,ts){const d={};Object.keys(ts).forEach(k=>{if(ts[k]&&ts[k].v)d[k]=1;});if(a.tip==='liste')LSx.set(a.k,Object.keys(d).sort());else LSx.set(a.k,bsIc(d));LSx.set('zstd_bs_gol_'+a.k,d);LSx.set('zstd_bs_ts_'+a.k,ts);}
+  function bsUygula(a,ts){try{if(a&&a.k==='dk_ilr'){var __y=JSON.parse(localStorage.getItem('zstd_bs_ts_dk_ilr')||'{}'),__m=JSON.parse(localStorage.getItem('dk_ilr_uzak_sil')||'{}'),__d=0;Object.keys(ts||{}).forEach(function(k){var z=ts[k],y=__y[k];if(z&&z.v===0&&!(y&&y.v===0&&y.t===z.t)){__m[k]=Date.now();__d=1;}});if(__d)localStorage.setItem('dk_ilr_uzak_sil',JSON.stringify(__m));}}catch(__e){}const d={};Object.keys(ts).forEach(k=>{if(ts[k]&&ts[k].v)d[k]=1;});if(a.tip==='liste')LSx.set(a.k,Object.keys(d).sort());else LSx.set(a.k,bsIc(d));LSx.set('zstd_bs_gol_'+a.k,d);LSx.set('zstd_bs_ts_'+a.k,ts);}
   function bsBirles(y,u){const r=Object.assign({},y);Object.keys(u||{}).forEach(k=>{const x=u[k];if(!x)return;if(!r[k]||(x.t||0)>(r[k].t||0))r[k]={v:x.v?1:0,t:x.t||1};});return r;}
   async function bsEsitle(elle){if(BS.mesgul||VELI)return;if(!bsAcik()&&!elle)return;if(navigator.onLine===false){BS.durum='cevrimdisi';bsRozet();return;}
     BS.mesgul=true;BS.durum='esitleniyor';bsRozet();const once=JSON.stringify(LSx.get('dk_ilr',{}));
@@ -9786,5 +9786,39 @@ if(document.readyState==='loading') document.addEventListener('DOMContentLoaded'
 })();
 </script>
 
+<script>
+/* ===== 🔒 İŞLENDİ KİLİDİ (23 Kasım 2026) — “işlendi” denen ders bir daha kaybolmaz =====
+   Üç uygulamada (Ders Saati · Ders Programım · Ders Planı) aynı kod. dk_ilr’deki her işaret dk_ilr_kalici’ye de yazılır.
+   Bir işaret kaybolursa (senkron sorunu, bozuk kayıt, eski cihazın üzerine yazması…) kendiliğinden GERİ GELİR.
+   Yalnız şu durumda kaldırılmış sayılır: az sayıda (≤4) işaret, son 6 sn içinde ekrana dokunulmuşken (bu ya da başka sekmede)
+   ya da başka cihazdan bilerek kaldırılıp bulut senkronuyla gelmişse (dk_ilr_uzak_sil). Diğer her kayıp geri yüklenir. */
+(function(){ if(window.__islKilidi) return; window.__islKilidi=1;
+  var K='dk_ilr', A='dk_ilr_kalici', D='dk_son_dokunus';
+  function oku(k,d){ try{ var v=localStorage.getItem(k); return v==null?d:(JSON.parse(v)||d); }catch(e){ return d; } }
+  function yaz(k,v){ try{ localStorage.setItem(k,JSON.stringify(v)); }catch(e){} }
+  function duz(o){ var r={}; Object.keys(o||{}).forEach(function(g){ var a=o[g]||{}; Object.keys(a).forEach(function(t){ var b=a[t]||{}; Object.keys(b).forEach(function(i){ if(b[i]) r[g+'|'+t+'|'+i]=1; }); }); }); return r; }
+  function dokundu(){ try{ localStorage.setItem(D,String(Date.now())); }catch(e){} }
+  ['pointerdown','keydown','touchstart'].forEach(function(ev){ document.addEventListener(ev,dokundu,true); });
+  function denetle(){ try{ var dur=+localStorage.getItem('dk_ilr_kilit_dur')||0; if(Date.now()<dur){ localStorage.removeItem(A); return; }
+      var ilr=oku(K,{}), su=duz(ilr), kal=oku(A,{}), now=Date.now(), deg=false;
+      if(typeof kal!=='object'||Array.isArray(kal)) kal={};
+      Object.keys(su).forEach(function(k){ if(!kal[k]){ kal[k]=now; deg=true; } });
+      var kayip=Object.keys(kal).filter(function(k){ return !su[k]; });
+      if(kayip.length){ var dok=now-(+localStorage.getItem(D)||0)<6000, uz=oku('dk_ilr_uzak_sil',{})||{}, uzDeg=false, geri=[];
+        kayip.forEach(function(k){ if(uz[k]){ delete kal[k]; delete uz[k]; deg=true; uzDeg=true; }      /* başka cihazdan bilerek kaldırıldı (bulut senkronu getirdi) */
+          else if(dok&&kayip.length<=4){ delete kal[k]; deg=true; }                                     /* burada ekrana dokunarak kaldırıldı */
+          else geri.push(k); });
+        if(uzDeg) yaz('dk_ilr_uzak_sil',uz);
+        if(geri.length){ geri.forEach(function(k){ var p=k.split('|'); ilr[p[0]]=ilr[p[0]]||{}; ilr[p[0]][p[1]]=ilr[p[0]][p[1]]||{}; ilr[p[0]][p[1]][p[2]]=1; });
+          yaz(K,ilr); var g=oku('dk_ilr_geriyukleme',[]); g.unshift({t:now,n:geri.length,s:geri.slice(0,12)}); yaz('dk_ilr_geriyukleme',g.slice(0,20));
+          try{ var m='🔒 '+geri.length+' işlenen ders kaybolmuştu — geri yüklendi'; if(typeof toast==='function') toast(m); }catch(e){}
+          try{ if(typeof renderPlan==='function'&&window.ST&&ST.view==='plan') renderPlan(); if(typeof renderNeredeKaldim==='function') renderNeredeKaldim(); }catch(e){}
+          try{ window.dispatchEvent(new StorageEvent('storage',{key:K})); }catch(e){} } }
+      if(deg) yaz(A,kal);
+    }catch(e){} }
+  denetle(); setInterval(denetle,1500); window.addEventListener('storage',function(e){ if(!e.key||e.key===K) setTimeout(denetle,50); });
+  window.ISL_KILIDI={denetle:denetle,kalici:function(){ return oku(A,{}); },gecmis:function(){ return oku('dk_ilr_geriyukleme',[]); }};
+})();
+</script>
 </body>
 </html>
